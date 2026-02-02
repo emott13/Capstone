@@ -1,26 +1,26 @@
-DROP TABLE IF EXISTS users;
-DROP TABLE IF EXISTS roles;
-DROP TABLE IF EXISTS userRoles;
-DROP TABLE IF EXISTS admins;
-DROP TABLE IF EXISTS adminDiscounts;
-DROP TABLE IF EXISTS vendors;
-DROP TABLE IF EXISTS vendorDiscounts;
-DROP TABLE IF EXISTS customers;
-DROP TABLE IF EXISTS phoneNumbers;
-DROP TABLE IF EXISTS addresses;
-DROP TABLE IF EXISTS carts;
-DROP TABLE IF EXISTS wishlists;
-DROP TABLE IF EXISTS reviews;
-DROP TABLE IF EXISTS reviewImages;
-DROP TABLE IF EXISTS complaints;
-DROP TABLE IF EXISTS products;
-DROP TABLE IF EXISTS productSpecifications;
-DROP TABLE IF EXISTS productColors;
-DROP TABLE IF EXISTS productCategories;
-DROP TABLE IF EXISTS productImages;
-DROP TABLE IF EXISTS orders;
-DROP TABLE IF EXISTS orderItems;
-DROP TABLE IF EXISTS payments;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS userRoles CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
+DROP TABLE IF EXISTS adminDiscounts CASCADE;
+DROP TABLE IF EXISTS vendors CASCADE;
+DROP TABLE IF EXISTS vendorDiscounts CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS phoneNumbers CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS carts CASCADE;
+DROP TABLE IF EXISTS wishlists CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS reviewImages CASCADE;
+DROP TABLE IF EXISTS complaints CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS productSpecifications CASCADE;
+DROP TABLE IF EXISTS productColors CASCADE;
+DROP TABLE IF EXISTS productCategories CASCADE;
+DROP TABLE IF EXISTS productImages CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS orderItems CASCADE;
+DROP TABLE IF EXISTS payments CASCADE;
 
 -- users -- 
 CREATE TABLE IF NOT EXISTS users(
@@ -55,13 +55,34 @@ CREATE TABLE IF NOT EXISTS userRoles(
 	roleID				BIGINT NOT NULL REFERENCES roles(roleID)
 )
 
--- admin and related --
+-- admin --
 CREATE TABLE IF NOT EXISTS admins(
 	adminID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
     updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 	
+	userID				BIGINT NOT NULL REFERENCES users(userID)
+);
+
+-- vendor --
+CREATE TABLE IF NOT EXISTS vendors(
+	vendorID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	vendorTitle			VARCHAR(50) NOT NULL,
+	
+	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
+
+	userID				BIGINT NOT NULL REFERENCES users(userID)
+);
+
+-- customer --
+CREATE TABLE IF NOT EXISTS customers(
+	customerID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
+
 	userID				BIGINT NOT NULL REFERENCES users(userID)
 );
 
@@ -75,17 +96,6 @@ CREATE TABLE IF NOT EXISTS adminDiscounts(
 	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
 );
 
--- vendors and related --
-CREATE TABLE IF NOT EXISTS vendors(
-	vendorID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	vendorTitle			VARCHAR(50) NOT NULL,
-	
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	userID				BIGINT NOT NULL REFERENCES users(userID)
-);
-
 CREATE TABLE IF NOT EXISTS vendorDiscounts(
 	vendorDiscountID	BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	discountPercent		NUMERIC(3, 2),
@@ -97,14 +107,7 @@ CREATE TABLE IF NOT EXISTS vendorDiscounts(
 );
 
 -- customers and related --
-CREATE TABLE IF NOT EXISTS customers(
-	customerID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	userID				BIGINT NOT NULL REFERENCES users(userID)
-);
 
 CREATE TABLE IF NOT EXISTS phoneNumbers(
 	phoneID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -160,7 +163,7 @@ CREATE TABLE IF NOT EXISTS reviews(
 	reviewID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	title				VARCHAR(50) UNIQUE NOT NULL,
 	description			VARCHAR(255) UNIQUE NOT NULL,
-	rating				INT UNIQUE NOT NULL,
+	rating				INT NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
     updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
@@ -272,3 +275,16 @@ CREATE TABLE IF NOT EXISTS payments(
 
 	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
 );
+
+CREATE OR REPLACE FUNCTION setUpdatedAt()
+RETURNS TRIGGER AS $$
+BEGIN
+	NEW.updatedAt = CURRENT_TIMESTAMP;
+	RETURN NEW;
+END;
+$$ LANGUAGE plpsql;
+
+CREATE TRIGGER usersUpdatedAt
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
