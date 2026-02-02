@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram name="Page-1" id="plsSvhekUSbcb4RE44jL">
-        <mxGraphModel dx="1224" dy="2016" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="3655" dy="2855" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -283,7 +283,7 @@
                 <mxCell id="168" value="&lt;u&gt;paymentID&lt;/u&gt;&lt;div&gt;&lt;i&gt;orderID&lt;/i&gt;&lt;/div&gt;&lt;div&gt;&lt;i&gt;customerID&lt;/i&gt;&lt;/div&gt;&lt;div&gt;date&lt;/div&gt;&lt;div&gt;time&lt;/div&gt;&lt;div&gt;paymentAmount&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="167" vertex="1">
                     <mxGeometry y="50" width="161" height="100" as="geometry"/>
                 </mxCell>
-                <mxCell id="169" value="productCategory" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
+                <mxCell id="169" value="productCategories" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=50;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="238.75" y="-480" width="160" height="120" as="geometry"/>
                 </mxCell>
                 <mxCell id="170" value="&lt;u&gt;categoryID&lt;/u&gt;&lt;div&gt;categoryName&lt;/div&gt;" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" parent="169" vertex="1">
@@ -969,7 +969,7 @@
                 <mxCell id="364" style="edgeStyle=none;shape=connector;rounded=1;html=1;strokeColor=#d6b656;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;fillColor=#fff2cc;" edge="1" parent="1" source="355" target="362">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="355" value="&lt;span style=&quot;&quot;&gt;PRODUCT CATEGORY&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+                <mxCell id="355" value="&lt;span style=&quot;&quot;&gt;PRODUCT CATEGORIES&lt;/span&gt;" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=11;labelBackgroundColor=none;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
                     <mxGeometry x="930" y="580" width="80" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="359" style="edgeStyle=none;shape=connector;rounded=1;html=1;strokeColor=#d6b656;align=center;verticalAlign=middle;fontFamily=Helvetica;fontSize=11;fontColor=default;labelBackgroundColor=default;endArrow=none;endFill=0;fillColor=#fff2cc;" edge="1" parent="1" source="358" target="355">
