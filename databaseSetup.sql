@@ -1,5 +1,3 @@
-USE Capstone;
-
 DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS roles;
 DROP TABLE IF EXISTS userRoles;
@@ -34,7 +32,7 @@ CREATE TABLE IF NOT EXISTS users(
 	dob					DATE NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
 );
 
 -- roles --
@@ -43,7 +41,7 @@ CREATE TABLE IF NOT EXISTS roles(
     roleName       		VARCHAR(20) UNIQUE NOT NULL,                                        -- name of the role (e.g., admin, vendor, customer)
 
     created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of role creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
 );
 
 -- userRoles (pivot table) --
@@ -51,10 +49,10 @@ CREATE TABLE IF NOT EXISTS userRoles(
 	userRoleID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
 	userID				BIGINT NOT NULL REFERENCES users(userID),
-	roleID				BIGINT NOT NULL REFERENCES roles(roleID),
+	roleID				BIGINT NOT NULL REFERENCES roles(roleID)
 )
 
 -- admin and related --
@@ -62,9 +60,9 @@ CREATE TABLE IF NOT EXISTS admins(
 	adminID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 	
-	userID				BIGINT NOT NULL REFERENCES users(userID),
+	userID				BIGINT NOT NULL REFERENCES users(userID)
 );
 
 CREATE TABLE IF NOT EXISTS adminDiscounts(
@@ -72,9 +70,9 @@ CREATE TABLE IF NOT EXISTS adminDiscounts(
 	discountPercent		NUMERIC(3, 2),
 	
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID),
+	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
 );
 
 -- vendors and related --
@@ -83,19 +81,19 @@ CREATE TABLE IF NOT EXISTS vendors(
 	vendorTitle			VARCHAR(50) NOT NULL,
 	
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	userID				BIGINT NOT NULL REFERENCES users(userID),
+	userID				BIGINT NOT NULL REFERENCES users(userID)
 );
 
 CREATE TABLE IF NOT EXISTS vendorDiscounts(
 	vendorDiscountID	BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	discountPercent		NUMERIC(3, 2)
+	discountPercent		NUMERIC(3, 2),
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 -- customers and related --
@@ -103,9 +101,9 @@ CREATE TABLE IF NOT EXISTS customers(
 	customerID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	userID				BIGINT NOT NULL REFERENCES users(userID),
+	userID				BIGINT NOT NULL REFERENCES users(userID)
 );
 
 CREATE TABLE IF NOT EXISTS phoneNumbers(
@@ -113,9 +111,9 @@ CREATE TABLE IF NOT EXISTS phoneNumbers(
 	phoneNumber			VARCHAR(15) UNIQUE NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID)
+	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID),
 	customerID			BIGINT NOT NULL REFERENCES customers(customerID)
 );
 
@@ -129,10 +127,10 @@ CREATE TABLE IF NOT EXISTS addresses(
 	postalCode			VARCHAR(20) UNIQUE NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
 	orderID				BIGINT REFERENCES orders(orderID),
-	customerID			BIGINT REFERENCES customers(customerID),
+	customerID			BIGINT REFERENCES customers(customerID)
 
 	-- set constraint so one has to be filled
 );
@@ -141,10 +139,10 @@ CREATE TABLE IF NOT EXISTS carts(
 	cartID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
 	customerID			BIGINT NOT NULL REFERENCES customers(customerID),
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS wishlists(
@@ -152,10 +150,10 @@ CREATE TABLE IF NOT EXISTS wishlists(
 	wishlistTitle		VARCHAR(50) UNIQUE NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
 	customerID			BIGINT NOT NULL REFERENCES customers(customerID),
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS reviews(
@@ -165,9 +163,9 @@ CREATE TABLE IF NOT EXISTS reviews(
 	rating				INT UNIQUE NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	customerID			BIGINT NOT NULL REFERENCES customers(customerID),
+	customerID			BIGINT NOT NULL REFERENCES customers(customerID)
 );
 
 CREATE TABLE IF NOT EXISTS reviewImages(
@@ -175,9 +173,9 @@ CREATE TABLE IF NOT EXISTS reviewImages(
 	imageLink			TEXT,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	reviewID			BIGINT NOT NULL REFERENCES reviews(reviewID),
+	reviewID			BIGINT NOT NULL REFERENCES reviews(reviewID)
 );
 
 CREATE TABLE IF NOT EXISTS complaints(
@@ -186,9 +184,9 @@ CREATE TABLE IF NOT EXISTS complaints(
 	description			VARCHAR(255),
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID),
+	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
 );
 
 -- products and related --
@@ -198,19 +196,19 @@ CREATE TABLE IF NOT EXISTS products(
 	description			TEXT,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID),
+	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID)
 );
 
 CREATE TABLE IF NOT EXISTS productSpecifications(
 	productSpecID		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	specification		VARCHAR(255)
+	specification		VARCHAR(255),
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS productColors(
@@ -218,9 +216,9 @@ CREATE TABLE IF NOT EXISTS productColors(
 	colorCode			BIGINT NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS productCategories(
@@ -229,9 +227,9 @@ CREATE TABLE IF NOT EXISTS productCategories(
 	description			VARCHAR(255),
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS productImages(
@@ -239,9 +237,9 @@ CREATE TABLE IF NOT EXISTS productImages(
 	imageLink			TEXT,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 -- orders and related --
@@ -252,17 +250,17 @@ CREATE TABLE IF NOT EXISTS orders(
 	orderStatus			VARCHAR(20), -- pending, received, shipped, etc?
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
 );
 
 CREATE TABLE IF NOT EXISTS orderItems(
 	orderItemID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 	
 	orderID				BIGINT NOT NULL REFERENCES orders(orderID),
-	productID			BIGINT NOT NULL REFERENCES products(productID),
+	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
 CREATE TABLE IF NOT EXISTS payments(
@@ -270,7 +268,7 @@ CREATE TABLE IF NOT EXISTS payments(
 	amount				NUMERIC(12, 2) NOT NULL,
 
 	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,    -- timestamp of last update
+    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
 
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID),
+	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
 );
