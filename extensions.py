@@ -1,9 +1,11 @@
+import os
 import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, text
 from flask_login import LoginManager, UserMixin, current_user
 from flask_bcrypt import Bcrypt
+from dotenv import load_dotenv
 
 # USEFUL flask_login COMMANDS
 # @app.route("/foo")
@@ -14,9 +16,14 @@ from flask_bcrypt import Bcrypt
 # getCurrentType() # gets the current type. Is None if the user isn't signed in
 
 
+# Postgresql connection credentials
+load_dotenv()
+db_user = os.environ["DB_USER"]
+db_password = os.environ["DB_PASSWORD"]
+db_name = os.environ["DB_NAME"]
+
 # Initialize Flask app
-# conn_str = "mysql://root:cset155@localhost/goods" <-- main database
-conn_str = "mysql://root:cset155@localhost/goods" 
+conn_str = f"postgresql://{db_user}:{db_password}@localhost/{db_name}" 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = conn_str
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
@@ -34,6 +41,7 @@ login_manager.login_view = "login.login"
 # Initialize DB the way we did the other times
 engine = create_engine(conn_str, echo=True)                                             
 conn = engine.connect()                                                                 
+
 
 # price formatter for jinja template. call like {{154|priceFormat}}
 @app.template_filter()
