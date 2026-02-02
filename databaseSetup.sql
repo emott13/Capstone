@@ -106,9 +106,6 @@ CREATE TABLE IF NOT EXISTS vendorDiscounts(
 	productID			BIGINT NOT NULL REFERENCES products(productID)
 );
 
--- customers and related --
-
-
 CREATE TABLE IF NOT EXISTS phoneNumbers(
 	phoneID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	phoneNumber			VARCHAR(15) UNIQUE NOT NULL,
