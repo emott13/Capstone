@@ -50,8 +50,8 @@ class Users(UserMixin, db.Model):
     email = db.Column(db.String(255), primary_key=True)
     username = db.Column(db.String(255), unique=False, nullable=False)
     password = db.Column(db.String(255), nullable=False)
-    firstName = db.Column(db.String(60), nullable=False)
-    lastName = db.Column(db.String(60), nullable=False)
+    first_name = db.Column(db.String(60), nullable=False)
+    last_name = db.Column(db.String(60), nullable=False)
 
     def get_id(self): return self.email
     def get_email(self): return self.get_id()

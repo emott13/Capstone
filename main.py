@@ -9,7 +9,7 @@ app.register_blueprint(login_bp)
 
 @app.route("/test")
 def test():
-    return "test"
+    return Users.query.all()
 
 if __name__ == '__main__':
     app.run(debug=True)
