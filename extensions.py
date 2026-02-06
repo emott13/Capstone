@@ -36,11 +36,25 @@ bcrypt = Bcrypt(app)
 db = SQLAlchemy(app)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = "login.login"
+login_manager.login_view = "blueprints.login.login"
+
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.get(user_id)
 
 # Initialize DB the way we did the other times
 engine = create_engine(conn_str, echo=True)                                             
 conn = engine.connect()                                                                 
+
+class Users(UserMixin, db.Model):
+    email = db.Column(db.String(255), primary_key=True)
+    username = db.Column(db.String(255), unique=False, nullable=False)
+    password = db.Column(db.String(255), nullable=False)
+    firstName = db.Column(db.String(60), nullable=False)
+    lastName = db.Column(db.String(60), nullable=False)
+
+    def get_id(self): return self.email
+    def get_email(self): return self.get_id()
 
 
 # price formatter for jinja template. call like {{154|priceFormat}}
