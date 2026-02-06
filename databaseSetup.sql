@@ -1,287 +1,356 @@
-DROP TABLE IF EXISTS users CASCADE;
-DROP TABLE IF EXISTS roles CASCADE;
-DROP TABLE IF EXISTS userRoles CASCADE;
-DROP TABLE IF EXISTS admins CASCADE;
-DROP TABLE IF EXISTS adminDiscounts CASCADE;
-DROP TABLE IF EXISTS vendors CASCADE;
-DROP TABLE IF EXISTS vendorDiscounts CASCADE;
-DROP TABLE IF EXISTS customers CASCADE;
-DROP TABLE IF EXISTS phoneNumbers CASCADE;
-DROP TABLE IF EXISTS addresses CASCADE;
-DROP TABLE IF EXISTS carts CASCADE;
-DROP TABLE IF EXISTS wishlists CASCADE;
-DROP TABLE IF EXISTS reviews CASCADE;
-DROP TABLE IF EXISTS reviewImages CASCADE;
-DROP TABLE IF EXISTS complaints CASCADE;
-DROP TABLE IF EXISTS products CASCADE;
-DROP TABLE IF EXISTS productSpecifications CASCADE;
-DROP TABLE IF EXISTS productColors CASCADE;
-DROP TABLE IF EXISTS productCategories CASCADE;
-DROP TABLE IF EXISTS productImages CASCADE;
-DROP TABLE IF EXISTS orders CASCADE;
-DROP TABLE IF EXISTS orderItems CASCADE;
+-- ---------- CORE USERS & ROLES ----------
 DROP TABLE IF EXISTS payments CASCADE;
+DROP TABLE IF EXISTS order_items CASCADE;
+DROP TABLE IF EXISTS order_addresses CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
+DROP TABLE IF EXISTS product_images CASCADE;
+DROP TABLE IF EXISTS product_categories CASCADE;
+DROP TABLE IF EXISTS product_colors CASCADE;
+DROP TABLE IF EXISTS product_specs CASCADE;
+DROP TABLE IF EXISTS products CASCADE;
+DROP TABLE IF EXISTS reviews CASCADE;
+DROP TABLE IF EXISTS wishlist_items CASCADE;
+DROP TABLE IF EXISTS wishlists CASCADE;
+DROP TABLE IF EXISTS cart_items CASCADE;
+DROP TABLE IF EXISTS carts CASCADE;
+DROP TABLE IF EXISTS user_phone_numbers CASCADE;
+DROP TABLE IF EXISTS phone_numbers CASCADE;
+DROP TABLE IF EXISTS addresses CASCADE;
+DROP TABLE IF EXISTS vendors CASCADE;
+DROP TABLE IF EXISTS customers CASCADE;
+DROP TABLE IF EXISTS admins CASCADE;
+DROP TABLE IF EXISTS user_roles CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
 
--- users -- 
-CREATE TABLE IF NOT EXISTS users(
-	userID 				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,					
+CREATE TABLE users (
+	user_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
 	username 			VARCHAR(30) UNIQUE NOT NULL,
-	fname 				VARCHAR(50) UNIQUE NOT NULL,
-	lname 				VARCHAR(50) UNIQUE NOT NULL,
-	email				VARCHAR(50) UNIQUE NOT NULL,
-	dob					DATE NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
+	firstName 			VARCHAR(50) NOT NULL,
+	lastName 			VARCHAR(50) NOT NULL,
+	email 				VARCHAR(100) UNIQUE NOT NULL,
+	dob 				DATE NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- roles --
-CREATE TABLE IF NOT EXISTS roles(
-	roleID         		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,                    -- unique role identifier
-    roleName       		VARCHAR(20) UNIQUE NOT NULL,                                        -- name of the role (e.g., admin, vendor, customer)
-
-    created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of role creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
+CREATE TABLE roles (
+	role_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	role_name 			VARCHAR(20) UNIQUE NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- userRoles (pivot table) --
-CREATE TABLE IF NOT EXISTS userRoles(
-	userRoleID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	userID				BIGINT NOT NULL REFERENCES users(userID),
-	roleID				BIGINT NOT NULL REFERENCES roles(roleID)
-)
-
--- admin --
-CREATE TABLE IF NOT EXISTS admins(
-	adminID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-	
-	userID				BIGINT NOT NULL REFERENCES users(userID)
+CREATE TABLE user_roles (
+	user_id 			BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
+	role_id 			BIGINT REFERENCES roles(role_id) ON DELETE CASCADE,
+	PRIMARY KEY (user_id, role_id),
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- vendor --
-CREATE TABLE IF NOT EXISTS vendors(
-	vendorID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	vendorTitle			VARCHAR(50) NOT NULL,
-	
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	userID				BIGINT NOT NULL REFERENCES users(userID)
+-- ---------- ROLE PROFILES ----------
+CREATE TABLE admins (
+	user_id 			BIGINT PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- customer --
-CREATE TABLE IF NOT EXISTS customers(
-	customerID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	userID				BIGINT NOT NULL REFERENCES users(userID)
+CREATE TABLE vendors (
+	user_id 			BIGINT PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
+	store_name 			VARCHAR(100) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS adminDiscounts(
-	adminDiscountID		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	discountPercent		NUMERIC(3, 2),
-	
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
+CREATE TABLE customers (
+	user_id 			BIGINT PRIMARY KEY REFERENCES users(user_id) ON DELETE CASCADE,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS vendorDiscounts(
-	vendorDiscountID	BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	discountPercent		NUMERIC(3, 2),
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+-- ---------- CONTACT INFO ----------
+CREATE TABLE phone_numbers (
+	phone_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	phone_number 		VARCHAR(20) UNIQUE NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS phoneNumbers(
-	phoneID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	phoneNumber			VARCHAR(15) UNIQUE NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID),
-	customerID			BIGINT NOT NULL REFERENCES customers(customerID)
+CREATE TABLE user_phone_numbers (
+	user_id 			BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
+	phone_id 			BIGINT REFERENCES phone_numbers(phone_id) ON DELETE CASCADE,
+	PRIMARY KEY (user_id, phone_id),
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS addresses(
-	addressID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	address1			VARCHAR(50) UNIQUE NOT NULL,
-	address2			VARCHAR(50) UNIQUE NOT NULL,
-	city				VARCHAR(50) UNIQUE NOT NULL,
-	state				VARCHAR(50) UNIQUE NOT NULL,
-	country				VARCHAR(50) UNIQUE NOT NULL,
-	postalCode			VARCHAR(20) UNIQUE NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	orderID				BIGINT REFERENCES orders(orderID),
-	customerID			BIGINT REFERENCES customers(customerID)
-
-	-- set constraint so one has to be filled
+CREATE TABLE addresses (
+	addressId 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	user_id 			BIGINT REFERENCES users(user_id) ON DELETE CASCADE,
+	address1 			VARCHAR(100) NOT NULL,
+	address2 			VARCHAR(100),
+	city 				VARCHAR(50) NOT NULL,
+	state 				VARCHAR(50) NOT NULL,
+	country 			VARCHAR(50) NOT NULL,
+	postalCode 			VARCHAR(20) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS carts(
-	cartID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	customerID			BIGINT NOT NULL REFERENCES customers(customerID),
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+-- ---------- PRODUCTS ----------
+CREATE TABLE products (
+	productId 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	vendorId 			BIGINT REFERENCES vendors(user_id) ON DELETE CASCADE,
+	name 				VARCHAR(100) NOT NULL,
+	description 		TEXT,
+	price 				NUMERIC(12,2) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS wishlists(
-	wishlistID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	wishlistTitle		VARCHAR(50) UNIQUE NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	customerID			BIGINT NOT NULL REFERENCES customers(customerID),
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+CREATE TABLE product_specs (
+	spec_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	product_id 			BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+	specification 		VARCHAR(255) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reviews(
-	reviewID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	title				VARCHAR(50) UNIQUE NOT NULL,
-	description			VARCHAR(255) UNIQUE NOT NULL,
-	rating				INT NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	customerID			BIGINT NOT NULL REFERENCES customers(customerID)
+CREATE TABLE product_colors (
+	color_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	color_name 			VARCHAR(50) NOT NULL,
+	hex_code 			VARCHAR(7),
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS reviewImages(
-	imageID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	imageLink			TEXT,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	reviewID			BIGINT NOT NULL REFERENCES reviews(reviewID)
+CREATE TABLE product_categories (
+	category_id 		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	category_name 		VARCHAR(50) UNIQUE NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS complaints(
-	complaintID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	title				VARCHAR(30),
-	description			VARCHAR(255),
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
+CREATE TABLE product_images (
+	image_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	product_id 			BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+	image_url 			TEXT NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- products and related --
-CREATE TABLE IF NOT EXISTS products(
-	productID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name				VARCHAR(50),
-	description			TEXT,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	vendorID			BIGINT NOT NULL REFERENCES vendors(vendorID)
+-- ---------- CARTS & WISHLISTS ----------
+CREATE TABLE carts (
+	cart_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	customer_id 		BIGINT REFERENCES customers(user_id) ON DELETE CASCADE,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS productSpecifications(
-	productSpecID		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	specification		VARCHAR(255),
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+CREATE TABLE cart_items (
+	cart_item_id 		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	cart_id 			BIGINT REFERENCES carts(cart_id) ON DELETE CASCADE,
+	product_id 			BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+	quantity 			INT NOT NULL CHECK (quantity > 0),
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS productColors(
-	productColorID		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	colorCode			BIGINT NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+CREATE TABLE wishlists (
+	wishlist_id 		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	customer_id 		BIGINT REFERENCES customers(user_id) ON DELETE CASCADE,
+	title 				VARCHAR(100) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS productCategories(
-	productCategoryID	BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	name				VARCHAR(50),
-	description			VARCHAR(255),
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+CREATE TABLE wishlist_items (
+	wishlist_item_id 	BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	wishlist_id 		BIGINT REFERENCES wishlists(wishlist_id) ON DELETE CASCADE,
+	product_id 			BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS productImages(
-	imageID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	imageLink			TEXT,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+-- ---------- ORDERS ----------
+CREATE TABLE orders (
+	order_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	customer_id 		BIGINT REFERENCES customers(user_id),
+	orderStatus 		VARCHAR(20) NOT NULL,
+	orderTotal 			NUMERIC(12,2) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
--- orders and related --
-CREATE TABLE IF NOT EXISTS orders(
-	orderID				BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	orderDateTime		TIMESTAMP WITH TIMEZONE
-	orderTotal			NUMERIC(12, 2) NOT NULL
-	orderStatus			VARCHAR(20), -- pending, received, shipped, etc?
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP							      -- timestamp of last update
+CREATE TABLE order_items (
+	order_item_id 		BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	order_id 			BIGINT REFERENCES orders(order_id) ON DELETE CASCADE,
+	product_id 			BIGINT REFERENCES products(product_id),
+	quantity 			INT NOT NULL,
+	price_at_purchase 	NUMERIC(12,2) NOT NULL,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS orderItems(
-	orderItemID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-	
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID),
-	productID			BIGINT NOT NULL REFERENCES products(productID)
+CREATE TABLE order_addresses (
+	order_id 			BIGINT REFERENCES orders(order_id) ON DELETE CASCADE,
+	address_id 			BIGINT REFERENCES addresses(address_id),
+	address_type 		VARCHAR(20) CHECK (address_type IN ('shipping', 'billing')),
+	PRIMARY KEY (order_id, address_type),
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE IF NOT EXISTS payments(
-	paymentID			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-	amount				NUMERIC(12, 2) NOT NULL,
-
-	created_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,                                -- timestamp of creation
-    updated_at      	TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,							      -- timestamp of last update
-
-	orderID				BIGINT NOT NULL REFERENCES orders(orderID)
+-- ---------- PAYMENTS ----------
+CREATE TABLE payments (
+	payment_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	order_id 			BIGINT REFERENCES orders(order_id) ON DELETE CASCADE,
+	amount 				NUMERIC(12,2) NOT NULL,
+	paymentMethod 		VARCHAR(30) NOT NULL,
+	paidAt 				TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+-- ---------- REVIEWS ----------
+CREATE TABLE reviews (
+	review_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+	rating 				INT CHECK (rating BETWEEN 1 AND 5),
+	title 				VARCHAR(100),
+	description 		TEXT,
+	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
+	customer_id 		BIGINT REFERENCES customers(user_id) ON DELETE CASCADE,
+	product_id 			BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+	UNIQUE (customer_id, product_id)
+);
+
 
 CREATE OR REPLACE FUNCTION setUpdatedAt()
 RETURNS TRIGGER AS $$
 BEGIN
-	NEW.updatedAt = CURRENT_TIMESTAMP;
+	NEW.updated_at = CURRENT_TIMESTAMP;
 	RETURN NEW;
 END;
 $$ LANGUAGE plpsql;
 
 CREATE TRIGGER usersUpdatedAt
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER paymentsUpdatedAt 
+BEFORE UPDATE ON payments
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER order_itemsUpdatedAt 
+BEFORE UPDATE ON order_items
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER orderAddressesUpdatedAt 
+BEFORE UPDATE ON orderAddresses 
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER ordersUpdatedAt 
+BEFORE UPDATE ON orders
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER product_imagesUpdatedAt 
+BEFORE UPDATE ON product_images
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER product_categoriesUpdatedAt 
+BEFORE UPDATE ON product_categories
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER product_colorsUpdatedAt 
+BEFORE UPDATE ON product_colors
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER productSpecsUpdatedAt
+BEFORE UPDATE ON product_specs
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER productsUpdatedAt 
+BEFORE UPDATE ON products
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER reviewsUpdatedAt 
+BEFORE UPDATE ON reviews
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER wishlistItemsUpdatedAt 
+BEFORE UPDATE ON wishlist_items
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER wishlistsUpdatedAt 
+BEFORE UPDATE ON wishlists
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER cartItemsUpdatedAt 
+BEFORE UPDATE ON cart_items
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER cartsUpdatedAt 
+BEFORE UPDATE ON carts
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER userPhoneNumbersUpdatedAt 
+BEFORE UPDATE ON user_phone_numbers
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER phoneNumbersUpdatedAt 
+BEFORE UPDATE ON phone_numbers
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER addressesUpdatedAt 
+BEFORE UPDATE ON addresses
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER vendorsUpdatedAt 
+BEFORE UPDATE ON vendors
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER customersUpdatedAt 
+BEFORE UPDATE ON customers
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER adminsUpdatedAt 
+BEFORE UPDATE ON admins
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER userRolesUpdatedAt 
+BEFORE UPDATE ON user_roles
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER rolesUpdatedAt 
+BEFORE UPDATE ON roles
+FOR EACH ROW
+EXECUTE FUNCTION setUpdatedAt();
+
+CREATE TRIGGER usersUpdatedAt 
 BEFORE UPDATE ON users
 FOR EACH ROW
 EXECUTE FUNCTION setUpdatedAt();
