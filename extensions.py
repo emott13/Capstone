@@ -5,6 +5,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine, text
 from flask_login import LoginManager, UserMixin, current_user
 from flask_bcrypt import Bcrypt
+from flask_bootstrap import Bootstrap
 from dotenv import load_dotenv
 
 # USEFUL flask_login COMMANDS
@@ -31,6 +32,9 @@ app.config["SECRET_KEY"] = b'\xdak\xd2\xf7\x80,8\x0f\xbdG\xb7\x87\xe4h\xcf\xae'
 
 # Initialize bcrypt
 bcrypt = Bcrypt(app)
+
+# Initialize bootstrap
+Bootstrap(app)
 
 # Initialize database and login manager
 db = SQLAlchemy(app)

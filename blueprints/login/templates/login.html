@@ -6,32 +6,28 @@
 </script>
 {% extends 'base.html' %}
 {% block body %}
-    <section class="login-container">
-        <div class="login-inner">
-            <h1 class="login-h1">Login</h1>
-            
-            {% if error %}
-                <p class="error">{{ error }}</p>
-            {% endif %}
+    <section class="container">
+        <h1 class="login-h1">Login</h1>
+        
+        {% if error %}
+            <p class="alert alert-danger">{{ error }}</p>
+        {% endif %}
 
-            <form class="login-form" action="/login" method="post">
-                <div class="input-row">
-                    <div class="fancy-input full-width">
-                        <input class="full-width" type="text" name="username" placeholder="" required />
-                        <label for="username">Email or Username:</label>
-                        <!-- <p class="error-message">Enter your email or username</p> -->
-                    </div>
+        <form class="login-form" action="/login" method="post">
+            <div class="input-row">
+                <div class="fancy-input full-width">
+                    <input class="full-width" type="text" name="username" placeholder="" required />
+                    <label for="username">Email or Username:</label>
                 </div>
-                <div class="input-row">
-                    <div class="fancy-input full-width">
-                        <input class="full-width" type="password" name="password" placeholder="" required />
-                        <label for="password">Password:</label>
-                        <!-- <p class="error-message">Enter your password</p> -->
-                    </div>
+            </div>
+            <div class="input-row">
+                <div class="fancy-input full-width">
+                    <input class="full-width" type="password" name="password" placeholder="" required />
+                    <label for="password">Password:</label>
                 </div>
-                <p class="to-register">Don't have an account? <a href="{{url_for('test')}}">Register Here</a></p>
-                <button class="btn" type="submit">Login</button>
-            </form>
-        </div>
+            </div>
+            <p class="">Don't have an account? <a href="{{url_for('test')}}">Register Here</a></p>
+            <button class="btn" type="submit">Login</button>
+        </form>
     </section>
 {% endblock %}
