@@ -4,15 +4,17 @@ from sqlalchemy import text
 from extensions import *
 from blueprints.viewDatabase.viewDatabase import view_database_bp
 from blueprints.login.login import login_bp
+from blueprints.register.register import register_bp
 
 # register blueprints
 app.register_blueprint(login_bp)
+app.register_blueprint(register_bp)
 app.register_blueprint(view_database_bp)
 
 # quick route to see all routes
 @app.route("/routes")
 def routes():
-    return "<br>".join(str(r) for r in app.url_map.iter_rules())
+    return (f"<a href=\"{r}\">{r}</a><br>" for r in app.url_map.iter_rules())
 
 # simple route to check database connection
 @app.route("/db-check")

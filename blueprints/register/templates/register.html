@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Register {{ super() }}{% endblock %}
+{% block styles %}{{ super() }}{% endblock %}
+{% block scripts %}{{ super() }}{% endblock %}
+{% block page_content %}
+    <h1 class="text-center">Register</h1>
+    
+    {% if error %}
+        <p class="alert alert-danger">{{ error }}</p>
+    {% endif %}
+
+    <form id="register-form" class="" action="/register" method="post">
+        <div class="form-group">
+            <label class="text-capitalize" for="email">email:</label>
+            <input class="form-control" type="email" name="email" placeholder="" required />
+        </div>
+        <div class="">
+            <label class="text-capitalize" for="username">username:</label>
+            <input class="" type="text" name="username" placeholder="" required />
+        </div>
+        <div class="">
+            <label class="text-capitalize" for="password">password:</label>
+            <input class="" type="password" name="password" placeholder="" required />
+        </div>
+
+        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Register Here</a></p>
+        <button class="btn" type="submit">Register</button>
+    </form>
+{% endblock %}
