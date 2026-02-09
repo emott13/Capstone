@@ -1,0 +1,33 @@
+<!-- <link rel="stylesheet" href="/static/styles/styles.css"> -->
+<script defer>
+    // prevents sending another POST request on refresh
+    if (window.history.replaceState)
+        window.history.replaceState( null, null, window.location.href );
+</script>
+{% extends 'base.html' %}
+{% block body %}
+    <section class="container">
+        <h1 class="">Register</h1>
+        
+        {% if error %}
+            <p class="alert alert-danger">{{ error }}</p>
+        {% endif %}
+
+        <form class="register-form" action="/register" method="post">
+            <div class="input-row">
+                <div class="fancy-input full-width">
+                    <input class="full-width" type="text" name="username" placeholder="" required />
+                    <label for="username">Email or Username:</label>
+                </div>
+            </div>
+            <div class="input-row">
+                <div class="fancy-input full-width">
+                    <input class="full-width" type="password" name="password" placeholder="" required />
+                    <label for="password">Password:</label>
+                </div>
+            </div>
+            <p class="">Don't have an account? <a href="{{url_for('test')}}">Register Here</a></p>
+            <button class="btn" type="submit">Register</button>
+        </form>
+    </section>
+{% endblock %}
