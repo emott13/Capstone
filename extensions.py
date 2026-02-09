@@ -185,7 +185,7 @@ class ProductImages(db.Model):
     __tablename__ = "product_images"
     image_id = db.Column(db.Integer, primary_key=True)
     product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
-    image_url = db.Column(db.String(255), nullable=False)
+    image_url = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
@@ -251,8 +251,8 @@ class OrderItems(db.Model):
 # order addresses
 class OrderAddresses(db.Model):
     __tablename__ = "order_addresses"
-    address_id = db.Column(db.Integer, primary_key=True)
-    order_id = db.Column(db.Integer, db.ForeignKey("orders.order_id"), nullable=False)
+    address_id = db.Column(db.Integer)
+    order_id = db.Column(db.Integer, db.ForeignKey("orders.order_id"), primary_key=True, nullable=False)
     address_type = db.Column(db.String(20), nullable=False, primary_key=True)  # e.g., shipping, billing
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())

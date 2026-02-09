@@ -6,6 +6,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 # seeder_sqlalchemy_full.py
 from extensions import db, app, bcrypt
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import text
 from extensions import Users, Roles, UserRoles, Admins, Vendors, Customers
 from extensions import PhoneNumbers, UserPhoneNumbers, Addresses
 from extensions import Products, ProductSpecs, ProductColors, ProductCategories, ProductImages
@@ -143,6 +144,14 @@ with app.app_context():
         db.session.add(ProductCategories(category_name=cat))
     db.session.commit()
     print("Inserted product colors and categories")
+
+    # Product images
+    # runs photoSeeder.sql to seed
+    with open("scripts/photoSeeder.sql", "r") as file:
+        postgresql = file.read()
+    db.session.execute(text(postgresql))
+    db.session.commit()
+    print("Inserted product images from photoSeeder.sql")
 
     # --- CARTS AND WISHLISTS --- #
     customers_list = Customers.query.all()
