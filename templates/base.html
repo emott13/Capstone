@@ -1,16 +1,22 @@
-<!-- This is for header / footer -->
-<!DOCTYPE html>
-<html lang="en">
 {% extends "bootstrap/base.html" %}
-<body>
-    <header>
-        <h1>Header</h1>
-    </header>
-    {% block body %}
-    {% endblock %}
+{% block title %}{{ super() }} - Capstone{% endblock %}
+{% block navbar %}
+<header>
+    <h1>Header</h1>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {% block page_content %}{% endblock %}
+</div>
+
+    {% block footer %}
     <footer>
         <h1>Footer</h1>
     </footer>
+    {% endblock %}
+{% endblock %}
     
 </body>
 </html>
