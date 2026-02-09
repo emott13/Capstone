@@ -14,16 +14,40 @@
             <label class="text-capitalize" for="email">email:</label>
             <input class="form-control" type="email" name="email" placeholder="" required />
         </div>
-        <div class="">
+        <div class="form-group">
             <label class="text-capitalize" for="username">username:</label>
-            <input class="" type="text" name="username" placeholder="" required />
+            <input class="form-control" type="text" name="username" placeholder="" required />
         </div>
-        <div class="">
+        <div class="form-group">
             <label class="text-capitalize" for="password">password:</label>
-            <input class="" type="password" name="password" placeholder="" required />
+            <input class="form-control" type="password" name="password" placeholder="" required />
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="conf-password">confirm password:</label>
+            <input class="form-control" type="password" name="conf-password" placeholder="" required />
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="first_name">first name:</label>
+            <input class="form-control" type="text" name="first_name" placeholder="" required />
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="last_name">last name:</label>
+            <input class="form-control" type="text" name="last_name" placeholder="" required />
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="dob">date of birth:</label>
+            <input class="form-control" type="date" name="dob" placeholder="" required />
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="role_id">role:</label>
+            <select class="form-control" name="role" placeholder="" required>
+                {% for role in roles %} 
+                <option value="{{ role.role_id }}">{{ role.role_name|title }}</option>
+                {% endfor %}
+            </select>
         </div>
 
-        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Register Here</a></p>
+        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Login Here</a></p>
         <button class="btn" type="submit">Register</button>
     </form>
 {% endblock %}
