@@ -14,7 +14,7 @@ app.register_blueprint(view_database_bp)
 # quick route to see all routes
 @app.route("/routes")
 def routes():
-    return "<br>".join(str(r) for r in app.url_map.iter_rules())
+    return (f"<a href=\"{r}\">{r}</a><br>" for r in app.url_map.iter_rules())
 
 # simple route to check database connection
 @app.route("/db-check")
