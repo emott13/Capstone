@@ -1,15 +1,41 @@
-from flask import render_template, url_for, redirect
-# from sqlalchemy import create_engine, text, insert, Table, MetaData, update
-from flask_login import logout_user, login_required, current_user
+from flask import Flask
+from flask_bootstrap import Bootstrap
+from sqlalchemy import text
 from extensions import *
+from blueprints.viewDatabase.viewDatabase import view_database_bp
 from blueprints.login.login import login_bp
 
-
+# register blueprints
 app.register_blueprint(login_bp)
+app.register_blueprint(view_database_bp)
 
-@app.route("/test")
-def test():
-    return Users.query.all()
+# quick route to see all routes
+@app.route("/routes")
+def routes():
+    return "<br>".join(str(r) for r in app.url_map.iter_rules())
 
-if __name__ == '__main__':
+# simple route to check database connection
+@app.route("/db-check")
+def db_check():
+    try:
+        db.session.execute(text("SELECT 1"))
+        return "Database connection OK"
+    except Exception as e:
+        return f"Database error: {e}"
+    
+# simple route to list all tables in the database
+@app.route("/db-tables")
+def db_tables():
+    inspector = db.inspect(db.engine)
+    return "<br>".join(inspector.get_table_names())
+
+# simple route to show current database and schema
+@app.route("/db-info")
+def db_info():
+    result = db.session.execute(text("SELECT current_database(), current_schema()"))
+    return str(result.fetchone())
+
+
+
+if __name__ == "__main__":
     app.run(debug=True)

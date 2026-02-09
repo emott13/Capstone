@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block body %}
+<section class="container">
+    <h1>Database Viewer</h1>
+
+    <form method="POST">
+        <label for="table_name">Select Table:</label>
+        <select name="table_name" id="table_name">
+            {% for t in allowed_tables %}
+                <option value="{{ t }}" {% if t == table_name %}selected{% endif %}>{{ t }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">View</button>
+    </form>
+
+    {% if error %}
+        <p style="color:red">{{ error }}</p>
+    {% endif %}
+
+    {% if results %}
+        <h2>Table: {{ table_name }}</h2>
+        <table border="1" cellpadding="5" cellspacing="0">
+            <thead>
+                <tr>
+                    {% for col in columns %}
+                        <th>{{ col }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                    <tr>
+                        {% for col in columns %}
+                            <td>{{ row[col] }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if results|length >= 100 %}
+            <p>Showing first 100 rows only.</p>
+        {% endif %}
+    {% else %}
+        <p>No records found</p>
+    {% endif %}
+</section>
+{% endblock %}

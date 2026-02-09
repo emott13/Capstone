@@ -16,24 +16,31 @@ from flask_bcrypt import Bcrypt
 
 # Initialize Flask app
 # conn_str = "mysql://root:cset155@localhost/goods" <-- main database
-conn_str = "mysql://root:cset155@localhost/goods" 
-app = Flask(__name__)
-app.config["SQLALCHEMY_DATABASE_URI"] = conn_str
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = b'\xdak\xd2\xf7\x80,8\x0f\xbdG\xb7\x87\xe4h\xcf\xae'
+from flask_sqlalchemy import SQLAlchemy
+from flask_bcrypt import Bcrypt
+from flask_login import LoginManager
+
+db = SQLAlchemy()
+bcrypt = Bcrypt()
+login_manager = LoginManager()
+
+
+# app.config["SQLALCHEMY_DATABASE_URI"] = conn_str
+# app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+# app.config["SECRET_KEY"] = b'\xdak\xd2\xf7\x80,8\x0f\xbdG\xb7\x87\xe4h\xcf\xae'
 
 # Initialize bcrypt
-bcrypt = Bcrypt(app)
+# bcrypt = Bcrypt(app)
 
 # Initialize database and login manager
-db = SQLAlchemy(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = "login.login"
+# db = SQLAlchemy(app)
+# login_manager = LoginManager()
+# login_manager.init_app(app)
+# login_manager.login_view = "login.login"
 
 # Initialize DB the way we did the other times
-engine = create_engine(conn_str, echo=True)                                             
-conn = engine.connect()                                                                 
+# engine = create_engine(conn_str, echo=True)                                             
+# conn = engine.connect()                                                                 
 
 # User model (required for flask-login)
 # Create database
