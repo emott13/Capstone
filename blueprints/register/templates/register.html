@@ -9,34 +9,36 @@
         <p class="alert alert-danger">{{ error }}</p>
     {% endif %}
 
+
     <form id="register-form" class="" action="/register" method="post">
+        {{ register_form.hidden_tag() }}
         <div class="form-group">
-            <label class="text-capitalize" for="email">email:</label>
-            <input class="form-control" type="email" name="email" placeholder="" required />
+            {{ register_form.email.label }}
+            {{ register_form.email( class="form-control", placeholder = "Email") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="username">username:</label>
-            <input class="form-control" type="text" name="username" placeholder="" required />
+            {{ register_form.username.label }}
+            {{ register_form.username( class="form-control", placeholder = "Username") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="password">password:</label>
-            <input class="form-control" type="password" name="password" placeholder="" required />
+            {{ register_form.password.label }}
+            {{ register_form.password( class="form-control", placeholder = "Password") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="conf-password">confirm password:</label>
-            <input class="form-control" type="password" name="conf-password" placeholder="" required />
+            {{ register_form.confirm_password.label }}
+            {{ register_form.confirm_password( class="form-control", placeholder = "Confirm Password") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="first_name">first name:</label>
-            <input class="form-control" type="text" name="first_name" placeholder="" required />
+            {{ register_form.first_name.label }}
+            {{ register_form.first_name( class="form-control", placeholder = "First Name") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="last_name">last name:</label>
-            <input class="form-control" type="text" name="last_name" placeholder="" required />
+            {{ register_form.last_name.label }}
+            {{ register_form.last_name( class="form-control", placeholder = "last Name") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="dob">date of birth:</label>
-            <input class="form-control" type="date" name="dob" placeholder="" required />
+            {{ register_form.dob.label }}
+            {{ register_form.dob( class="form-control") }}
         </div>
         <div class="form-group">
             <label class="text-capitalize" for="role_id">role:</label>
@@ -48,6 +50,6 @@
         </div>
 
         <p class="">Already have an account? <a href="{{url_for('login.login')}}">Login Here</a></p>
-        <button class="btn" type="submit">Register</button>
+        {{ register_form.submit(class="btn") }}
     </form>
 {% endblock %}
