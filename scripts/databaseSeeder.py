@@ -139,7 +139,7 @@ with app.app_context():
     db.session.commit()
 
     # Product categories
-    categories = ['Soils','Pots','Seeds','Tools','Fertilizers']
+    categories = ['Soils','Fertilizers', 'Seeds', 'Bulbs', 'Plants', 'Trees', 'Pots', 'Lawn Care', 'Garden Tools', 'Outdoor Furniture', 'Outdoor Decor', 'Indoor Gardening']
     for cat in categories:
         db.session.add(ProductCategories(category_name=cat))
     db.session.commit()
