@@ -6,12 +6,14 @@ from blueprints.viewDatabase.viewDatabase import view_database_bp
 from blueprints.login.login import login_bp
 from blueprints.register.register import register_bp
 from blueprints.home.home import home_bp
+from blueprints.viewProduct.viewProduct import view_product_bp
 
 # register blueprints
 app.register_blueprint(login_bp)
 app.register_blueprint(register_bp)
 app.register_blueprint(view_database_bp)
 app.register_blueprint(home_bp)
+app.register_blueprint(view_product_bp)
 
 # quick route to see all routes
 @app.route("/routes")
