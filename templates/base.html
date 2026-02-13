@@ -1,20 +1,65 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}{{ super() }} - Capstone{% endblock %}
 {% block navbar %}
-<header>
-    <h1>Header</h1>
-</header>
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Hibiscus</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li class="active"><a href="#">Home</a></li>
+      <li><a href="#">Best Sellers</a></li>
+      <li><a href="#">Featured Items</a></li>
+      <li><a href="#">SALE</a></li>
+    </ul>
+    <form action="" class="navbar-form navbar-left">
+        <div class="form-group">
+            <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+    </form>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+    </ul>
+  </div>
+</nav>
+<nav class="navbar">
+    <div class="container">
+        <ul class="nav navbar-nav">
+            <li><a href="#">Soils</a></li>
+            <li><a href="#">Fertilizers</a></li>
+            <li><a href="#">Seeds</a></li>
+            <li><a href="#">Bulbs</a></li>
+            <li><a href="#">Plants</a></li>
+            <li><a href="#">Trees</a></li>
+            <li><a href="#">Pots</a></li>
+            <li><a href="#">Lawn Tools</a></li>
+            <li><a href="#">Garden Tools</a></li>
+            <li><a href="#">Outdoor Furniture</a></li>
+            <li><a href="#">Outdoor Decor</a></li>
+            <li><a href="#">Indoor Gardening</a></li>
+        </ul>
+    </div>
+</nav>
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    {% block page_content %}{% endblock %}
-</div>
+    <div class="container" style="min-height: 80vh;">
+        {% block page_content %}
+        {% endblock %}
+    </div>
 
     {% block footer %}
-    <footer>
-        <h1>Footer</h1>
-    </footer>
+        <!-- <footer class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li><a href="#">About Us</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="#">Privacy Policy</a></li>
+                <li><a href="#">Terms of Service</a></li>
+            </ul>
+        </footer> -->
     {% endblock %}
 {% endblock %}
     
