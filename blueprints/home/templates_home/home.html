@@ -1,4 +1,8 @@
 <style>
+    .jumbotron{
+        background-color: var(--green-1) !important;
+        color: var(--tan-2) !important;
+    }
     .img-cover{
         object-fit: cover;
         object-position: center;
@@ -13,6 +17,14 @@
         padding: 50px;
         border-radius: 50%;
     }
+    .btn{
+        background-color: var(--orange-2) !important;
+        border-color: var(--orange-2) !important;
+    }
+    .btn:hover{
+        background-color: var(--orange-1) !important;
+        border-color: var(--orange-1) !important;
+    }
 </style>
 {% extends "base.html" %}
 {% block page_content %}
@@ -25,7 +37,7 @@
         {% for category in productsCategories %}
         <div class="col-sm-3">
             <div class="card card_circle">
-                <div class="ratio ratio-1x1 rounded-circle" >
+                <div class="ratio ratio-1x1 rounded-circle">
                 </div>
                 <div class="card_body">
                     <h5 class="card-title">{{ category.category_name }}</h5>
