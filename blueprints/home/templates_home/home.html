@@ -1,5 +1,6 @@
 <style>
     .jumbotron{
+        margin-top: 20px;
         background-color: var(--green-1) !important;
         color: var(--tan-2) !important;
     }
@@ -8,14 +9,19 @@
         object-position: center;
     }
     .card_circle{
-        background-color: var(--green-2);
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
         margin-top: 30px;
         border: 10px solid transparent;
+        border-radius: 50%;
+        background-color: var(--green-2);
         height: 200px;
         width: 200px;
         padding: 50px;
-        border-radius: 50%;
+        font-family: var(--font-main);
+        color: var(--tan-2);
     }
     .btn{
         background-color: var(--orange-2) !important;
@@ -24,6 +30,69 @@
     .btn:hover{
         background-color: var(--orange-1) !important;
         border-color: var(--orange-1) !important;
+    }
+
+    /* -- categories -- */
+
+    .soils{
+        background-image: url(https://www.thetreecenter.com/c/uploads/2018/01/Garden_Soil_1-copy-jpg.webp);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .fertilizers{
+        background-image: url(https://www.gardendesign.com/pictures/images/900x705Max/site_3/applying-fertilizer-blue-trowel-fertilizing-tomato-plant-shutterstock-com_15275.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .seeds{
+        background-image: url(https://cdn.mos.cms.futurecdn.net/2KimaEYUTZk2qzNZjnLWYP.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .bulbs{
+        background-image: url(https://millcreekgardens.com/wp-content/uploads/2017/08/Depositphotos_65388297_m-2015.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .plants{
+        background-image: url(https://www.wagnergreenhouses.com/wp-content/uploads/2017/01/shutterstock_2061262208-1-scaled.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .trees{
+        background-image: url(https://t3.ftcdn.net/jpg/14/62/47/02/360_F_1462470203_3wXjC5IeReCDn6LgJwQFxFxvmH3iLzUX.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .pots{
+        background-image: url(https://mulhalls.com/wp-content/uploads/2024/01/Template-Website-Post-Image3.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .lawn_care{
+        background-image: url(https://huntersgardencentre.com/wp-content/uploads/2025/04/Blog-Post-Featured-Pic-lawn-care.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .garden_tools{
+        background-image: url(https://m.media-amazon.com/images/I/81BPQvrklaL._AC_UF350,350_QL80_.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .outdoor_furniture{
+        background-image: url(https://images.thdstatic.com/productImages/d86b6b44-e9c5-4005-aebd-2986d252ce6f/svn/hooowooo-fire-pit-patio-sets-rfp54-tbs210-64_600.jpg);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .outdoor_decor{
+        background-image: url(https://resources.itemint.com/hs-fs/hubfs/acogedor-patio-trasero-flores-al-atardecer.webp?width=1000&height=667&name=acogedor-patio-trasero-flores-al-atardecer.webp);
+        background-size: auto 120%;
+        background-position: center;
+    }
+    .indoor_gardening{
+        background-image: url(https://www.greengenius.com.au/cdn/shop/articles/6809d4a59bd9ce97f26c0270-1745475945147_3f99913f-dca2-487c-bcd4-300cd6b3de39.jpg?v=1755573292);
+        background-size: auto 120%;
+        background-position: center;
     }
 </style>
 {% extends "base.html" %}
@@ -34,17 +103,124 @@
         <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
     </div>
     <div class="row">
-        {% for category in productsCategories %}
         <div class="col-sm-3">
-            <div class="card card_circle">
+            <div class="card card_circle soils">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
                 <div class="card_body">
-                    <h5 class="card-title">{{ category.category_name }}</h5>
-                    <a href="#" class="btn btn-primary">View</a>
+                    <a href="#" class="btn btn-primary">View Soils</a>
                 </div>
             </div>
         </div>
-        {% endfor %}
+
+        <div class="col-sm-3">
+            <div class="card card_circle fertilizers">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Fertilizers</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle seeds">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Seeds</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle bulbs">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Bulbs</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle plants">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Plants</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle trees">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Trees</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle pots">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Pots</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle lawn_care">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Lawn Care</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle garden_tools">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Garden Tools</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle outdoor_furniture">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Outdoor Furniture</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle outdoor_decor">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Outdoor Decor</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-3">
+            <div class="card card_circle indoor_gardening">
+                <div class="ratio ratio-1x1 rounded-circle">
+                </div>
+                <div class="card_body">
+                    <a href="#" class="btn btn-primary">View Indoor Gardening</a>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock %}
