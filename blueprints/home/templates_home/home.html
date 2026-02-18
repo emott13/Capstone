@@ -1,6 +1,7 @@
 <style>
     .jumbotron{
-        margin-top: 20px;
+        margin-top: 50px;
+        min-height: fit-content;
         background-color: var(--green-1) !important;
         color: var(--tan-2) !important;
     }
@@ -31,6 +32,20 @@
         background-color: var(--orange-1) !important;
         border-color: var(--orange-1) !important;
     }
+    .container_specials{
+        margin-top: 50px;
+        height: 200px;
+    }
+    .col-sm-4{
+        padding: 20px;
+        background-color: var(--green-1);
+    }
+    .card{
+        /* background-color: var(--orange-1); */
+        color: var(--tan-2);
+        font-size: 20px;
+    }
+    
 
     /* -- categories -- */
 
@@ -219,6 +234,35 @@
                 </div>
                 <div class="card_body">
                     <a href="#" class="btn btn-primary">View Indoor Gardening</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container_specials mt-5">
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body best_sellers" id="best_sellers">
+                    <h2 class="card-title">Best Sellers</h2>
+                    <p class="card-text">Shop our best-selling products</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <div class="card-body new" id="new">
+                    <h2 class="card-title">New Arrivals</h2>
+                    <p class="card-text">Check out our latest products</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card" id="sale">
+                <div class="card-body sale">
+                    <h2 class="card-title">On Sale</h2>
+                    <p class="card-text">Don't miss our current discounts</p>
+                    <a href="#" class="btn btn-primary">Learn More</a>
                 </div>
             </div>
         </div>
