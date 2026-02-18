@@ -1,0 +1,57 @@
+<style>
+    .image-container {
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+    }
+    .image-container img {
+        width: 100%;
+        display: block;
+        transform: scale(1.05);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .img-hover {
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+    .image-container:hover .img-hover {
+        opacity: 1;
+    }
+    .image-container:hover .img-primary {
+        opacity: 0;
+    }
+</style>
+
+{% extends "base.html" %}
+{% block page_content %}
+    <div class="container">
+        <h1 class="mt-5">Search Results</h1>
+        <p class="lead">Showing results for "{{ query }}"</p>
+        <hr>
+        {% if products %}
+            <div class="row">
+                {% for product in products %}
+                    <a href="#" class="col-sm-3 mb-4 list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="image-container">
+                            {% set images = image_dict.get(product.product_id, []) %}
+
+                            {% if images|length > 0 %}
+                                <img src="{{ images[0].image_url }}" class="img-primary">
+                            {% endif %}
+
+                            {% if images|length > 1 %}
+                                <img src="{{ images[1].image_url }}" class="img-hover">
+                            {% endif %}
+                        </div>
+                        <h5 class="mb-1">{{ product.name }}</h5>
+                        <p class="mb-1">{{ product.description }}</p>
+                        <small>${{ product.price }}</small>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No products found.</p>
+        {% endif %}
+{% endblock %}
