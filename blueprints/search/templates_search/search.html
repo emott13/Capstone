@@ -34,24 +34,29 @@
         <p class="lead">Showing results for "{{ query }}"</p>
         <hr>
         {% if products %}
-            <div class="row">
+            <div class="row mx-4">
                 {% for product in products %}
-                    <a href="#" class="col-sm-3 mb-4 list-group-item list-group-item-action flex-column align-items-start">
-                        <h4 class="mb-1">{{ product.product_name }}</h4>
-                        <div class="image-container">
-                            {% set images = image_dict.get(product.product_id, []) %}
+                    <div class="product list-group-item col-sm-3">
+                        <a href="#" class="card">
+                            <div class="image-container card-img-top">
+                                {% set images = image_dict.get(product.product_id, []) %}
 
-                            {% if images|length > 0 %}
-                                <img src="{{ images[0].image_url }}" class="img-primary">
-                            {% endif %}
+                                {% if images|length > 0 %}
+                                    <img src="{{ images[0].image_url }}" class="img-primary">
+                                {% endif %}
 
-                            {% if images|length > 1 %}
-                                <img src="{{ images[1].image_url }}" class="img-hover">
-                            {% endif %}
-                        </div>
-                        <p class="mb-1">{{ product.description }}</p>
-                        <small>${{ product.price }}</small>
-                    </a>
+                                {% if images|length > 1 %}
+                                    <img src="{{ images[1].image_url }}" class="img-hover">
+                                {% endif %}
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">{{ product.product_name }}</h4>
+                                <p class="card-text">{{ product.description }}</p>
+                                <small>${{ product.price }}</small>
+                            </div>
+                        </a>
+                    </div>
+                    
                 {% endfor %}
             </div>
         {% else %}
