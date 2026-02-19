@@ -9,21 +9,47 @@
         <p class="alert alert-danger">{{ error }}</p>
     {% endif %}
 
+
     <form id="register-form" class="" action="/register" method="post">
+        {{ register_form.hidden_tag() }}
         <div class="form-group">
-            <label class="text-capitalize" for="email">email:</label>
-            <input class="form-control" type="email" name="email" placeholder="" required />
+            {{ register_form.email.label }}
+            {{ register_form.email( class="form-control", placeholder = "Email") }}
         </div>
-        <div class="">
-            <label class="text-capitalize" for="username">username:</label>
-            <input class="" type="text" name="username" placeholder="" required />
+        <div class="form-group">
+            {{ register_form.username.label }}
+            {{ register_form.username( class="form-control", placeholder = "Username") }}
         </div>
-        <div class="">
-            <label class="text-capitalize" for="password">password:</label>
-            <input class="" type="password" name="password" placeholder="" required />
+        <div class="form-group">
+            {{ register_form.password.label }}
+            {{ register_form.password( class="form-control", placeholder = "Password") }}
+        </div>
+        <div class="form-group">
+            {{ register_form.confirm_password.label }}
+            {{ register_form.confirm_password( class="form-control", placeholder = "Confirm Password") }}
+        </div>
+        <div class="form-group">
+            {{ register_form.first_name.label }}
+            {{ register_form.first_name( class="form-control", placeholder = "First Name") }}
+        </div>
+        <div class="form-group">
+            {{ register_form.last_name.label }}
+            {{ register_form.last_name( class="form-control", placeholder = "last Name") }}
+        </div>
+        <div class="form-group">
+            {{ register_form.dob.label }}
+            {{ register_form.dob( class="form-control") }}
+        </div>
+        <div class="form-group">
+            <label class="text-capitalize" for="role_id">role:</label>
+            <select class="form-control" name="role" placeholder="" required>
+                {% for role in roles %} 
+                <option value="{{ role.role_id }}">{{ role.role_name|title }}</option>
+                {% endfor %}
+            </select>
         </div>
 
-        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Register Here</a></p>
-        <button class="btn" type="submit">Register</button>
+        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Login Here</a></p>
+        {{ register_form.submit(class="btn") }}
     </form>
 {% endblock %}
