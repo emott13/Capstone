@@ -1,10 +1,83 @@
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
+</head>
+<style>
+    :root{
+    --font-main: 'Nunito Sans', sans-serif;
+    --green-1: #0A400C;
+    --green-2: #819067;
+    --tan-1: #B1AB86;
+    --tan-2: #FEFAE0;
+    --orange-1: #E67E22;
+    --orange-2: #f3ae53;
+
+    --info-blue: #93bbc7;
+    --warning-yellow: #F9CB43;
+    --warning-yellow-light: #f9e79f;
+    --error-red: #a03a13;
+    --error-red-light: #F5824A;
+
+    /* Order properties:
+    +-------------------+
+    |      display      |
+    |     properties    |
+    |                   |
+    |      margin       |
+    |                   |
+    |  +---border----+  |
+    |  |             |  |
+    |  |  background |  |
+    |  |    color    |  |
+    |  |             |  |
+    |  |   padding   |  |
+    |  |             |  |
+    |  |  +-------+  |  |
+    |  |  | height|  |  |
+    |  |  | width |  |  |
+    |  |  | list  |  |  |
+    |  |  | text  |  |  |
+    |  |  | color |  |  |
+    |  |  | font  |  |  |
+    |  |  | cursor|  |  |
+    |  |  +-------+  |  |
+    |  +-------------+  |
+    +-------------------+ 
+*/
+
+}
+
+body{
+    font-family: var(--font-main);
+    background-color: var(--tan-2);
+}
+
+.navbar{
+    font-family: var(--font-main);
+    background-color: var(--green-1);
+    margin: 0 !important;
+}
+.navbar-nav > li > a{
+    color: var(--tan-2) !important;
+}
+.navbar-nav > li > a:hover{
+    background-color: var(--orange-2);
+    color: var(--green-1) !important;
+}
+.navbar-nav > li.active > a{
+    background-color: var(--orange-2);
+    color: var(--green-1) !important;
+}
+</style>
+
 {% extends "bootstrap/base.html" %}
 {% block title %}{{ super() }} - Capstone{% endblock %}
 {% block navbar %}
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Hibiscus</a>
+      <a class="navbar-brand" href="#" style="color: var(--orange-1);">Hibiscus</a>
     </div>
     <ul class="nav navbar-nav">
       <li class="active"><a href="#">Home</a></li>
@@ -25,7 +98,7 @@
     </ul>
   </div>
 </nav>
-<nav class="navbar">
+<nav class="navbar" style="background-color: var(--green-2);">
     <div class="container">
         <ul class="nav navbar-nav">
             <li><a href="#">Soils</a></li>

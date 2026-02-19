@@ -4,6 +4,33 @@
     box-sizing: border-box;
 }
 
+/* Order properties:
++-------------------+
+|      display      |
+|     properties    |
+|                   |
+|      margin       |
+|                   |
+|  +---border----+  |
+|  |             |  |
+|  |  background |  |
+|  |    color    |  |
+|  |             |  |
+|  |   padding   |  |
+|  |             |  |
+|  |  +-------+  |  |
+|  |  | height|  |  |
+|  |  | width |  |  |
+|  |  | list  |  |  |
+|  |  | text  |  |  |
+|  |  | color |  |  |
+|  |  | font  |  |  |
+|  |  | cursor|  |  |
+|  |  +-------+  |  |
+|  +-------------+  |
++-------------------+ 
+*/
+
 :root{
     --green-1: #0A400C;
     --green-2: #819067;
@@ -17,12 +44,4 @@
     --warning-yellow-light: #f9e79f;
     --error-red: #a03a13;
     --error-red-light: #F5824A;
-
-}
-
-.header {
-    background-color: #333;
-    color: #fff;
-    padding: 20px;
-    text-align: center;
 }
