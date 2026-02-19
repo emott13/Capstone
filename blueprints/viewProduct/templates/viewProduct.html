@@ -2,8 +2,46 @@
 {% block title %}Product View {{ super() }}{% endblock %}
 {% block styles %}{{ super() }}{% endblock %}
 {% block page_content %}
-    <h1>Product View</h1>
-    <div>
-        <p>This is what a product page will look like. Display info here and stuff.</p>
+
+<div class="row d-flex">
+
+    <div class="col-sm-6 bg-warning">
+        <div class="card">
+            Image display will go here
+        </div>
     </div>
+
+    <div class="col-sm-6 bg-info">
+        <div class="card">
+            <h2>Product Name</h2>
+            <div class="row">
+                <div class="col-sm-6">
+                    Vendor Name
+                </div>
+                <div class="col-sm-6">
+                    Rating / 5
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="card">
+            <h4>Description</h4>
+            <div>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at porta odio.
+                Aenean laoreet elementum mauris, et tincidunt nunc congue in. Curabitur ante magna,
+                vestibulum et pellentesque eu, tristique quis metus. Vestibulum lacinia justo quis
+                augue rhoncus, at bibendum lorem faucibus. Class aptent taciti sociosqu ad litora
+                torquent per conubia nostra, per inceptos himenaeos. Praesent arcu ante, gravida
+                vitae justo ut, molestie commodo est. Donec pharetra consectetur erat, sit amet
+                scelerisque quam lacinia vel. Interdum et malesuada fames ac ante ipsum primis in
+                faucibus. Integer placerat bibendum sem, sit amet pharetra augue vulputate ut.
+                Nunc elit mi, eleifend et luctus et, dictum vel nisi. Curabitur mattis condimentum
+                dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
+            </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
 {% endblock %}
