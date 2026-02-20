@@ -1,47 +1,112 @@
+<style>
+    .outer-wrapper{
+        margin: 50px 0 50px 0;
+    }
+    .row-eq-height {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .product-img-main{
+        max-height: 100%;
+        max-width: 100%;
+    }
+    .ruler{
+        margin-top: 30px;
+        margin-bottom: 30px;
+        border: none;
+        border-top: 1px solid black;
+        background: none;
+        height: 0;
+    }
+    .description-box{
+        border: 1px solid black;
+        max-height: 300px;
+        overflow-y: scroll;
+    }
+</style>
+
 {% extends "base.html" %}
-{% block title %}Product View {{ super() }}{% endblock %}
+{% block title %}Product Name {{ super() }}{% endblock %}
 {% block styles %}{{ super() }}{% endblock %}
 {% block page_content %}
 
-<div class="row d-flex">
+<div class="outer-wrapper">
+    <div class="row row-eq-height d-flex">
 
-    <div class="col-sm-6 bg-warning">
-        <div class="card">
-            Image display will go here
+        <div class="col-sm-6">
+            <!-- src is currently just an example, make dynamic later -->
+            <img class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200">
         </div>
-    </div>
 
-    <div class="col-sm-6 bg-info">
-        <div class="card">
-            <h2>Product Name</h2>
-            <div class="row">
-                <div class="col-sm-6">
-                    Vendor Name
+        <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
+            <h1>Product Name</h1>
+            <h4 style="margin: 0 0 10px 0;"><span class="glyphicon glyphicon-user"></span> Vendor Name</h4>
+
+            <div class="row" style="margin-bottom: 10px;">
+                <div class="col-sm-6" style="padding: 0 15px;">
+                    <h4>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        <span class="glyphicon glyphicon-star-empty"></span>
+                        0.0 <a href="#">(0 Reviews)</a>
+                    </h4>
                 </div>
-                <div class="col-sm-6">
-                    Rating / 5
+                <div class="col-sm-6" style="padding: 0 15px;">
+                    <a href="#"><h4>Write a Review...</h4></a>
                 </div>
             </div>
-        </div>
-        <br>
-        <div class="card">
-            <h4>Description</h4>
+
+            <h3 style="margin-bottom: 30px;">$00.00</h3>
+            
+            <form>
+                <h4>Quantity</h4>
+                <div class="row">
+                    <div class="col-sm-3" style="padding-right: 0;">
+                        <input type="number" value="1" min="1" style="width: 100%;">
+                    </div>
+                    <div class="col-sm-9" style="padding-left: 0;">
+                        <button style="width: 100%;"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                    </div>
+                </div>
+            </form>
+
+            <hr class="ruler">
+
             <div>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus at porta odio.
-                Aenean laoreet elementum mauris, et tincidunt nunc congue in. Curabitur ante magna,
-                vestibulum et pellentesque eu, tristique quis metus. Vestibulum lacinia justo quis
-                augue rhoncus, at bibendum lorem faucibus. Class aptent taciti sociosqu ad litora
-                torquent per conubia nostra, per inceptos himenaeos. Praesent arcu ante, gravida
-                vitae justo ut, molestie commodo est. Donec pharetra consectetur erat, sit amet
-                scelerisque quam lacinia vel. Interdum et malesuada fames ac ante ipsum primis in
-                faucibus. Integer placerat bibendum sem, sit amet pharetra augue vulputate ut.
-                Nunc elit mi, eleifend et luctus et, dictum vel nisi. Curabitur mattis condimentum
-                dui. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae.
-            </div>
+                <h4>Description</h4>
+                <div class="description-box">
+                    <p>
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ex ex.
+                        Ut placerat fringilla erat vel molestie. Proin tincidunt elit vel dui
+                        placerat tempus. Nunc ultrices sollicitudin diam, eu tincidunt arcu congue
+                        quis. Etiam faucibus aliquet elementum. Pellentesque molestie congue lobortis.
+                        Aliquam viverra arcu quis eros maximus commodo. Nunc in felis est. Cras mollis
+                        lacus in eros elementum dictum. Quisque aliquam, est et aliquet laoreet, lacus
+                        nisl ultrices est, quis finibus felis mauris ornare eros. Donec in massa quam.
+                        Etiam a leo velit. Nullam ut diam interdum, hendrerit augue ut, sollicitudin ligula.<br><br>
+
+                        Etiam nec nunc sed eros tristique vulputate non eu felis. In lobortis augue ac massa
+                        pulvinar, vel dignissim nisi ullamcorper. Aliquam mi dui, tempus a aliquam vel, luctus
+                        non sem. Sed vitae tempor dolor. Sed eget rhoncus nisl, vitae rhoncus elit. Sed diam sem,
+                        gravida eu fringilla non, dignissim non leo. Vivamus vitae tristique ligula. Morbi eu
+                        turpis condimentum, eleifend ex ut, tempus erat. In consequat rutrum augue. In nec consequat
+                        nisi. Duis lacus tortor, feugiat dictum maximus a, vulputate eget purus. Vestibulum ante
+                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut vitae mi dui.
+                        Nullam velit ante, congue et semper in, vestibulum a eros. Morbi sodales tellus lorem.
+                        Proin sed blandit libero.<br><br>
+
+                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ex ex.
+                        Ut placerat fringilla erat vel molestie. Proin tincidunt elit vel dui
+                        placerat tempus. Nunc ultrices sollicitudin diam, eu tincidunt arcu congue
+                        quis.
+                    </p>
+                </div>
             </div>
         </div>
-    </div>
 
+    </div>
 </div>
 
 {% endblock %}
