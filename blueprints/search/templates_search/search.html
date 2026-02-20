@@ -22,6 +22,9 @@
     .image-container:hover .img-primary {
         opacity: 0;
     }
+    .col-sm-3 {
+        height: 475px;
+    }
 </style>
 
 {% extends "base.html" %}
@@ -34,6 +37,7 @@
             <div class="row">
                 {% for product in products %}
                     <a href="#" class="col-sm-3 mb-4 list-group-item list-group-item-action flex-column align-items-start">
+                        <h4 class="mb-1">{{ product.product_name }}</h4>
                         <div class="image-container">
                             {% set images = image_dict.get(product.product_id, []) %}
 
@@ -45,7 +49,6 @@
                                 <img src="{{ images[1].image_url }}" class="img-hover">
                             {% endif %}
                         </div>
-                        <h5 class="mb-1">{{ product.name }}</h5>
                         <p class="mb-1">{{ product.description }}</p>
                         <small>${{ product.price }}</small>
                     </a>
