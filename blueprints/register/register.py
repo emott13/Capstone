@@ -59,13 +59,14 @@ def register():
                      first_name=register_form.first_name.data,
                      dob=register_form.dob.data,
         )
-        db.session.add(user)
-        db.session.commit()
+        print(request.args)
+        # db.session.add(user)
+        # db.session.commit()
         
         return "Success"
 
     roles = Roles.query.order_by(Roles.role_id.desc())
 
     return render_template("register.html", error=error,
-                           roles=roles, register_form=register_form
+                           roles=roles, register_form=register_form,
     )
