@@ -12,6 +12,8 @@
     --tan-2: #FEFAE0;
     --orange-1: #E67E22;
     --orange-2: #f3ae53;
+    --purple-1: #400a3e;
+    --purple-2: #8d6790;
 
     --info-blue: #93bbc7;
     --warning-yellow: #F9CB43;
@@ -62,12 +64,24 @@ body{
     color: var(--tan-2) !important;
 }
 .navbar-nav > li > a:hover{
-    background-color: var(--orange-2);
+    background-color: var(--orange-2) !important;
     color: var(--green-1) !important;
 }
+.navbar-nav > li.boostrap-select > a{
+    background-color: var(--purple-2) !important;
+}
 .navbar-nav > li.active > a{
-    background-color: var(--orange-2);
+    background-color: var(--orange-2) !important;
     color: var(--green-1) !important;
+}
+.search-btn{
+    background-color: var(--purple-2) !important;
+    border: var(--purple-2) 1px solid !important;
+    height: 34px;
+}
+.search-btn:hover{
+    background-color: var(--purple-1) !important;
+    border: var(--purple-1) 1px solid !important;
 }
 </style>
 
@@ -85,11 +99,11 @@ body{
       <li><a href="#">Featured Items</a></li>
       <li><a href="#">SALE</a></li>
     </ul>
-    <form action="" class="navbar-form navbar-left">
+    <form action="{{ url_for('search.search') }}" class="navbar-form navbar-left">
         <div class="form-group">
-            <input type="text" class="form-control" placeholder="Search">
+            <input type="text" class="form-control" placeholder="Search" name="search">
         </div>
-        <button class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+        <button class="btn btn-default search-btn"><span class="glyphicon glyphicon-search" style="color: var(--tan-2);"></span></button>
     </form>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
@@ -101,18 +115,18 @@ body{
 <nav class="navbar" style="background-color: var(--green-2);">
     <div class="container">
         <ul class="nav navbar-nav">
-            <li><a href="#">Soils</a></li>
-            <li><a href="#">Fertilizers</a></li>
-            <li><a href="#">Seeds</a></li>
-            <li><a href="#">Bulbs</a></li>
-            <li><a href="#">Plants</a></li>
-            <li><a href="#">Trees</a></li>
-            <li><a href="#">Pots</a></li>
-            <li><a href="#">Lawn Care</a></li>
-            <li><a href="#">Garden Tools</a></li>
-            <li><a href="#">Outdoor Furniture</a></li>
-            <li><a href="#">Outdoor Decor</a></li>
-            <li><a href="#">Indoor Gardening</a></li>
+            <li><a href="{{ url_for('search.search', category='Soils') }}">Soils</a></li>
+            <li><a href="{{ url_for('search.search', category='Fertilizers')}}">Fertilizers</a></li>
+            <li><a href="{{ url_for('search.search', category='Seeds') }}">Seeds</a></li>
+            <li><a href="{{ url_for('search.search', category='Bulbs') }}">Bulbs</a></li>
+            <li><a href="{{ url_for('search.search', category='Plants') }}">Plants</a></li>
+            <li><a href="{{ url_for('search.search', category='Trees') }}">Trees</a></li>
+            <li><a href="{{ url_for('search.search', category='Pots') }}">Pots</a></li>
+            <li><a href="{{ url_for('search.search', category='Lawn care') }}">Lawn Care</a></li>
+            <li><a href="{{ url_for('search.search', category='Garden tools') }}">Garden Tools</a></li>
+            <li><a href="{{ url_for('search.search', category='Outdoor furniture') }}">Outdoor Furniture</a></li>
+            <li><a href="{{ url_for('search.search', category='Outdoor decor') }}">Outdoor Decor</a></li>
+            <li><a href="{{ url_for('search.search', category='Indoor gardening') }}">Indoor Gardening</a></li>
         </ul>
     </div>
 </nav>

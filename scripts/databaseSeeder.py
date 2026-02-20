@@ -114,7 +114,7 @@ with app.app_context():
     vendors_list = Vendors.query.all()
     products_list = []
     for vendor in vendors_list:
-        for _ in range(randint(1, 5)):
+        for _ in range(randint(5, 10)):
             product = Products(
                 vendor_id=vendor.vendor_id,
                 product_name=fake.catch_phrase(),
@@ -144,6 +144,20 @@ with app.app_context():
         db.session.add(ProductCategories(category_name=cat))
     db.session.commit()
     print("Inserted product colors and categories")
+
+    # --- ASSIGN PRODUCTS TO CATEGORIES (Many-to-Many) --- #
+    # can be adjusted later to hard code categories for specific products if needed
+    categories_list = ProductCategories.query.all()
+
+    for product in products_list:
+        # each product gets 1–3 random categories
+        assigned_categories = sample(categories_list, randint(1, 3))
+
+        for category in assigned_categories:
+            product.categories.append(category)
+
+    db.session.commit()
+    print("Assigned categories to products")
 
     # Product images
     # runs photoSeeder.sql to seed

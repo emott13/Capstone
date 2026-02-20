@@ -53,6 +53,24 @@ def load_user(user_id):
 engine = create_engine(conn_str, echo=True)                                             
 conn = engine.connect()                                                                 
 
+
+# product category map
+product_category_map = db.Table(
+    "product_category_map",
+    db.Column(
+        "product_id",
+        db.Integer,
+        db.ForeignKey("products.product_id", ondelete="CASCADE"),
+        primary_key=True
+    ),
+    db.Column(
+        "category_id",
+        db.Integer,
+        db.ForeignKey("product_categories.category_id", ondelete="CASCADE"),
+        primary_key=True
+    )
+)
+
 # Define models here
 # Users
 class Users(db.Model):
@@ -146,13 +164,18 @@ class Addresses(db.Model):
 # products
 class Products(db.Model):
     __tablename__ = "products"
-    product_id = db.Column(db.Integer, primary_key=True)
+    product_id = db.Column(db.BigInteger, primary_key=True)
     vendor_id = db.Column(db.BigInteger, db.ForeignKey("vendors.vendor_id"), nullable=False)
     product_name = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
     price = db.Column(db.Integer, nullable=False)  # Store price in cents to avoid float issues
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+    categories = db.relationship(
+        "ProductCategories",
+        secondary=product_category_map,
+        backref=db.backref("products", lazy="dynamic")
+    )
 
 # product specs
 class ProductSpecs(db.Model):
