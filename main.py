@@ -53,3 +53,8 @@ def test():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    # # host="::" allows ipv6. Not nessessary but I thought it was cool
+    # ipv4 still works if I have this on, but I'm going to leave it off 
+    # just in case it doesn't work for you all
+    # app.run(debug=True, host="::") 

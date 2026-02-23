@@ -1,11 +1,11 @@
-import time
+from datetime import datetime
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_user
 from sqlalchemy import text
 from extensions import Users, UserRoles, Roles, bcrypt, db
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
-from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
 
 class RegisterForm(FlaskForm):    
     username = StringField('Username',
@@ -23,26 +23,35 @@ class RegisterForm(FlaskForm):
         validators=[
             InputRequired(),
             Length(min=8, max=255),
-            Regexp(regex="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*])", message="Password must contain at least 1 capital, 1 lowercase, 1 number, and a special character"),
+            Regexp(regex="^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$%^&*])", message="Password must contain at least 1 capital, 1 lowercase, 1 number, and a special character."),
         ])
     confirm_password = PasswordField('Confirm Password',
         validators=[
             InputRequired(),
-            EqualTo('password'),
+            EqualTo('password', message="Passwords must match."),
         ])
     first_name = StringField('First Name',
         validators=[
             InputRequired(), 
+            Length(max=50),
         ])
     last_name = StringField('Last Name',
         validators=[
             InputRequired(), 
+            Length(max=50),
         ])
     dob = DateField('Date Of Birth',
         validators=[
             InputRequired(),
+            
         ])
     submit = SubmitField('Sign Up')
+
+    def validate_dob(form, field):
+        if datetime.strptime(field.data, '%Y-%m-%d') < datetime(1900, 1, 1):
+            raise ValidationError("Date of birth must be greater than the year 1900")
+        elif field.data > datetime.today().strftime('%Y-%m-%d'):
+            raise ValidationError("Date of birth can not be in the future")
 
 register_bp = Blueprint("register", __name__, static_folder="register_static",
                   template_folder="templates")
@@ -52,6 +61,7 @@ register_bp = Blueprint("register", __name__, static_folder="register_static",
 def register():
     register_form = RegisterForm()
     error = request.args.get("error", None)
+    print(register_form.dob.data)
     if register_form.validate_on_submit():
         error = register_post(register_form)
         if not error:
