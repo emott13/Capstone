@@ -2,6 +2,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from sqlalchemy import text
 from extensions import *
+from flask_login import login_required, current_user
 from blueprints.viewDatabase.viewDatabase import view_database_bp
 from blueprints.login.login import login_bp
 from blueprints.register.register import register_bp
@@ -42,6 +43,11 @@ def db_tables():
 def db_info():
     result = db.session.execute(text("SELECT current_database(), current_schema()"))
     return str(result.fetchone())
+
+@login_required
+@app.route("/test")
+def test():
+    return f"{current_user}"
 
 
 
