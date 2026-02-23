@@ -37,7 +37,7 @@ def login():
 
 
 def login_post(login_form) -> str:
-    """Runs the login post verifications. Returns the error if there is any"""
+    """Runs the login post verifications and logic. Returns the error if there is any"""
     email = request.form.get("username")
     password = request.form.get("password")
 
