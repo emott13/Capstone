@@ -8,8 +8,15 @@
 {% block page_content %}
     <h1 class="text-center">Register</h1>
     
-    {% if error %}
-        <p class="alert alert-danger">{{ error }}</p>
+    {% if register_form.errors or error %}
+        <div class="alert alert-danger">
+            {{ error if error }}
+            <ul class="list-unstyled">
+            {% for er in register_form.errors.items() %}
+                <li class="">{{ er }}</li>
+            {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
 
