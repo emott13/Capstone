@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template, request
 from sqlalchemy import text
 from extensions import conn
+from extensions import db
+
 
 search_bp = Blueprint('search', __name__, static_folder='static_search', template_folder='templates_search')
 
@@ -35,11 +37,13 @@ def search():
     # Category filter
     if category:
         sql += " AND pc.category_name ILIKE :category"
-        params["category"] = category
+        params["category"] = f"%{category}%"
 
     sql += " ORDER BY p.created_at DESC"
 
-    products = conn.execute(text(sql), params).fetchall()
+    # products = conn.execute(text(sql), params).fetchall()
+    # use session instead of raw connection
+    products = db.session.execute(text(sql), params).fetchall()
 
     image_dict = getFirstTwoProductImages(products)
 

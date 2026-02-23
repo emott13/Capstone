@@ -37,7 +37,7 @@
             <div class="row mx-4">
                 {% for product in products %}
                     <div class="product list-group-item col-sm-3">
-                        <a href="#" class="card">
+                        <a href="{{ url_for('viewProduct.viewProduct') }}" class="card">
                             <div class="image-container card-img-top">
                                 {% set images = image_dict.get(product.product_id, []) %}
 
