@@ -82,6 +82,7 @@ CREATE TABLE products (
 	name 				VARCHAR(100) NOT NULL,
 	description 		TEXT,
 	price 				NUMERIC(12,2) NOT NULL,
+	
 	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
@@ -108,6 +109,12 @@ CREATE TABLE product_categories (
 	created_at 			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP,
 	updated_at			TIMESTAMPTZ DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE product_category_map (
+	product_id   BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
+    category_id  BIGINT REFERENCES product_categories(category_id) ON DELETE CASCADE,
+    PRIMARY KEY (product_id, category_id)
+)
 
 CREATE TABLE product_images (
 	image_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
