@@ -37,10 +37,18 @@
     <div class="row row-eq-height d-flex">
 
         <div class="col-sm-6">
+            {% if images and images|length > 1 %}
+                <div class="mb-2" id="thumbnail-container" style="display: flex; gap: 5px;">
+                    {% for img in images %}
+                        <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px;" onclick="setMainImage('{{ img.image_url }}')">
+                    {% endfor %}
+                </div>
+            {% endif %}
+
             {% if images and images|length > 0 %}
-                <img class="product-img-main" src="{{ images[0].image_url }}" alt="{{ product.product_name }}">
+                <img id="main-product-img" class="product-img-main" src="{{ images[0].image_url }}" alt="{{ product.product_name }}">
             {% else %}
-                <img class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image">
+                <img id="main-product-img" class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image">
             {% endif %}
         </div>
 
@@ -98,5 +106,13 @@
 
     </div>
 </div>
+<script>
+    function setMainImage(url){
+        let main = document.getElementById('main-product-img');
+        if(main){
+            main.src = url;
+        }
+    }
+</script>
 
 {% endblock %}
