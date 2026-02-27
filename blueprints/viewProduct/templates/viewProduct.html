@@ -38,10 +38,14 @@
 
         <div class="col-sm-6">
             {% if images and images|length > 1 %}
-                <div class="mb-2" id="thumbnail-container" style="display: flex; gap: 5px; margin-bottom: 15px;">
-                    {% for img in images %}
-                        <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px;" onclick="setMainImage('{{ img.image_url }}')">
-                    {% endfor %}
+                <div class="mb-2" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px;" onclick="scrollThumbs(-1)"></span>
+                    <div id="thumbnail-container" style="display: flex; gap: 5px; overflow-x: auto;">
+                        {% for img in images %}
+                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor:pointer;" onclick="setMainImage('{{ img.image_url }}')">
+                        {% endfor %}
+                    </div>
+                    <span class="glyphicon glyphicon-chevron-right" style="cursor:pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
                 </div>
             {% endif %}
 
@@ -111,6 +115,12 @@
         let main = document.getElementById('main-product-img');
         if(main){
             main.src = url;
+        }
+    }
+    function scrollThumbs(dir){
+        let container = document.getElementById('thumbnail-container');
+        if(container){
+            container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
 </script>
