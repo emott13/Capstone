@@ -48,9 +48,9 @@ class RegisterForm(FlaskForm):
     submit = SubmitField('Sign Up')
 
     def validate_dob(form, field):
-        if datetime.strptime(field.data, '%Y-%m-%d') < datetime(1900, 1, 1):
+        if field.data < datetime(1900, 1, 1).date():
             raise ValidationError("Date of birth must be greater than the year 1900")
-        elif field.data > datetime.today().strftime('%Y-%m-%d'):
+        elif field.data > datetime.today().date():
             raise ValidationError("Date of birth can not be in the future")
 
 register_bp = Blueprint("register", __name__, static_folder="register_static",
