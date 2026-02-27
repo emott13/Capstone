@@ -14,39 +14,64 @@
 </style>
 {% extends "base.html" %}
 {% block page_content %}
-{% if cartItems %}
-<table class="table">
-    <tr>
-        <th>Product</th>
-        <th>Quantity</th>
-        <th>Price</th>
-    </tr>
-    {% for cartItem in cartItems %}
-    <tr>
-        <td>{{ cartItem.name }}</td>
-        <td>{{ cartItem.quantity }}</td>
-        <td>{{ cartItem.price }}</td>
-    </tr>
-    {% endfor %}
-</table>
+
+<form action="{{ url_for('cart.cart') }}" method="post" id="quantityChange">
+    {% if cartItems %}
+    <table class="table">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        {% for cartItem in cartItems %}
+        <tr>
+            <td>{{ cartItem.name }}</td>
+            <td>
+                <input 
+                    type="number" 
+                    min="1" 
+                    value="{{ cartItem.quantity }}" 
+                    name="{{ cartItem.id }}"
+                    onchange="document.querySelector('#quantityChange').submit()">
+                <button type="button" class="delete-btn" onclick="deleteItem(this)">
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+            <td>${{ cartItem.price | priceFormat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</form>
+
 <div class="totalsContainer">
     <table class="table">
         <tr>
             <td>Subtotal</td>
-            <td>{{ totals[0] }}</td>
+            <td>${{ totals[0] | priceFormat }}</td>
         </tr>
         <tr>
             <td>Tax</td>
-            <td>{{ totals[1] }}</td>
+            <td>${{ totals[1] | priceFormat }}</td>
         </tr>
         <tr>
             <th>Total</th>
-            <td>{{ totals[2] }}</td>
+            <td>${{ totals[2] | priceFormat }}</td>
         </tr>
     </table>
     <a href="#checkout" class="btn checkoutBtn">Checkout</a>
 </div>
-
-    
 {% endif %}
 {% endblock %}
+<script>
+    function confirmOrder() {
+        return confirm("Are you sure you're ready to submit?")
+    }
+
+    function deleteItem(button){
+        let confirmed = confirm('Are you sure you want to remove this item?')
+        if (confirmed) {
+            let form = document.getElementById('deleteForm')
+        }
+    }
+
+</script>

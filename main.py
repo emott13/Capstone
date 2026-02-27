@@ -10,6 +10,13 @@ from blueprints.home.home import home_bp
 from blueprints.search.search import search_bp
 from blueprints.viewProduct.viewProduct import view_product_bp
 from blueprints.cart.cart import cart_bp
+from models import Users
+
+# load users
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(user_id)
+
 
 # register blueprints
 app.register_blueprint(login_bp)

@@ -2,7 +2,8 @@ from datetime import datetime
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_user
 from sqlalchemy import text
-from extensions import Users, UserRoles, Roles, bcrypt, db
+from extensions import bcrypt, db
+from models import Users, UserRoles, Roles
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
