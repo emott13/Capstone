@@ -37,13 +37,11 @@ def search():
     # Category filter
     if category:
         sql += " AND pc.category_name ILIKE :category"
-        params["category"] = f"%{category}%"
+        params["category"] = category
 
     sql += " ORDER BY p.created_at DESC"
 
-    # products = conn.execute(text(sql), params).fetchall()
-    # use session instead of raw connection
-    products = db.session.execute(text(sql), params).fetchall()
+    products = conn.execute(text(sql), params).fetchall()
 
     image_dict = getFirstTwoProductImages(products)
 
