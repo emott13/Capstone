@@ -1,9 +1,10 @@
-{% block style %}
+{% extends "bootstrap/base.html" %}
+{% block styles %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
-</head>
-<style>
+    {{ super() }}
+    <style>
     :root{
     --font-main: 'Nunito Sans', sans-serif;
     --green-1: #0A400C;
@@ -83,10 +84,11 @@ body{
     background-color: var(--purple-1) !important;
     border: var(--purple-1) 1px solid !important;
 }
-</style>
+    </style>
+{% endblock %}
 
-{% extends "bootstrap/base.html" %}
 {% block title %}{{ super() }} - Capstone{% endblock %}
+
 {% block navbar %}
 <nav class="navbar">
   <div class="container-fluid">
