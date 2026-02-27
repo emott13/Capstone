@@ -27,7 +27,10 @@
 
 {% extends "base.html" %}
 {% block title %}Product Name {{ super() }}{% endblock %}
-{% block styles %}{{ super() }}{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('viewProduct.static', filename='viewProduct.css') }}">
+    {{ super() }}
+{% endblock %}
 {% block page_content %}
 
 <div class="outer-wrapper">
@@ -109,4 +112,5 @@
     </div>
 </div>
 
+{% include "reviewProduct.html" %}
 {% endblock %}

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-view_product_bp = Blueprint("viewProduct", __name__, static_folder="static", template_folder="templates")
+view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
 def viewProduct():

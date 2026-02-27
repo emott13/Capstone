@@ -49,6 +49,26 @@ body{
     background-color: var(--tan-2);
 }
 
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.width-100 {
+    width: 100%;
+}
+
 .hr1 {
     border-width: 4px;
 }
