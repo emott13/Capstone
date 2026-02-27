@@ -61,7 +61,6 @@ register_bp = Blueprint("register", __name__, static_folder="register_static",
 def register():
     register_form = RegisterForm()
     error = request.args.get("error", None)
-    print(register_form.dob.data)
     if register_form.validate_on_submit():
         error = register_post(register_form)
         if not error:
@@ -76,7 +75,6 @@ def register():
 
 def register_post(register_form) -> str:
     """Runs the register post verifications and logic. Returns the error if there is any"""
-    print(request.form.getlist('role_id'))
     role_ids = request.form.getlist('role_id')
 
     if role_ids == []:
