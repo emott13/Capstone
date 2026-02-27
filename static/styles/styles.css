@@ -49,6 +49,22 @@ body{
     background-color: var(--tan-2);
 }
 
+.hr1 {
+    border-width: 4px;
+}
+
+.hr2 {
+    border-width: 3px;
+}
+
+.hr3 {
+    border-width: 2px;
+}
+
+.hr4 {
+    border-width: 1px;
+}
+
 .navbar{
     font-family: var(--font-main);
     background-color: var(--green-1);
