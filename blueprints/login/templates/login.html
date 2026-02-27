@@ -3,24 +3,28 @@
 {% block page_content %}
     <h1 class="login-h1">Login</h1>
     
+    {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+    {% endif %}
     {% if error %}
-        <p class="alert alert-danger">{{ error }}</p>
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
     {% endif %}
 
-    <form class="login-form" action="/login" method="post">
-        <div class="input-row">
-            <div class="fancy-input full-width">
-                <input class="full-width" type="text" name="username" placeholder="" required />
-                <label for="username">Email or Username:</label>
-            </div>
+    <form id="login-form" class="" action="/login" method="post">
+        {{ login_form.hidden_tag() }}
+        <div class="form-group">
+            {{ login_form.username.label }}
+            {{ login_form.username( class="form-control", placeholder = "Email/Username") }}
+        <div class="form-group">
+            {{ login_form.password.label }}
+            {{ login_form.password( class="form-control", placeholder = "Password") }}
         </div>
-        <div class="input-row">
-            <div class="fancy-input full-width">
-                <input class="full-width" type="password" name="password" placeholder="" required />
-                <label for="password">Password:</label>
-            </div>
-        </div>
+
         <p class="">Don't have an account? <a href="{{url_for('register.register')}}">Register Here</a></p>
-        <button class="btn" type="submit">Login</button>
+        {{ login_form.submit(class="btn") }}
     </form>
 {% endblock %}

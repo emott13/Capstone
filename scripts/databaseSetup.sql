@@ -114,7 +114,7 @@ CREATE TABLE product_category_map (
 	product_id   BIGINT REFERENCES products(product_id) ON DELETE CASCADE,
     category_id  BIGINT REFERENCES product_categories(category_id) ON DELETE CASCADE,
     PRIMARY KEY (product_id, category_id)
-)
+);
 
 CREATE TABLE product_images (
 	image_id 			BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,

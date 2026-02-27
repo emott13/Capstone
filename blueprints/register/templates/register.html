@@ -1,16 +1,26 @@
 {% extends 'base.html' %}
 {% block title %}Register {{ super() }}{% endblock %}
-{% block style %}{{ super() }}{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('register.static', filename='register.css') }}">
+    {{ super() }}
+{% endblock %}
 {% block scripts %}{{ super() }}{% endblock %}
 {% block page_content %}
     <h1 class="text-center">Register</h1>
     
-    {% if error %}
-        <p class="alert alert-danger">{{ error }}</p>
+    {% if register_form.errors or error %}
+        <div class="alert alert-danger">
+            {{ error if error }}
+            <ul class="list-unstyled">
+            {% for er in register_form.errors.values() %}
+                <li class="">{{ er[0] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
     {% endif %}
 
 
-    <form id="register-form" class="" style="background-color: var(--green-1);" action="/register" method="post">
+    <form id="register-form" class="" action="/register" method="post">
         {{ register_form.hidden_tag() }}
         <div class="form-group">
             {{ register_form.email.label }}
@@ -34,16 +44,21 @@
         </div>
         <div class="form-group">
             {{ register_form.last_name.label }}
-            {{ register_form.last_name( class="form-control", placeholder = "last Name") }}
+            {{ register_form.last_name( class="form-control", placeholder = "Last Name") }}
         </div>
         <div class="form-group">
             {{ register_form.dob.label }}
             {{ register_form.dob( class="form-control") }}
         </div>
         <div class="form-group">
-            <label class="text-capitalize" for="role_id">role:</label>
+            <label class="text-capitalize" for="role_id">type:</label>
             {% for role in roles %} 
-            <input type="checkbox" class="form-control" name="role_id" value="{{ role.role_id }}">{{ role.role_name|title }}
+            <div class="register-roles">
+                <span class="form-control">
+                    <input type="checkbox" class="register-role-checkbox" name="role_id" value="{{ role.role_id }}">
+                    {{ role.role_name|title }}
+                </span>
+            </div>
             {% endfor %}
         </div>
 

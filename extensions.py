@@ -38,7 +38,7 @@ db.init_app(app)
 bcrypt = Bcrypt(app)
 
 # Initialize bootstrap
-Bootstrap(app)
+bootstrap = Bootstrap(app)
 
 # Initialize database and login manager
 login_manager = LoginManager()
@@ -47,7 +47,7 @@ login_manager.login_view = "blueprints.login.login"
 
 @login_manager.user_loader
 def load_user(user_id):
-    return Users.get(user_id)
+    return Users.query.get(user_id)
 
 # Initialize DB the way we did the other times
 engine = create_engine(conn_str, echo=True)                                             
@@ -73,7 +73,7 @@ product_category_map = db.Table(
 
 # Define models here
 # Users
-class Users(db.Model):
+class Users(UserMixin, db.Model):
     __tablename__ = "users"
     user_id = db.Column(db.BigInteger, primary_key=True)
     username = db.Column(db.String(30), unique=True, nullable=False)
@@ -90,6 +90,10 @@ class Users(db.Model):
         secondary="user_roles",
         backref=db.backref("users", lazy="dynamic")
     )
+
+    def get_id(self):
+        return self.user_id
+
 # Roles
 class Roles(db.Model):
     __tablename__ = "roles"

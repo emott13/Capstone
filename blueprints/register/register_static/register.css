@@ -1,0 +1,7 @@
+.register-roles > span {
+    margin-bottom: .2rem;
+}
+.register-role-checkbox {
+    width: 15px;
+    height: 15px;
+}
