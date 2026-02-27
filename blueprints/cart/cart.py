@@ -29,6 +29,25 @@ def cart():
         
             cart_id = cart_result[0]
 
+            # DELETE CASE
+            if "delete_product" in request.form:
+                product_id = int(request.form["delete_product"])
+
+                delete_sql = """
+                    DELETE FROM cart_items
+                    WHERE cart_id = :cart_id
+                    AND product_id = :product_id
+                """
+
+                db.session.execute(text(delete_sql), {
+                    "cart_id": cart_id,
+                    "product_id": product_id,
+                })
+                db.session.commit() # save changes to db
+
+                return redirect(url_for("cart.cart"))
+
+            # UPDATE CASE
             # loop through form items
             for product_id, quantity in request.form.items():
                 update_sql = """

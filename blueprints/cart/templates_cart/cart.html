@@ -32,8 +32,15 @@
                     min="1" 
                     value="{{ cartItem.quantity }}" 
                     name="{{ cartItem.id }}"
-                    onchange="document.querySelector('#quantityChange').submit()">
-                <button type="button" class="delete-btn" onclick="deleteItem(this)">
+                    onchange="document.querySelector('#quantityChange').submit()"
+                    >
+                <button 
+                    type="submit" 
+                    name="delete_product"
+                    value="{{ cartItem.id }}"
+                    class="delete-btn"
+                    onclick="return confirm('Remove this item?')"
+                    >
                     <span class="glyphicon glyphicon-trash"></span>
                 </button>
             </td>
