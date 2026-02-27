@@ -239,31 +239,3 @@ INSERT INTO product_images (product_id, image_url) VALUES
 (27, 'https://mobileimages.lowes.com/productimages/82657ab5-a894-45ea-aa91-2901167bdb59/49347688.jpg?size=mpdhi'),
 (27, 'https://mobileimages.lowes.com/productimages/9e44f273-6610-4fdb-a226-aef02af6661d/49347690.jpg?size=mpdhi'),
 (27, 'https://mobileimages.lowes.com/productimages/8dfcdf13-2714-4514-91aa-7c2f7081d827/49347689.jpg?size=mpdhi');
-
--- trees --
--- (28, ''),
--- (28, ''),
--- (28, ''),
--- (28, ''),
--- (28, ''),
--- (28, ''),
--- (28, ''),
--- (28, ''),
-
--- (29, ''),
--- (29, ''),
--- (29, ''),
--- (29, ''),
--- (29, ''),
--- (29, ''),
-
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),
--- (30, ''),

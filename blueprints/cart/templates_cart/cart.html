@@ -1,0 +1,52 @@
+<style>
+    .totalsContainer{
+        width: 350px;
+        float: right;
+    }
+    .checkoutBtn{
+        background-color: var(--purple-2);
+        color: black;
+    }
+    .checkoutBtn:hover{
+        background-color: var(--purple-1);
+        color: white !important;
+    }
+</style>
+{% extends "base.html" %}
+{% block page_content %}
+{% if cartItems %}
+<table class="table">
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+    {% for cartItem in cartItems %}
+    <tr>
+        <td>{{ cartItem.name }}</td>
+        <td>{{ cartItem.quantity }}</td>
+        <td>{{ cartItem.price }}</td>
+    </tr>
+    {% endfor %}
+</table>
+<div class="totalsContainer">
+    <table class="table">
+        <tr>
+            <td>Subtotal</td>
+            <td>{{ totals[0] }}</td>
+        </tr>
+        <tr>
+            <td>Tax</td>
+            <td>{{ totals[1] }}</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>{{ totals[2] }}</td>
+        </tr>
+    </table>
+    <a href="#checkout" class="btn checkoutBtn">Checkout</a>
+</div>
+
+    
+{% endif %}
+{% endblock %}
