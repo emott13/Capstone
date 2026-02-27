@@ -1,0 +1,65 @@
+:root{
+    --font-main: 'Nunito Sans', sans-serif;
+    --green-1: #0A400C;
+    --green-2: #819067;
+    --tan-1: #B1AB86;
+    --tan-2: #FEFAE0;
+    --orange-1: #E67E22;
+    --orange-2: #f3ae53;
+
+    --info-blue: #93bbc7;
+    --warning-yellow: #F9CB43;
+    --warning-yellow-light: #f9e79f;
+    --error-red: #a03a13;
+    --error-red-light: #F5824A;
+
+    /* Order properties:
+    +-------------------+
+    |      display      |
+    |     properties    |
+    |                   |
+    |      margin       |
+    |                   |
+    |  +---border----+  |
+    |  |             |  |
+    |  |  background |  |
+    |  |    color    |  |
+    |  |             |  |
+    |  |   padding   |  |
+    |  |             |  |
+    |  |  +-------+  |  |
+    |  |  | height|  |  |
+    |  |  | width |  |  |
+    |  |  | list  |  |  |
+    |  |  | text  |  |  |
+    |  |  | color |  |  |
+    |  |  | font  |  |  |
+    |  |  | cursor|  |  |
+    |  |  +-------+  |  |
+    |  +-------------+  |
+    +-------------------+ 
+*/
+
+}
+
+body{
+    font-family: var(--font-main);
+    background-color: var(--tan-2);
+}
+
+.navbar{
+    font-family: var(--font-main);
+    background-color: var(--green-1);
+    margin: 0 !important;
+}
+.navbar-nav > li > a{
+    color: var(--tan-2) !important;
+}
+.navbar-nav > li > a:hover{
+    background-color: var(--orange-2);
+    color: var(--green-1) !important;
+}
+.navbar-nav > li.active > a{
+    background-color: var(--orange-2);
+    color: var(--green-1) !important;
+}
