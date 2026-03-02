@@ -89,9 +89,15 @@ body{
     font-family: var(--font-main);
     background-color: var(--green-1);
     margin: 0 !important;
+    padding: 1px !important;
+}
+.navbar-nav > li {
+    display: flex;
 }
 .navbar-nav > li > a{
     color: var(--tan-2) !important;
+    padding: 10px 15px;
+    text-decoration: none;
 }
 .navbar-nav > li > a:hover{
     background-color: var(--orange-2) !important;
@@ -103,6 +109,9 @@ body{
 .navbar-nav > li.active > a{
     background-color: var(--orange-2) !important;
     color: var(--green-1) !important;
+}
+.navbar-search-form {
+    flex: 1;
 }
 .search-btn{
     background-color: var(--purple-2) !important;
