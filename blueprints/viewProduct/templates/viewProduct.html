@@ -59,11 +59,7 @@
         <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
             <h1>{{ product.product_name if product else "Product Name" }}</h1>
             <h4 style="margin: 0 0 10px 0;"><span class="glyphicon glyphicon-user"></span> 
-                {% if vendor %}
-                    {{ vendor.store_name }}
-                {% else %}
-                    Vendor Name
-                {% endif %}
+                {{ vendor.store_name if vendor else "Vendor Name" }}
             </h4>
 
             <div class="row" style="margin-bottom: 10px;">
