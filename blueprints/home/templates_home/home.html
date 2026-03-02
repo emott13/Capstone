@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block styles %}
 <style>
     .jumbotron{
         margin-top: 50px;
@@ -110,7 +112,8 @@
         background-position: center;
     }
 </style>
-{% extends "base.html" %}
+    {{ super() }}
+{% endblock %}
 {% block page_content %}
     <div class="jumbotron">
         <h1>Welcome to Hibiscus</h1>

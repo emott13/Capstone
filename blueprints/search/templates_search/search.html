@@ -1,33 +1,35 @@
-<style>
-    .image-container {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-    }
-    .image-container img {
-        width: 100%;
-        display: block;
-        transform: scale(1.05);
-        transition: opacity 0.4s ease, transform 0.4s ease;
-    }
-    .img-hover {
-        position: absolute;
-        top: 0;
-        left: 0;
-        opacity: 0;
-    }
-    .image-container:hover .img-hover {
-        opacity: 1;
-    }
-    .image-container:hover .img-primary {
-        opacity: 0;
-    }
-    .col-sm-3 {
-        height: 475px;
-    }
-</style>
-
 {% extends "base.html" %}
+{% block styles %}
+    <style>
+        .image-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+        }
+        .image-container img {
+            width: 100%;
+            display: block;
+            transform: scale(1.05);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+        .img-hover {
+            position: absolute;
+            top: 0;
+            left: 0;
+            opacity: 0;
+        }
+        .image-container:hover .img-hover {
+            opacity: 1;
+        }
+        .image-container:hover .img-primary {
+            opacity: 0;
+        }
+        .col-sm-3 {
+            height: 475px;
+        }
+    </style>
+    {{ super() }}
+{% endblock %}
 {% block page_content %}
     <div class="container">
         <h1 class="mt-5">Search Results</h1>
