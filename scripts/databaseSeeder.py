@@ -7,11 +7,11 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 from extensions import db, app, bcrypt
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import text
-from extensions import Users, Roles, UserRoles, Admins, Vendors, Customers
-from extensions import PhoneNumbers, UserPhoneNumbers, Addresses
-from extensions import Products, ProductSpecs, ProductColors, ProductCategories, ProductImages
-from extensions import Carts, CartItems, Wishlists, WishlistItems
-from extensions import Orders, OrderItems, OrderAddresses, Payments, Reviews
+from models import Users, Roles, UserRoles, Admins, Vendors, Customers
+from models import PhoneNumbers, UserPhoneNumbers, Addresses
+from models import Products, ProductSpecs, ProductColors, ProductCategories, ProductImages
+from models import Carts, CartItems, Wishlists, WishlistItems
+from models import Orders, OrderItems, OrderAddresses, Payments, Reviews
 from faker import Faker
 from random import randint, sample, choice
 
@@ -205,10 +205,16 @@ with app.app_context():
     # --- ORDERS AND PAYMENTS --- #
     for customer in customers_list:
         for _ in range(randint(1, 3)):
+            subtotal = round(fake.random_number(digits=5)/100, 2)
+            tax = round(subtotal * 0.06, 2)  # example tax calculation
+            total = round(subtotal + tax, 2)
             order = Orders(
                 customer_id=customer.customer_id,
                 order_status=choice(['pending', 'shipped', 'delivered', 'cancelled']),
-                amount=round(fake.random_number(digits=5)/100, 2)
+                order_date=fake.date_time_this_year(),
+                order_subtotal=subtotal,
+                order_tax=tax,
+                order_total=total
             )
             db.session.add(order)
     db.session.commit()
@@ -244,7 +250,7 @@ with app.app_context():
         # Payment
         db.session.add(Payments(
             order_id=order.order_id,
-            amount=order.amount,
+            amount=order.order_total,
             payment_method=choice(['credit_card','paypal','bank_transfer']),
             paid_at=fake.date_time_this_year()
         ))

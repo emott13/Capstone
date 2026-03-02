@@ -65,7 +65,12 @@
             <td>${{ totals[2] | priceFormat }}</td>
         </tr>
     </table>
-    <a href="#checkout" class="btn checkoutBtn">Checkout</a>
+    <form action="{{ url_for('order.order') }}" method="post">
+        <input type="hidden" name="subtotal" value="{{ totals[0] }}">
+        <input type="hidden" name="tax" value="{{ totals[1] }}">
+        <input type="hidden" name="total" value="{{ totals[2] }}">
+        <button type="submit" class="btn checkoutBtn" onclick="confirmOrder()">Checkout</button>
+    </form>
 </div>
 {% endif %}
 {% endblock %}

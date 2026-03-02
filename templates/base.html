@@ -27,8 +27,8 @@
     </form>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+      <li><a href="{{ url_for('login.login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a href="{{ url_for('cart.cart') }}"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
     </ul>
   </div>
 </nav>
