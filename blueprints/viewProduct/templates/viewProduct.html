@@ -6,7 +6,7 @@
     .outer-wrapper{
         margin: 50px 0 50px 0;
     }
-    .row-eq-height {
+    .row-eq-height{
         display: flex;
         flex-wrap: wrap;
     }
@@ -27,6 +27,26 @@
         max-height: 300px;
         overflow-y: scroll;
     }
+    .open-image-zoom{
+        position: fixed;
+        z-index: 1;
+        padding: 100px 20px 0 20px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    .open-image-zoom-content{
+        display: flex;
+        justify-content: center;
+        position: relative;
+        margin: auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1200px;
+    }
 </style>
 
 {{ super() }}
@@ -39,20 +59,20 @@
         <div class="col-sm-6">
             {% if images and images|length > 1 %}
                 <div class="mb-2" style="display: flex; align-items: center; margin-bottom: 15px;">
-                    <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px;" onclick="scrollThumbs(-1)"></span>
+                    <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px; cursor: pointer;" onclick="scrollThumbs(-1)"></span>
                     <div id="thumbnail-container" style="display: flex; gap: 5px; overflow-x: auto;">
                         {% for img in images %}
-                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor:pointer;" onclick="setMainImage('{{ img.image_url }}')">
+                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor: pointer;" onclick="setMainImage('{{ img.image_url }}')">
                         {% endfor %}
                     </div>
-                    <span class="glyphicon glyphicon-chevron-right" style="cursor:pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
+                    <span class="glyphicon glyphicon-chevron-right" style="cursor: pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
                 </div>
             {% endif %}
 
             {% if images and images|length > 0 %}
-                <img id="main-product-img" class="product-img-main" src="{{ images[0].image_url }}" alt="{{ product.product_name }}">
+                <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
             {% else %}
-                <img id="main-product-img" class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image">
+                <img id="main-product-img" class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image" onclick="openZoom(this.src)">
             {% endif %}
         </div>
 
@@ -97,26 +117,59 @@
             <div>
                 <h4>Description</h4>
                 <div class="description-box">
-                    <p>
-                        {{ product.description if product else "No description is available for this product." }}
-                    </p>
+                    <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
             </div>
         </div>
+        
+    </div>    
+</div>
 
+<div class="open-image-zoom" id="image-zoom" style="display: none;">
+    <span class="glyphicon glyphicon-remove" style="color: white; cursor: pointer; font-size: 28px; position:absolute; right:20px; top:20px;" onclick="closeZoom()"></span>
+    <div class="open-image-zoom-content">
+        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}">
     </div>
 </div>
+
 <script>
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
         if(main){
             main.src = url;
         }
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        if(overlay && overlay.style.display !== 'none' && zoomed){
+            zoomed.src = url;
+        }
     }
     function scrollThumbs(dir){
         let container = document.getElementById('thumbnail-container');
         if(container){
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
+        }
+    }
+    function openZoom(src){
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        let main = document.getElementById('main-product-img');
+        let imgSrc = src || (main ? main.src : '');
+        if(!overlay || !zoomed){
+            return;
+        }
+        zoomed.src = imgSrc;
+        overlay.style.display = 'block';
+    }
+    function closeZoom(){
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        if(!overlay){
+            return;
+        }
+        overlay.style.display = 'none';
+        if(zoomed){
+            zoomed.src = '';
         }
     }
 </script>
