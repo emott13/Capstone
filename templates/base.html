@@ -1,12 +1,13 @@
-{% block style %}
+{% extends "bootstrap/base.html" %}
+{% block styles %}
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles/styles.css">
 {% endblock %}
 
-{% extends "bootstrap/base.html" %}
 {% block title %}{{ super() }} - Capstone{% endblock %}
+
 {% block navbar %}
 <nav class="navbar">
   <div class="container-fluid">
@@ -27,8 +28,8 @@
     </form>
     <ul class="nav navbar-nav navbar-right">
       <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
-      <li><a href="#"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
+      <li><a href="{{ url_for('login.login') }}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+      <li><a href="{{ url_for('cart.cart') }}"><span class="glyphicon glyphicon-shopping-cart"></span>Cart</a></li>
     </ul>
   </div>
 </nav>
@@ -69,6 +70,7 @@
         </footer> -->
     {% endblock %}
 {% endblock %}
-    
+<script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 </body>
 </html>

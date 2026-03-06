@@ -1,8 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Product Name {{ super() }}{% endblock %}
+{% block styles %}
+
 <style>
     .outer-wrapper{
         margin: 50px 0 50px 0;
     }
-    .row-eq-height {
+    .row-eq-height{
         display: flex;
         flex-wrap: wrap;
     }
@@ -23,6 +27,26 @@
         max-height: 300px;
         overflow-y: scroll;
     }
+    .open-image-zoom{
+        position: fixed;
+        z-index: 1;
+        padding: 100px 20px 0 20px;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.8);
+    }
+    .open-image-zoom-content{
+        display: flex;
+        justify-content: center;
+        position: relative;
+        margin: auto;
+        padding: 0;
+        width: 90%;
+        max-width: 1200px;
+    }
 </style>
 
 {% extends "base.html" %}
@@ -37,13 +61,30 @@
     <div class="row row-eq-height d-flex">
 
         <div class="col-sm-6">
-            <!-- src is currently just an example, make dynamic later -->
-            <img class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200">
+            {% if images and images|length > 1 %}
+                <div class="mb-2" style="display: flex; align-items: center; margin-bottom: 15px;">
+                    <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px; cursor: pointer;" onclick="scrollThumbs(-1)"></span>
+                    <div id="thumbnail-container" style="display: flex; gap: 5px; overflow-x: auto;">
+                        {% for img in images %}
+                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor: pointer;" onclick="setMainImage('{{ img.image_url }}')">
+                        {% endfor %}
+                    </div>
+                    <span class="glyphicon glyphicon-chevron-right" style="cursor: pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
+                </div>
+            {% endif %}
+
+            {% if images and images|length > 0 %}
+                <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
+            {% else %}
+                <img id="main-product-img" class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image" onclick="openZoom(this.src)">
+            {% endif %}
         </div>
 
         <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
-            <h1>Product Name</h1>
-            <h4 style="margin: 0 0 10px 0;"><span class="glyphicon glyphicon-user"></span> Vendor Name</h4>
+            <h1>{{ product.product_name if product else "Product Name" }}</h1>
+            <h4 style="margin: 0 0 10px 0;"><span class="glyphicon glyphicon-user"></span> 
+                {{ vendor.store_name if vendor else "Vendor Name" }}
+            </h4>
 
             <div class="row" style="margin-bottom: 10px;">
                 <div class="col-sm-6" style="padding: 0 15px;">
@@ -61,7 +102,7 @@
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 30px;">$00.00</h3>
+            <h3 style="margin-bottom: 30px;">${{ "%.2f"|format(product.price) if product else "00.00" }}</h3>
             
             <form>
                 <h4>Quantity</h4>
@@ -80,37 +121,62 @@
             <div>
                 <h4>Description</h4>
                 <div class="description-box">
-                    <p>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ex ex.
-                        Ut placerat fringilla erat vel molestie. Proin tincidunt elit vel dui
-                        placerat tempus. Nunc ultrices sollicitudin diam, eu tincidunt arcu congue
-                        quis. Etiam faucibus aliquet elementum. Pellentesque molestie congue lobortis.
-                        Aliquam viverra arcu quis eros maximus commodo. Nunc in felis est. Cras mollis
-                        lacus in eros elementum dictum. Quisque aliquam, est et aliquet laoreet, lacus
-                        nisl ultrices est, quis finibus felis mauris ornare eros. Donec in massa quam.
-                        Etiam a leo velit. Nullam ut diam interdum, hendrerit augue ut, sollicitudin ligula.<br><br>
-
-                        Etiam nec nunc sed eros tristique vulputate non eu felis. In lobortis augue ac massa
-                        pulvinar, vel dignissim nisi ullamcorper. Aliquam mi dui, tempus a aliquam vel, luctus
-                        non sem. Sed vitae tempor dolor. Sed eget rhoncus nisl, vitae rhoncus elit. Sed diam sem,
-                        gravida eu fringilla non, dignissim non leo. Vivamus vitae tristique ligula. Morbi eu
-                        turpis condimentum, eleifend ex ut, tempus erat. In consequat rutrum augue. In nec consequat
-                        nisi. Duis lacus tortor, feugiat dictum maximus a, vulputate eget purus. Vestibulum ante
-                        ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Ut vitae mi dui.
-                        Nullam velit ante, congue et semper in, vestibulum a eros. Morbi sodales tellus lorem.
-                        Proin sed blandit libero.<br><br>
-
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec a ex ex.
-                        Ut placerat fringilla erat vel molestie. Proin tincidunt elit vel dui
-                        placerat tempus. Nunc ultrices sollicitudin diam, eu tincidunt arcu congue
-                        quis.
-                    </p>
+                    <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
             </div>
         </div>
+        
+    </div>    
+</div>
 
+<div class="open-image-zoom" id="image-zoom" style="display: none;">
+    <span class="glyphicon glyphicon-remove" style="color: white; cursor: pointer; font-size: 28px; position:absolute; right:20px; top:20px;" onclick="closeZoom()"></span>
+    <div class="open-image-zoom-content">
+        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}">
     </div>
 </div>
 
 {% include "reviewProduct.html" %}
+<!-- <script>
+    function setMainImage(url){
+        let main = document.getElementById('main-product-img');
+        if(main){
+            main.src = url;
+        }
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        if(overlay && overlay.style.display !== 'none' && zoomed){
+            zoomed.src = url;
+        }
+    }
+    function scrollThumbs(dir){
+        let container = document.getElementById('thumbnail-container');
+        if(container){
+            container.scrollBy({ left: dir * 70, behavior: 'smooth' });
+        }
+    }
+    function openZoom(src){
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        let main = document.getElementById('main-product-img');
+        let imgSrc = src || (main ? main.src : '');
+        if(!overlay || !zoomed){
+            return;
+        }
+        zoomed.src = imgSrc;
+        overlay.style.display = 'block';
+    }
+    function closeZoom(){
+        let overlay = document.getElementById('image-zoom');
+        let zoomed = document.getElementById('zoomed-img');
+        if(!overlay){
+            return;
+        }
+        overlay.style.display = 'none';
+        if(zoomed){
+            zoomed.src = '';
+        }
+    }
+</script> -->
+
 {% endblock %}

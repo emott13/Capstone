@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_user
-from extensions import Users, bcrypt
+from extensions import bcrypt
+from models import Users
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
 from wtforms.validators import Length, Email, EqualTo, InputRequired, Regexp
