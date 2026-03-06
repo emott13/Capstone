@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Product Name {{ super() }}{% endblock %}
 {% block styles %}
-
 <style>
     .outer-wrapper{
         margin: 50px 0 50px 0;
@@ -36,6 +35,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
+        cursor: zoom-out;
         background-color: rgba(0, 0, 0, 0.8);
     }
     .open-image-zoom-content{
@@ -47,8 +47,22 @@
         width: 90%;
         max-width: 1200px;
     }
+    .review-hr {
+        border-color: var(--green-2);
+        filter: brightness(150%);
+    }
+    .review-star {
+        color: var(--orange-1);
+        font-size: 2rem;
+        margin: 0 .2rem;
+    }
+    #zoomed-img{
+        transition: transform .2s;
+    }
+    #zoomed-img:hover{
+        transform: scale(1.7);
+    }
 </style>
-
 {{ super() }}
 {% endblock %}
 {% block page_content %}
@@ -78,23 +92,26 @@
 
         <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
             <h1>{{ product.product_name if product else "Product Name" }}</h1>
-            <h4 style="margin: 0 0 10px 0;"><span class="glyphicon glyphicon-user"></span> 
+            <h4 style="margin: 0 0 10px 0;">
+                <i class="bi bi-person-fill"></i>
                 {{ vendor.store_name if vendor else "Vendor Name" }}
             </h4>
 
             <div class="row" style="margin-bottom: 10px;">
-                <div class="col-sm-6" style="padding: 0 15px;">
-                    <h4>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
-                        <span class="glyphicon glyphicon-star-empty"></span>
+                <div class="d-flex flex-wrap" style="padding: 0 15px;">
+                    <h4 class="p-1">
+                        <i class="bi bi-star"></i>
+                        <i class="bi bi-star"></i>
+                        <i class="bi bi-star"></i>
+                        <i class="bi bi-star"></i>
+                        <i class="bi bi-star"></i>
+                    </h4>
+                    <h4 class="p-1">
                         0.0 <a href="#">(0 Reviews)</a>
                     </h4>
-                </div>
-                <div class="col-sm-6" style="padding: 0 15px;">
-                    <a href="#"><h4>Write a Review...</h4></a>
+                    <h4 class="p-1">
+                        <a href="#"><h4>Write a Review...</h4></a>
+                    </h4>
                 </div>
             </div>
 
@@ -107,7 +124,7 @@
                         <input type="number" value="1" min="1" style="width: 100%;">
                     </div>
                     <div class="col-sm-9" style="padding-left: 0;">
-                        <button style="width: 100%;"><span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart</button>
+                        <button style="width: 100%;"><i class="bi bi-cart-fill"></i> Add To Cart</button>
                     </div>
                 </div>
             </form>
@@ -125,13 +142,13 @@
     </div>    
 </div>
 
-<div class="open-image-zoom" id="image-zoom" style="display: none;">
-    <span class="glyphicon glyphicon-remove" style="color: white; cursor: pointer; font-size: 28px; position:absolute; right:20px; top:20px;" onclick="closeZoom()"></span>
-    <div class="open-image-zoom-content">
-        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}">
+<div class="open-image-zoom" id="image-zoom" style="display: none;" onclick="closeZoom()">
+        <div class="open-image-zoom-content">
+        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}" onclick="event.stopPropagation()">
     </div>
 </div>
 
+{% include "reviewProduct.html" %}
 <script>
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
@@ -150,6 +167,21 @@
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
+    function zoomPan(e) {
+        let zoomed = e.currentTarget;
+        let rect = zoomed.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        let xPct = (x / rect.width) * 100;
+        let yPct = (y / rect.height) * 100;
+        zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
+    }
+    function resetZoomOrigin(){
+        const zoomed = document.getElementById('zoomed-img');
+        if(zoomed){
+            zoomed.style.transformOrigin = 'center center';
+        }
+    }
     function openZoom(src){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -160,6 +192,8 @@
         }
         zoomed.src = imgSrc;
         overlay.style.display = 'block';
+        zoomed.addEventListener('mousemove', zoomPan);
+        zoomed.addEventListener('mouseleave', resetZoomOrigin);
     }
     function closeZoom(){
         let overlay = document.getElementById('image-zoom');
@@ -170,6 +204,9 @@
         overlay.style.display = 'none';
         if(zoomed){
             zoomed.src = '';
+            zoomed.style.transformOrigin = 'center center';
+            zoomed.removeEventListener('mousemove', zoomPan);
+            zoomed.removeEventListener('mouseleave', resetZoomOrigin);
         }
     }
 </script>

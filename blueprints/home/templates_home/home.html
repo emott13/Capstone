@@ -1,9 +1,13 @@
+{% extends "base.html" %}
+{% block styles %}
 <style>
     .jumbotron{
         margin-top: 50px;
         min-height: fit-content;
         background-color: var(--green-1) !important;
         color: var(--tan-2) !important;
+        padding: 2rem;
+        border-radius: 1rem;
     }
     .img-cover{
         object-fit: cover;
@@ -34,7 +38,7 @@
     }
     .container_specials{
         margin-top: 50px;
-        height: 200px;
+        color: white;
     }
     .col-sm-4{
         padding: 20px;
@@ -44,6 +48,12 @@
         /* background-color: var(--orange-1); */
         color: var(--tan-2);
         font-size: 20px;
+    }
+    .card-body{
+        text-wrap: nowrap;
+    }
+    .card-body > a{
+        font-size: .85rem;
     }
     
 
@@ -110,7 +120,8 @@
         background-position: center;
     }
 </style>
-{% extends "base.html" %}
+    {{ super() }}
+{% endblock %}
 {% block page_content %}
     <div class="jumbotron">
         <h1>Welcome to Hibiscus</h1>
@@ -119,128 +130,128 @@
     </div>
     <div class="row">
         <div class="col-sm-3">
-            <div class="card card_circle soils">
+            <div class="home-card card_circle soils">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Soils') }}" class="btn btn-primary">View Soils</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle fertilizers">
+            <div class="home-card card_circle fertilizers">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Fertilizers') }}" class="btn btn-primary">View Fertilizers</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle seeds">
+            <div class="home-card card_circle seeds">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Seeds') }}" class="btn btn-primary">View Seeds</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle bulbs">
+            <div class="home-card card_circle bulbs">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Bulbs') }}" class="btn btn-primary">View Bulbs</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle plants">
+            <div class="home-card card_circle plants">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Plants') }}" class="btn btn-primary">View Plants</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle trees">
+            <div class="home-card card_circle trees">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Trees') }}" class="btn btn-primary">View Trees</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle pots">
+            <div class="home-card card_circle pots">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Pots') }}" class="btn btn-primary">View Pots</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle lawn_care">
+            <div class="home-card card_circle lawn_care">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Lawn Care') }}" class="btn btn-primary">View Lawn Care</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle garden_tools">
+            <div class="home-card card_circle garden_tools">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Garden Tools') }}" class="btn btn-primary">View Garden Tools</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle outdoor_furniture">
+            <div class="home-card card_circle outdoor_furniture">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Outdoor Furniture') }}" class="btn btn-primary">View Outdoor Furniture</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle outdoor_decor">
+            <div class="home-card card_circle outdoor_decor">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Outdoor Decor') }}" name="category" class="btn btn-primary">View Outdoor Decor</a>
                 </div>
             </div>
         </div>
 
         <div class="col-sm-3">
-            <div class="card card_circle indoor_gardening">
+            <div class="home-card card_circle indoor_gardening">
                 <div class="ratio ratio-1x1 rounded-circle">
                 </div>
-                <div class="card_body">
+                <div class="card-body">
                     <a href="{{ url_for('search.search', category='Indoor Gardening') }}" name="category" class="btn btn-primary">View Indoor Gardening</a>
                 </div>
             </div>
         </div>
     </div>
-    <div class="container_specials mt-5">
+    <div class="d-flex container_specials mt-5">
         <div class="col-sm-4">
-            <div class="card">
+            <div class="home-card">
                 <div class="card-body best_sellers" id="best_sellers">
                     <h2 class="card-title">Best Sellers</h2>
                     <p class="card-text">Shop our best-selling products</p>
@@ -249,7 +260,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card">
+            <div class="home-card">
                 <div class="card-body new" id="new">
                     <h2 class="card-title">New Arrivals</h2>
                     <p class="card-text">Check out our latest products</p>
@@ -258,7 +269,7 @@
             </div>
         </div>
         <div class="col-sm-4">
-            <div class="card" id="sale">
+            <div class="home-card" id="sale">
                 <div class="card-body sale">
                     <h2 class="card-title">On Sale</h2>
                     <p class="card-text">Don't miss our current discounts</p>

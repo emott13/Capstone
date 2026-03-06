@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block title %}Login {{ super() }}{% endblock %}
 {% block page_content %}
-    <h1 class="login-h1">Login</h1>
+    <h1 class="login-h1 fw-light mt-3">Login</h1>
     
     {% if success %}
         <div class="alert alert-success">
@@ -16,15 +16,15 @@
 
     <form id="login-form" class="" action="/login" method="post">
         {{ login_form.hidden_tag() }}
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ login_form.username.label }}
             {{ login_form.username( class="form-control", placeholder = "Email/Username") }}
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ login_form.password.label }}
             {{ login_form.password( class="form-control", placeholder = "Password") }}
         </div>
 
         <p class="">Don't have an account? <a href="{{url_for('register.register')}}">Register Here</a></p>
-        {{ login_form.submit(class="btn") }}
+        {{ login_form.submit(class="btn btn-success") }}
     </form>
 {% endblock %}

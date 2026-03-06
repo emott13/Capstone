@@ -1,5 +1,4 @@
 from flask import Flask
-from flask_bootstrap import Bootstrap
 from sqlalchemy import text
 from extensions import *
 from flask_login import login_required, current_user
