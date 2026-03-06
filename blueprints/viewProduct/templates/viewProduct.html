@@ -35,6 +35,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
+        cursor: zoom-out;
         background-color: rgba(0, 0, 0, 0.8);
     }
     .open-image-zoom-content{
@@ -54,6 +55,12 @@
         color: var(--orange-1);
         font-size: 2rem;
         margin: 0 .2rem;
+    }
+    #zoomed-img{
+        transition: transform .2s;
+    }
+    #zoomed-img:hover{
+        transform: scale(1.7);
     }
 </style>
 {{ super() }}
@@ -161,6 +168,21 @@
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
+    function zoomPan(e) {
+        let zoomed = e.currentTarget;
+        let rect = zoomed.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        let xPct = (x / rect.width) * 100;
+        let yPct = (y / rect.height) * 100;
+        zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
+    }
+    function resetZoomOrigin(){
+        const zoomed = document.getElementById('zoomed-img');
+        if(zoomed){
+            zoomed.style.transformOrigin = 'center center';
+        }
+    }
     function openZoom(src){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -171,6 +193,8 @@
         }
         zoomed.src = imgSrc;
         overlay.style.display = 'block';
+        zoomed.addEventListener('mousemove', zoomPan);
+        zoomed.addEventListener('mouseleave', resetZoomOrigin);
     }
     function closeZoom(){
         let overlay = document.getElementById('image-zoom');
@@ -181,6 +205,9 @@
         overlay.style.display = 'none';
         if(zoomed){
             zoomed.src = '';
+            zoomed.style.transformOrigin = 'center center';
+            zoomed.removeEventListener('mousemove', zoomPan);
+            zoomed.removeEventListener('mouseleave', resetZoomOrigin);
         }
     }
 </script>
