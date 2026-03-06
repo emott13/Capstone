@@ -9,6 +9,15 @@ from blueprints.register.register import register_bp
 from blueprints.home.home import home_bp
 from blueprints.search.search import search_bp
 from blueprints.viewProduct.viewProduct import view_product_bp
+from blueprints.cart.cart import cart_bp
+from blueprints.order.order import order_bp
+from models import Users
+
+# load users
+@login_manager.user_loader
+def load_user(user_id):
+    return Users.query.get(user_id)
+
 
 # register blueprints
 app.register_blueprint(login_bp)
@@ -17,6 +26,8 @@ app.register_blueprint(view_database_bp)
 app.register_blueprint(home_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(view_product_bp)
+app.register_blueprint(cart_bp)
+app.register_blueprint(order_bp)
 
 # quick route to see all routes
 @app.route("/routes")
@@ -53,3 +64,8 @@ def test():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+    # # host="::" allows ipv6. Not nessessary but I thought it was cool
+    # ipv4 still works if I have this on, but I'm going to leave it off 
+    # just in case it doesn't work for you all
+    # app.run(debug=True, host="::") 

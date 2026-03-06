@@ -1,0 +1,89 @@
+<style>
+    .totalsContainer{
+        width: 350px;
+        float: right;
+    }
+    .checkoutBtn{
+        background-color: var(--purple-2);
+        color: black;
+    }
+    .checkoutBtn:hover{
+        background-color: var(--purple-1);
+        color: white !important;
+    }
+</style>
+{% extends "base.html" %}
+{% block page_content %}
+
+<form action="{{ url_for('cart.cart') }}" method="post" id="quantityChange">
+    {% if cartItems %}
+    <table class="table">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        {% for cartItem in cartItems %}
+        <tr>
+            <td>{{ cartItem.name }}</td>
+            <td>
+                <input 
+                    type="number" 
+                    min="1" 
+                    value="{{ cartItem.quantity }}" 
+                    name="{{ cartItem.id }}"
+                    onchange="document.querySelector('#quantityChange').submit()"
+                    >
+                <button 
+                    type="submit" 
+                    name="delete_product"
+                    value="{{ cartItem.id }}"
+                    class="delete-btn"
+                    onclick="return confirm('Remove this item?')"
+                    >
+                    <span class="glyphicon glyphicon-trash"></span>
+                </button>
+            </td>
+            <td>${{ cartItem.price | priceFormat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</form>
+
+<div class="totalsContainer">
+    <table class="table">
+        <tr>
+            <td>Subtotal</td>
+            <td>${{ totals[0] | priceFormat }}</td>
+        </tr>
+        <tr>
+            <td>Tax</td>
+            <td>${{ totals[1] | priceFormat }}</td>
+        </tr>
+        <tr>
+            <th>Total</th>
+            <td>${{ totals[2] | priceFormat }}</td>
+        </tr>
+    </table>
+    <form action="{{ url_for('order.order') }}" method="post">
+        <input type="hidden" name="subtotal" value="{{ totals[0] }}">
+        <input type="hidden" name="tax" value="{{ totals[1] }}">
+        <input type="hidden" name="total" value="{{ totals[2] }}">
+        <button type="submit" class="btn checkoutBtn" onclick="confirmOrder()">Checkout</button>
+    </form>
+</div>
+{% endif %}
+{% endblock %}
+<script>
+    function confirmOrder() {
+        return confirm("Are you sure you're ready to submit?")
+    }
+
+    function deleteItem(button){
+        let confirmed = confirm('Are you sure you want to remove this item?')
+        if (confirmed) {
+            let form = document.getElementById('deleteForm')
+        }
+    }
+
+</script>

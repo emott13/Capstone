@@ -6,6 +6,8 @@
     --tan-2: #FEFAE0;
     --orange-1: #E67E22;
     --orange-2: #f3ae53;
+    --purple-1: #400a3e;
+    --purple-2: #8d6790;
 
     --info-blue: #93bbc7;
     --warning-yellow: #F9CB43;
@@ -56,10 +58,22 @@ body{
     color: var(--tan-2) !important;
 }
 .navbar-nav > li > a:hover{
-    background-color: var(--orange-2);
+    background-color: var(--orange-2) !important;
     color: var(--green-1) !important;
 }
+.navbar-nav > li.boostrap-select > a{
+    background-color: var(--purple-2) !important;
+}
 .navbar-nav > li.active > a{
-    background-color: var(--orange-2);
+    background-color: var(--orange-2) !important;
     color: var(--green-1) !important;
+}
+.search-btn{
+    background-color: var(--purple-2) !important;
+    border: var(--purple-2) 1px solid !important;
+    height: 34px;
+}
+.search-btn:hover{
+    background-color: var(--purple-1) !important;
+    border: var(--purple-1) 1px solid !important;
 }

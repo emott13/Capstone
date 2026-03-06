@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block page_content %}
+
+{% if orders %}
+    {% for order in orders %}
+        <div class="order">
+            <h3>
+                Order #{{ order.order_id }} -
+                {{ order.order_date.strftime('%Y-%m-%d %H:%M:%S') }}
+            </h3>
+
+
+            <p>Subtotal: ${{ order.order_subtotal | priceFormat }}</p>
+            <p>Tax: ${{ order.order_tax | priceFormat }}</p>
+            <p>Total: ${{ order.order_total | priceFormat }}</p>
+
+            <table class="table">
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price at Purchase</th>
+                </tr>
+
+                {% for item in order.items %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ item.price_at_purchase | priceFormat }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    {% endfor %}
+{% else %}
+    <p>You have no past orders.</p>
+{% endif %}
+
+{% endblock %}

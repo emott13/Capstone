@@ -3,8 +3,15 @@
 {% block page_content %}
     <h1 class="login-h1">Login</h1>
     
+    {% if success %}
+        <div class="alert alert-success">
+            {{ success }}
+        </div>
+    {% endif %}
     {% if error %}
-        <p class="alert alert-danger">{{ error }}</p>
+        <div class="alert alert-danger">
+            {{ error }}
+        </div>
     {% endif %}
 
     <form id="login-form" class="" action="/login" method="post">
@@ -12,7 +19,6 @@
         <div class="form-group">
             {{ login_form.username.label }}
             {{ login_form.username( class="form-control", placeholder = "Email/Username") }}
-        </div>
         <div class="form-group">
             {{ login_form.password.label }}
             {{ login_form.password( class="form-control", placeholder = "Password") }}
