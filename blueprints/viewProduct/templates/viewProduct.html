@@ -139,7 +139,10 @@
                 <br>
                 <h4>Product Details</h4>
                 <div class="description-box">
-                    <p>Color: {{ color.hex_code }}<br>Specifications: {{ spec.specification }}</p>
+                    <p>
+                        Color: <span style="background-color: {{ color.hex_code }};">{{ color.hex_code }}</span><br>
+                        Specifications: {{ spec.specification }}
+                    </p>
                 </div>
             </div>
         </div>
