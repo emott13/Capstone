@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Product Name {{ super() }}{% endblock %}
+{% block title %}{{ product.product_name }} {{ super() }}{% endblock %}
 {% block styles %}
 <style>
     .outer-wrapper{
@@ -150,10 +150,15 @@
                 <div class="description-box">
                     <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
+
                 <br>
+
                 <h4>Product Details</h4>
                 <div class="description-box">
-                    <p>Color: {{ color.hex_code }}<br>Specifications: {{ spec.specification }}</p>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <p style="margin: 0; display">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;"></div>
+                    </div>
+                    <p>Specifications: {{ spec.specification }}</p>
                 </div>
             </div>
         </div>
