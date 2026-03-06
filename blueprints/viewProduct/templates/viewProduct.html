@@ -136,6 +136,11 @@
                 <div class="description-box">
                     <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
+                <br>
+                <h4>Product Details</h4>
+                <div class="description-box">
+                    <p>Color: {{ color.hex_code }}<br>Specifications: {{ spec.specification }}</p>
+                </div>
             </div>
         </div>
         
