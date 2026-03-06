@@ -24,9 +24,6 @@
         .image-container:hover .img-primary {
             opacity: 0;
         }
-        .col-sm-3 {
-            height: 475px;
-        }
     </style>
     {{ super() }}
 {% endblock %}
@@ -38,7 +35,7 @@
         {% if products %}
             <div class="row mx-4">
                 {% for product in products %}
-                    <div class="product list-group-item col-sm-3">
+                    <div class="product list-group-item col-sm-3 d-flex">
                         <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card">
                             <div class="image-container card-img-top">
                                 {% set images = image_dict.get(product.product_id, []) %}
