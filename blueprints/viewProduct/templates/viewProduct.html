@@ -47,13 +47,27 @@
         max-width: 1200px;
     }
     .review-hr {
-        border-color: var(--green-2);
-        filter: brightness(150%);
+        border-color: var(--green-1);
+        /* filter: brightness(100%); */
     }
     .review-star {
         color: var(--orange-1);
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin: 0 .2rem;
+    }
+    .review-star-sm {
+        font-size: 1rem;
+    }
+    .review-ratings {
+        max-width: 300;
+    }
+    .review-left {
+        flex-grow: .1;
+    }
+    .review-right {
+        min-width: 300px;
+        max-width: 600px;
+        flex-grow: .9;
     }
 </style>
 {{ super() }}
