@@ -28,7 +28,7 @@
         </tr>
         {% for cartItem in cartItems %}
         <tr>
-            <td>{{ cartItem.name }}</td>
+            <td>{{ cartItem.product_name }}</td>
             <td>
                 <input 
                     type="number" 
@@ -54,24 +54,46 @@
 </form>
 
 <div class="totalsContainer">
+    <form method="POST" action="{{ url_for('cart.apply_promo') }}">
+        <input type="text" name="promo_code" placeholder="Enter promo code">
+        <button type="submit">Apply</button>
+    </form>
     <table class="table">
         <tr>
-            <td>Subtotal</td>
-            <td>${{ totals[0] | priceFormat }}</td>
+            <td>Subtotal:</td>
+            <td>${{ subtotal | priceFormat }}</td> 
+        </tr>
+        {% if promotions %}
+            {% for promo in promotions %}
+            <tr>
+                <td>Code:</td>
+                <td>{{ promo.code }}</td>
+            </tr>
+            {% endfor %}
+        {% endif %}
+        <tr>
+            {% if discounts %}
+            <td>
+                Discounts: 
+            </td>
+            <td>
+                -${{ discounts | priceFormat }}
+            </td>
+            {% endif %}
         </tr>
         <tr>
-            <td>Tax</td>
-            <td>${{ totals[1] | priceFormat }}</td>
+            <td>Tax: </td>
+            <td>${{ tax | priceFormat }}</td>
         </tr>
         <tr>
-            <th>Total</th>
-            <td>${{ totals[2] | priceFormat }}</td>
+            <td>Total: </td>
+            <td>${{ total | priceFormat }}</td>
         </tr>
     </table>
     <form action="{{ url_for('order.order') }}" method="post">
-        <input type="hidden" name="subtotal" value="{{ totals[0] }}">
-        <input type="hidden" name="tax" value="{{ totals[1] }}">
-        <input type="hidden" name="total" value="{{ totals[2] }}">
+        <input type="hidden" name="subtotal" value="{{ subtotal }}">
+        <input type="hidden" name="tax" value="{{ tax }}">
+        <input type="hidden" name="total" value="{{ total }}">
         <button type="submit" class="btn checkoutBtn" onclick="confirmOrder()">Checkout</button>
     </form>
 </div>
