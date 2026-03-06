@@ -11,6 +11,9 @@
 
 
             <p>Subtotal: ${{ order.order_subtotal | priceFormat }}</p>
+            {% if order.discount_amount %}
+            <p>Discount Applied: -${{ order.discount_amount | priceFormat }}</p>
+            {% endif %}
             <p>Tax: ${{ order.order_tax | priceFormat }}</p>
             <p>Total: ${{ order.order_total | priceFormat }}</p>
 
