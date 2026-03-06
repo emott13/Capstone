@@ -212,7 +212,10 @@ class Orders(db.Model):
     order_id = db.Column(db.Integer, primary_key=True)
     customer_id = db.Column(db.BigInteger, db.ForeignKey("customers.customer_id"), nullable=False)
     order_status = db.Column(db.String(20), nullable=False)  # e.g., pending, shipped, delivered
-    amount = db.Column(db.Integer, nullable=False)  # Store total price in cents
+    order_date = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    order_subtotal = db.Column(db.Integer, nullable=False)  # Store total price in cents
+    order_tax = db.Column(db.Integer, nullable=False)  # Store tax amount in cents
+    order_total = db.Column(db.Integer, nullable=False)  # Store total price in cents
     payment_method = db.Column(db.String(50))  # e.g., credit card, PayPal
     paid_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())

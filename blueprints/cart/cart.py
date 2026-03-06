@@ -91,7 +91,7 @@ def cart():
         # for debugging
         print("cart items: ", cartItems)
 
-        # change price from cents to dollars and map items
+        # map items and calculate price for display
         cartItemsMap = []
         prices = []
         for item in cartItems:
