@@ -4,7 +4,6 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import create_engine
 from flask_bcrypt import Bcrypt
-from flask_bootstrap import Bootstrap
 from dotenv import load_dotenv
 from flask_login import LoginManager
 
@@ -36,9 +35,6 @@ db.init_app(app)
 
 # Initialize bcrypt
 bcrypt = Bcrypt(app)
-
-# Initialize bootstrap
-bootstrap = Bootstrap(app)
 
 # Initialize database and login manager
 login_manager = LoginManager()

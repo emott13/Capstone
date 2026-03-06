@@ -6,7 +6,7 @@
 {% endblock %}
 {% block scripts %}{{ super() }}{% endblock %}
 {% block page_content %}
-    <h1 class="text-center">Register</h1>
+    <h1 class="hw-light mt-3">Register</h1>
     
     {% if register_form.errors or error %}
         <div class="alert alert-danger">
@@ -22,38 +22,38 @@
 
     <form id="register-form" class="" action="/register" method="post">
         {{ register_form.hidden_tag() }}
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.email.label }}
             {{ register_form.email( class="form-control", placeholder = "Email") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.username.label }}
             {{ register_form.username( class="form-control", placeholder = "Username") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.password.label }}
             {{ register_form.password( class="form-control", placeholder = "Password") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.confirm_password.label }}
             {{ register_form.confirm_password( class="form-control", placeholder = "Confirm Password") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.first_name.label }}
             {{ register_form.first_name( class="form-control", placeholder = "First Name") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.last_name.label }}
             {{ register_form.last_name( class="form-control", placeholder = "Last Name") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             {{ register_form.dob.label }}
             {{ register_form.dob( class="form-control") }}
         </div>
-        <div class="form-group">
+        <div class="form-group mb-1">
             <label class="text-capitalize" for="role_id">type:</label>
             {% for role in roles %} 
-            <div class="register-roles">
+            <div class="register-roles mb-1">
                 <span class="form-control">
                     <input type="checkbox" class="register-role-checkbox" name="role_id" value="{{ role.role_id }}">
                     {{ role.role_name|title }}
@@ -63,6 +63,6 @@
         </div>
 
         <p class="">Already have an account? <a href="{{url_for('login.login')}}">Login Here</a></p>
-        {{ register_form.submit(class="btn") }}
+        {{ register_form.submit(class="btn btn-success") }}
     </form>
 {% endblock %}

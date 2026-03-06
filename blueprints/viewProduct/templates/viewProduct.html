@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 {% block title %}Product Name {{ super() }}{% endblock %}
 {% block styles %}
-
 <style>
     .outer-wrapper{
         margin: 50px 0 50px 0;
@@ -47,13 +46,17 @@
         width: 90%;
         max-width: 1200px;
     }
+    .review-hr {
+        border-color: var(--green-2);
+        filter: brightness(150%);
+    }
+    .review-star {
+        color: var(--orange-1);
+        font-size: 2rem;
+        margin: 0 .2rem;
+    }
 </style>
-
-{% extends "base.html" %}
-{% block title %}Product Name {{ super() }}{% endblock %}
-{% block style %}
-    <link rel="stylesheet" href="{{ url_for('viewProduct.static', filename='viewProduct.css') }}">
-    {{ super() }}
+{{ super() }}
 {% endblock %}
 {% block page_content %}
 
