@@ -220,17 +220,30 @@ class Orders(db.Model):
     paid_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+    
+    # RELATIONSHIPS
+    items = db.relationship(
+        "OrderItems",
+        backref="order",
+        lazy=True
+    )
 
 # order items
 class OrderItems(db.Model):
     __tablename__ = "order_items"
     order_item_id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.order_id"), nullable=False)
-    product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
+    product_id = db.Column(db.BigInteger, db.ForeignKey("products.product_id"), nullable=False)
     quantity = db.Column(db.Integer, nullable=False)
     price_at_purchase = db.Column(db.Integer, nullable=False)  # Store price at purchase time in cents
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    # RELATIONSHIPS 
+    product = db.relationship(
+        "Products",
+        backref="order_items"
+    )
 
 # order addresses
 class OrderAddresses(db.Model):
@@ -261,5 +274,190 @@ class Reviews(db.Model):
     rating = db.Column(db.Integer, nullable=False)  # e.g., 1-5
     title = db.Column(db.String(100), nullable=False)
     description = db.Column(db.Text)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+# discounts
+class Promotion(db.Model):
+    __tablename__ = "promotions"
+    promotion_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    code = db.Column(db.String(50), unique=True)  # nullable for automatic discounts
+    description = db.Column(db.Text)
+
+    # Discount definition
+    discount_type = db.Column(
+        db.String(30),
+        nullable=False
+        # values:
+        # 'percentage'
+        # 'fixed_amount'
+        # 'free_shipping'
+        # 'bogo'
+    )
+
+    discount_value = db.Column(db.Integer, nullable=False)
+    # cents if fixed_amount
+    # integer percent if percentage
+
+    # Scope
+    scope_type = db.Column(
+        db.String(30),
+        nullable=False
+        # 'cart'
+        # 'product'
+        # 'vendor'
+        # 'category'
+    )
+
+    # Ownership
+    created_by_admin = db.Column(db.Boolean, default=True)
+    vendor_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("vendors.vendor_id"),
+        nullable=True
+    )  # null if global/admin promo
+
+    # Limits
+    usage_limit = db.Column(db.Integer)  # total uses allowed
+    per_customer_limit = db.Column(db.Integer)
+
+    stackable = db.Column(db.Boolean, default=False)
+
+    # Time controls
+    starts_at = db.Column(db.DateTime(timezone=True))
+    ends_at = db.Column(db.DateTime(timezone=True))
+
+    is_active = db.Column(db.Boolean, default=True)
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+    updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+
+    # RELATIONSHIPS
+    targets = db.relationship(
+        "PromotionTarget",
+        backref="promotion",
+        cascade="all, delete-orphan"
+    )
+
+    conditions = db.relationship(
+        "PromotionCondition",
+        backref="promotion",
+        cascade="all, delete-orphan"
+    )
+
+    redemptions = db.relationship(
+        "PromotionRedemption",
+        backref="promotion",
+        cascade="all, delete-orphan"
+    )
+
+    order_discounts = db.relationship(
+        "OrderDiscount",
+        backref="promotion",
+        cascade="all, delete-orphan"
+    )
+
+# targets
+# allows associating a promotion with specific products, vendors, or categories based on scope_type
+class PromotionTarget(db.Model):
+    __tablename__ = "promotion_targets"
+
+    promotion_target_id = db.Column(db.Integer, primary_key=True)
+
+    promotion_id = db.Column(
+        db.Integer,
+        db.ForeignKey("promotions.promotion_id"),
+        nullable=False
+    )
+
+    product_id = db.Column(
+        db.Integer,
+        db.ForeignKey("products.product_id"),
+        nullable=True
+    )
+
+    vendor_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("vendors.vendor_id"),
+        nullable=True
+    )
+
+    category_id = db.Column(
+        db.Integer,
+        db.ForeignKey("product_categories.category_id"),
+        nullable=True
+    )
+
+# promotion conditions
+class PromotionCondition(db.Model):
+    __tablename__ = "promotion_conditions"
+    promotion_condition_id = db.Column(db.Integer, primary_key=True)
+
+    promotion_id = db.Column(
+        db.Integer,
+        db.ForeignKey("promotions.promotion_id"),
+        nullable=False
+    )
+
+    condition_type = db.Column(
+        db.String(50),
+        nullable=False
+        # examples:
+        # 'min_cart_total'
+        # 'first_order_only'
+        # 'customer_role'
+    )
+
+    condition_value = db.Column(db.String(100), nullable=False)
+
+# promotion redemptions
+class PromotionRedemption(db.Model):
+    __tablename__ = "promotion_redemptions"
+    promotion_redemption_id = db.Column(db.Integer, primary_key=True)
+
+    promotion_id = db.Column(
+        db.Integer,
+        db.ForeignKey("promotions.promotion_id"),
+        nullable=False
+    )
+
+    customer_id = db.Column(
+        db.BigInteger,
+        db.ForeignKey("users.user_id"),
+        nullable=False
+    )
+
+    order_id = db.Column(
+        db.Integer,
+        db.ForeignKey("orders.order_id"),
+        nullable=False
+    )
+
+    redeemed_at = db.Column(
+        db.DateTime(timezone=True),
+        server_default=db.func.now()
+    )
+
+# order discounts
+class OrderDiscount(db.Model):
+    __tablename__ = "order_discounts"
+
+    order_discount_id = db.Column(db.Integer, primary_key=True)
+
+    order_id = db.Column(
+        db.Integer,
+        db.ForeignKey("orders.order_id"),
+        nullable=False
+    )
+
+    promotion_id = db.Column(
+        db.Integer,
+        db.ForeignKey("promotions.promotion_id"),
+        nullable=False
+    )
+
+    code_used = db.Column(db.String(50))
+    discount_amount_applied = db.Column(db.Integer, nullable=False)  # in cents
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
