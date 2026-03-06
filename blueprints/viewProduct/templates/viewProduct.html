@@ -142,10 +142,9 @@
     </div>    
 </div>
 
-<div class="open-image-zoom" id="image-zoom" style="display: none;">
-    <span class="glyphicon glyphicon-remove" style="color: white; cursor: pointer; font-size: 28px; position:absolute; right:20px; top:20px;" onclick="closeZoom()"></span>
-    <div class="open-image-zoom-content">
-        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}">
+<div class="open-image-zoom" id="image-zoom" style="display: none;" onclick="closeZoom()">
+        <div class="open-image-zoom-content">
+        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}" onclick="event.stopPropagation()">
     </div>
 </div>
 
