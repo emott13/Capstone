@@ -49,7 +49,11 @@
     }
 </style>
 
-{{ super() }}
+{% extends "base.html" %}
+{% block title %}Product Name {{ super() }}{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('viewProduct.static', filename='viewProduct.css') }}">
+    {{ super() }}
 {% endblock %}
 {% block page_content %}
 
@@ -132,7 +136,8 @@
     </div>
 </div>
 
-<script>
+{% include "reviewProduct.html" %}
+<!-- <script>
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
         if(main){
@@ -172,6 +177,6 @@
             zoomed.src = '';
         }
     }
-</script>
+</script> -->
 
 {% endblock %}

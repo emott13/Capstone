@@ -1,0 +1,10 @@
+.review-hr {
+    border-color: var(--green-2);
+    filter: brightness(150%);
+}
+
+.review-star {
+    color: var(--orange-1);
+    font-size: 2rem;
+    margin: 0 .2rem;
+}
