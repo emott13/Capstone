@@ -35,6 +35,7 @@
         width: 100%;
         height: 100%;
         overflow: auto;
+        cursor: zoom-out;
         background-color: rgba(0, 0, 0, 0.8);
     }
     .open-image-zoom-content{
@@ -68,6 +69,12 @@
         min-width: 300px;
         max-width: 600px;
         flex-grow: .9;
+    }
+    #zoomed-img{
+        transition: transform .2s;
+    }
+    #zoomed-img:hover{
+        transform: scale(1.7);
     }
 </style>
 {{ super() }}
@@ -143,16 +150,20 @@
                 <div class="description-box">
                     <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
+                <br>
+                <h4>Product Details</h4>
+                <div class="description-box">
+                    <p>Color: {{ color.hex_code }}<br>Specifications: {{ spec.specification }}</p>
+                </div>
             </div>
         </div>
         
     </div>    
 </div>
 
-<div class="open-image-zoom" id="image-zoom" style="display: none;">
-    <span class="glyphicon glyphicon-remove" style="color: white; cursor: pointer; font-size: 28px; position:absolute; right:20px; top:20px;" onclick="closeZoom()"></span>
-    <div class="open-image-zoom-content">
-        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}">
+<div class="open-image-zoom" id="image-zoom" style="display: none;" onclick="closeZoom()">
+        <div class="open-image-zoom-content">
+        <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}" onclick="event.stopPropagation()">
     </div>
 </div>
 
@@ -175,6 +186,21 @@
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
+    function zoomPan(e) {
+        let zoomed = e.currentTarget;
+        let rect = zoomed.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        let xPct = (x / rect.width) * 100;
+        let yPct = (y / rect.height) * 100;
+        zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
+    }
+    function resetZoomOrigin(){
+        const zoomed = document.getElementById('zoomed-img');
+        if(zoomed){
+            zoomed.style.transformOrigin = 'center center';
+        }
+    }
     function openZoom(src){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -185,6 +211,8 @@
         }
         zoomed.src = imgSrc;
         overlay.style.display = 'block';
+        zoomed.addEventListener('mousemove', zoomPan);
+        zoomed.addEventListener('mouseleave', resetZoomOrigin);
     }
     function closeZoom(){
         let overlay = document.getElementById('image-zoom');
@@ -195,6 +223,9 @@
         overlay.style.display = 'none';
         if(zoomed){
             zoomed.src = '';
+            zoomed.style.transformOrigin = 'center center';
+            zoomed.removeEventListener('mousemove', zoomPan);
+            zoomed.removeEventListener('mouseleave', resetZoomOrigin);
         }
     }
 </script>
