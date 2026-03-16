@@ -16,11 +16,7 @@ class ReviewRepository:
         ).fetchall()
         self.reviewCount = len(self.reviews)
 
-        self.averageRating = float(round(
-            db.session.query(
-                func.avg(Reviews.rating)
-            ).filter(Reviews.product_id==product_id).scalar(),
-            1))
+        self.averageRating = self._initAverageRating()
         
         # dictionary containing the total of each star's reviews
         # ex two 1 star reviews, zero 2 stars, etc.
@@ -77,3 +73,13 @@ class ReviewRepository:
             starCount[query[0]] = query[1]
         
         return starCount
+    
+    def _initAverageRating(self):
+        if (self.reviewCount == 0):
+            return 0
+
+        return float(round(
+            db.session.query(
+                func.avg(Reviews.rating)
+            ).filter(Reviews.product_id==self.product_id).scalar(),
+            1))
