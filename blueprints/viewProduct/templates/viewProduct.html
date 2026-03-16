@@ -2,6 +2,9 @@
 {% block title %}Product Name {{ super() }}{% endblock %}
 {% block styles %}
 <style>
+    .color-orange{
+        color: var(--orange-1);
+    }
     .outer-wrapper{
         margin: 50px 0 50px 0;
     }
@@ -114,14 +117,23 @@
             <div class="row" style="margin-bottom: 10px;">
                 <div class="d-flex flex-wrap" style="padding: 0 15px;">
                     <h4 class="p-1">
+                        {% for i in range(reviews.getFullStars()) %}
+                            <i class="color-orange bi bi-star-fill"></i>
+                        {% endfor %}
+                        {% if reviews.getHalfStars() %}
+                            <i class="color-orange bi bi-star-half"></i>
+                        {% endif %}
+                        {% for i in range(reviews.getEmptyStars()) %}
+                            <i class="color-orange bi bi-star"></i>
+                        {% endfor %}
+                        <!-- <i class="bi bi-star"></i>
                         <i class="bi bi-star"></i>
                         <i class="bi bi-star"></i>
                         <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
-                        <i class="bi bi-star"></i>
+                        <i class="bi bi-star"></i> -->
                     </h4>
                     <h4 class="p-1">
-                        0.0 <a href="#">(0 Reviews)</a>
+                        {{ reviews.getAverageRating() }} <a href="#">({{ reviews.getReviewCount() }} Reviews)</a>
                     </h4>
                     <h4 class="p-1">
                         <a href="#"><h4>Write a Review...</h4></a>

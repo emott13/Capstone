@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, url_for, redirect
 from extensions import conn
 from models import Products
 from sqlalchemy import text
+from repositories.ReviewRepository import ReviewRepository
+
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
@@ -13,6 +15,7 @@ def viewProduct():
     images = []
     color = None
     spec = None
+    reviews = ReviewRepository(product_id)
 
     if product_id:
         try:
@@ -49,4 +52,4 @@ def viewProduct():
         except Exception as error:
             error = "Error loading product."
     
-    return render_template("viewProduct.html", product=product, vendor=vendor, images=images, color=color, spec=spec, error=error)
+    return render_template("viewProduct.html", product=product, vendor=vendor, images=images, color=color, spec=spec, error=error, reviews=reviews)
