@@ -14,6 +14,16 @@ def cart():
 
     cart = CartService.get_cart(customer_id, promo_code)
 
+    if cart is None:
+        cart = {
+            "items": [],
+            "subtotal": 0,
+            "discounts": 0,
+            "tax": 0,
+            "total": 0,
+            "applied_promotions": []
+        }
+
     return render_template(
         "cart.html",
         cartItems=cart["items"],
