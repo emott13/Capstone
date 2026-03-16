@@ -40,6 +40,8 @@ def view_database():
             except Exception as e:
                 error = str(e)
 
+    print(f"Allowed tables: {allowed_tables}")
+    print(f"Selected table: {table_name}")
     return render_template(
         "view_database.html",
         results=results,

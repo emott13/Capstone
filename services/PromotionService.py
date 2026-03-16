@@ -1,212 +1,143 @@
 from datetime import datetime
-from models import (
-    Promotion,
-    PromotionTarget,
-    PromotionCondition,
-    PromotionRedemption
-)
 from sqlalchemy import func
 from extensions import db
-
+from models import Promotion, PromotionTarget, PromotionCondition, PromotionRedemption, Users, Orders
 
 class PromotionService:
 
     @staticmethod
-    def apply_promotions(order, order_items, subtotal, promo_code=None):
-
-        promotions = PromotionService.get_valid_promotions(promo_code)
-
-        discount_total = 0
+    def apply_promotions(items, subtotal, customer_id, promo_code=None):
+        """
+        Apply all eligible promotions to the cart.
+        Returns: (total_discount, list_of_applied_promotions)
+        """
+        customer = Users.query.get(customer_id)
         applied_promotions = []
+        total_discount = 0
+        applied_non_stackable = False
 
-        for promo in promotions:
+        # Fetch active promotions
+        promos = Promotion.query.filter(Promotion.is_active == True).all()
 
-            if not PromotionService.check_conditions(promo, order, subtotal):
+        # Optionally filter by promo code if provided
+        if promo_code:
+            promos = [p for p in promos if p.code and p.code.upper() == promo_code.upper()]
+
+        # Shuffle or sort by discount value (optional)
+        promos.sort(key=lambda p: p.discount_value, reverse=True)
+
+        for promo in promos:
+            # Check usage limits
+            if not PromotionService.check_usage_limits(promo, customer_id):
                 continue
 
-            discount = PromotionService.calculate_discount(
-                promo,
-                order_items,
-                subtotal
-            )
+            # Check conditions
+            if not PromotionService.check_conditions(promo, customer, subtotal):
+                continue
 
-            if discount > 0:
-                discount_total += discount
-                applied_promotions.append(promo)
+            # Check if scope matches cart items
+            if not PromotionService.scope_matches(promo, items):
+                continue
 
-        return discount_total, applied_promotions
+            # Non-stackable promotion conflict
+            if applied_non_stackable and not promo.stackable:
+                continue
 
+            # Calculate discount
+            discount_amount = PromotionService.calculate_discount(promo, items, subtotal)
+            if discount_amount <= 0:
+                continue
 
-    @staticmethod
-    def get_valid_promotions(promo_code=None):
+            total_discount += discount_amount
+            applied_promotions.append({
+                "promotion_id": promo.promotion_id,
+                "code": promo.code,
+                "name": promo.name,
+                "discount_amount": discount_amount
+            })
 
-        now = datetime.utcnow()
+            if not promo.stackable:
+                applied_non_stackable = True
 
-        query = Promotion.query.filter(
-            Promotion.is_active == True,
-            Promotion.starts_at <= now,
-            Promotion.ends_at >= now
-        )
-
-        if promo_code:
-            query = query.filter(Promotion.code == promo_code)
-
-        return query.all()
-
-
-    @staticmethod
-    def calculate_discount(promo, order_items, subtotal):
-
-        if promo.discount_type == "percentage":
-            return int(subtotal * (promo.discount_value / 100))
-
-        if promo.discount_type == "fixed_amount":
-            return promo.discount_value
-
-        return 0
-
+        return total_discount, applied_promotions
 
     @staticmethod
-    def check_conditions(promo, order, subtotal):
+    def check_usage_limits(promo, customer_id):
+        """
+        Returns True if promotion usage is under limits.
+        """
+        total_usage = db.session.query(func.count(PromotionRedemption.promotion_redemption_id))\
+            .filter_by(promotion_id=promo.promotion_id).scalar()
 
-        for condition in promo.conditions:
+        if promo.usage_limit and total_usage >= promo.usage_limit:
+            return False
 
-            if condition.condition_type == "min_cart_total":
-                if subtotal < int(condition.condition_value):
-                    return False
+        customer_usage = db.session.query(func.count(PromotionRedemption.promotion_redemption_id))\
+            .filter_by(promotion_id=promo.promotion_id, customer_id=customer_id).scalar()
 
-            if condition.condition_type == "first_order_only":
-                if order.customer.orders.count() > 1:
-                    return False
+        if promo.per_customer_limit and customer_usage >= promo.per_customer_limit:
+            return False
 
         return True
 
-    # @staticmethod
-    # def evaluate_cart(cart, customer):
-    #     """
-    #     Returns:
-    #     {
-    #         "discounts": [],
-    #         "total_discount": int,
-    #         "final_total": int
-    #     }
-    #     """
+    @staticmethod
+    def check_conditions(promo, customer, cart_subtotal):
+        """
+        Returns True if promotion meets all conditions.
+        """
+        conditions = PromotionCondition.query.filter_by(promotion_id=promo.promotion_id).all()
+        for condition in conditions:
+            if condition.condition_type == "min_cart_total":
+                if cart_subtotal < int(condition.condition_value):
+                    return False
+            elif condition.condition_type == "first_order_only":
+                previous_orders = Orders.query.filter(
+                    Orders.customer_id == customer.user_id
+                ).count()
+                if previous_orders > 0:
+                    return False
+            elif condition.condition_type == "customer_role":
+                if not customer.has_role(condition.condition_value):
+                    return False
+        return True
 
-    #     now = datetime.utcnow()
+    @staticmethod
+    def scope_matches(promo, items):
+        """
+        Returns True if promo scope applies to cart items.
+        `items` should be a list of dicts:
+        [{'product_id': ..., 'vendor_id': ..., 'category_id': ...}]
+        """
+        if promo.scope_type == "cart":
+            return True
 
-    #     promotions = Promotion.query.filter(
-    #         Promotion.is_active == True,
-    #         Promotion.starts_at <= now,
-    #         Promotion.ends_at >= now
-    #     ).all()
+        targets = PromotionTarget.query.filter_by(promotion_id=promo.promotion_id).all()
+        for item in items:
+            for target in targets:
+                if promo.scope_type == "product" and target.product_id == item["product_id"]:
+                    return True
+                if promo.scope_type == "vendor" and target.vendor_id == item["vendor_id"]:
+                    return True
+                if promo.scope_type == "category" and hasattr(item, "category_id") and target.category_id == item.get("category_id"):
+                    return True
+        return False
 
-    #     subtotal = cart["subtotal"]
-    #     total_discount = 0
-    #     applied_promos = []
-    #     non_stackable_applied = False
-
-    #     for promo in promotions:
-
-    #         if not PromotionService._check_usage_limits(promo, customer.user_id):
-    #             continue
-
-    #         if not PromotionService._check_conditions(promo, cart, customer):
-    #             continue
-
-    #         if not PromotionService._check_scope(promo, cart):
-    #             continue
-
-    #         if non_stackable_applied and not promo.stackable:
-    #             continue
-
-    #         discount = PromotionService._calculate_discount(promo, cart)
-
-    #         if discount <= 0:
-    #             continue
-
-    #         total_discount += discount
-
-    #         applied_promos.append({
-    #             "promotion_id": promo.promotion_id,
-    #             "code": promo.code,
-    #             "discount": discount
-    #         })
-
-    #         if not promo.stackable:
-    #             non_stackable_applied = True
-
-    #     final_total = max(subtotal - total_discount, 0)
-
-    #     return {
-    #         "discounts": applied_promos,
-    #         "total_discount": total_discount,
-    #         "final_total": final_total
-    #     }
-
-    # # ----------------------------
-    # # Helper Methods
-    # # ----------------------------
-
-    # @staticmethod
-    # def _check_usage_limits(promo, customer_id):
-    #     total_usage = db.session.query(
-    #         func.count(PromotionRedemption.promotion_id)
-    #     ).filter_by(
-    #         promotion_id=promo.promotion_id
-    #     ).scalar()
-
-    #     if promo.usage_limit and total_usage >= promo.usage_limit:
-    #         return False
-
-    #     customer_usage = db.session.query(
-    #         func.count(PromotionRedemption.promotion_id)
-    #     ).filter_by(
-    #         promotion_id=promo.promotion_id,
-    #         customer_id=customer_id
-    #     ).scalar()
-
-    #     if promo.per_customer_limit and customer_usage >= promo.per_customer_limit:
-    #         return False
-
-    #     return True
-
-    # @staticmethod
-    # def _check_conditions(promo, cart, customer):
-    #     for condition in promo.conditions:
-
-    #         if condition.condition_type == "min_cart_total":
-    #             if cart["subtotal"] < int(condition.condition_value):
-    #                 return False
-
-    #     return True
-
-    # @staticmethod
-    # def _check_scope(promo, cart):
-
-    #     if promo.scope_type == "cart":
-    #         return True
-
-    #     for item in cart["items"]:
-
-    #         if promo.scope_type == "product":
-    #             if item["product_id"] in [t.product_id for t in promo.targets]:
-    #                 return True
-
-    #         if promo.scope_type == "vendor":
-    #             if item["vendor_id"] in [t.vendor_id for t in promo.targets]:
-    #                 return True
-
-    #     return False
-
-    # @staticmethod
-    # def _calculate_discount(promo, cart):
-
-    #     subtotal = cart["subtotal"]
-
-    #     if promo.discount_type == "percentage":
-    #         return int(subtotal * (promo.discount_value / 100))
-
-    #     if promo.discount_type == "fixed_amount":
-    #         return min(promo.discount_value, subtotal)
-
-    #     return 0
+    @staticmethod
+    def calculate_discount(promo, items, subtotal):
+        """
+        Compute discount amount based on type.
+        """
+        if promo.discount_type == "percentage":
+            return int(subtotal * (promo.discount_value / 100))
+        elif promo.discount_type == "fixed_amount":
+            return min(promo.discount_value, subtotal)
+        elif promo.discount_type == "bogo":
+            # Simplified: 50% off cheapest item if eligible
+            if not items:
+                return 0
+            cheapest_item = min(items, key=lambda x: x["price"])
+            return int(cheapest_item["price"] * 0.5)
+        elif promo.discount_type == "free_shipping":
+            # Handle shipping discount elsewhere if needed
+            return 0
+        return 0

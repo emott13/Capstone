@@ -5,14 +5,22 @@ from services.CartService import CartService
 cart_bp = Blueprint("cart", __name__, template_folder="templates_cart")
 
 @cart_bp.route("/cart")
-@login_required
 def cart():
 
+    if not current_user.is_authenticated:
+        return redirect(url_for("login.login"))
+    if not current_user.has_role("customer"):
+        return redirect(url_for("login.login"))
+    
     customer_id = current_user.get_id()
 
     promo_code = session.get("manual_promo_code")
 
     cart = CartService.get_cart(customer_id, promo_code)
+
+    if not cart or not cart.get("items"):
+        # Either the cart doesn't exist, or it has no items
+        return render_template("cart.html", cart=None)
 
     return render_template(
         "cart.html",
@@ -37,5 +45,16 @@ def apply_promo():
     session["manual_promo_code"] = code
 
     flash("Promo code applied","success")
+
+    return redirect(url_for("cart.cart"))
+
+@cart_bp.route("/update_cart", methods=["POST"])
+@login_required
+def update_cart():
+
+    CartService.update_quantities(
+        customer_id=current_user.get_id(),
+        form_data=request.form
+    )
 
     return redirect(url_for("cart.cart"))
