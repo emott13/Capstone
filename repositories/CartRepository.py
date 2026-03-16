@@ -134,31 +134,31 @@ class CartRepository:
                 VALUES (:cart_id, :product_id, :quantity)
             """), {"cart_id": cart_id, "product_id": product_id, "quantity": quantity})
         db.session.commit()
-        
-      @staticmethod
-      def update_quantity(cart_item_id, quantity):
 
-          sql = """
-          UPDATE cart_items
-          SET quantity = :quantity
-          WHERE cart_item_id = :cart_item_id
-          """
+    @staticmethod
+    def update_quantity(cart_item_id, quantity):
+        sql = """
+        UPDATE cart_items
+        SET quantity = :quantity
+        WHERE cart_item_id = :cart_item_id
+        """
 
-          db.session.execute(
-              text(sql),
-              {
-                  "quantity": quantity,
-                  "cart_item_id": cart_item_id
-              }
-          )
+        db.session.execute(
+            text(sql),
+            {
+                "quantity": quantity,
+                "cart_item_id": cart_item_id
+            }
+        )
+        db.session.commit()
 
+    @staticmethod
+    def clear_cart(cart_id):
 
-      @staticmethod
-      def clear_cart(cart_id):
+        sql = """
+        DELETE FROM cart_items
+        WHERE cart_id = :cart_id
+        """
 
-          sql = """
-          DELETE FROM cart_items
-          WHERE cart_id = :cart_id
-          """
-
-          db.session.execute(text(sql), {"cart_id": cart_id})
+        db.session.execute(text(sql), {"cart_id": cart_id})
+        db.session.commit()
