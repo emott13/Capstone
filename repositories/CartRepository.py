@@ -57,6 +57,7 @@ class CartRepository:
             COALESCE(
                 json_agg(
                     json_build_object(
+                        'cart_item_id', ci.cart_item_id,
                         'product_id', p.product_id,
                         'product_name', p.product_name,
                         'vendor_id', p.vendor_id,
