@@ -154,12 +154,11 @@ class CartRepository:
         db.session.commit()
 
     @staticmethod
-    def clear_cart(cart_id):
-
+    def remove_item(cart_item_id):
         sql = """
         DELETE FROM cart_items
-        WHERE cart_id = :cart_id
+        WHERE cart_item_id = :cart_item_id
         """
 
-        db.session.execute(text(sql), {"cart_id": cart_id})
+        db.session.execute(text(sql), {"cart_item_id": cart_item_id})
         db.session.commit()
