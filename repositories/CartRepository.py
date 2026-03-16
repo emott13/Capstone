@@ -6,6 +6,45 @@ import json
 class CartRepository:
 
     @staticmethod
+    def get_cart_items(cart_id):
+
+        sql = """
+        SELECT
+            ci.product_id,
+            ci.quantity,
+            p.price,
+            p.vendor_id
+        FROM cart_items ci
+        JOIN products p ON ci.product_id = p.product_id
+        WHERE ci.cart_id = :cart_id
+        """
+
+        result = db.session.execute(
+            text(sql),
+            {"cart_id": cart_id}
+        ).mappings().all()
+
+        return result
+
+
+    @staticmethod
+    def get_cart_id(customer_id):
+
+        sql = """
+        SELECT cart_id
+        FROM carts
+        WHERE customer_id = :customer_id
+        """
+
+        result = db.session.execute(
+            text(sql),
+            {"customer_id": customer_id}
+        ).scalar()
+
+        return result
+
+
+    @staticmethod
     def get_cart(customer_id):
         """
         Fetch the customer's cart and all items as Python-native list of dicts.
@@ -50,5 +89,76 @@ class CartRepository:
         return {
             "cart_id": result["cart_id"],
             "customer_id": result["customer_id"],
-            "items": items
+            "items": items,
         }
+
+    @staticmethod
+    def get_or_create_cart(customer_id):
+        """
+        Get the cart for the customer / create one if not avalible
+        """
+        result = db.session.execute(text("""
+            SELECT cart_id FROM carts
+            WHERE customer_id = :customer_id
+        """), {"customer_id": customer_id}).fetchone()
+        if result:
+            return result[0]
+        else:
+            new_cart = db.session.execute(text("""
+                INSERT INTO carts (customer_id) VALUES
+                (:customer_id) RETURNING cart_id
+            """), {"customer_id": customer_id}).fetchone()
+            db.session.commit()
+            return new_cart[0]
+
+    @staticmethod
+    def add_item(cart_id, product_id, quantity):
+        """
+        Add or update an item in the cart
+        """
+        existing = db.session.execute(text("""
+            SELECT cart_item_id, quantity FROM cart_items
+            WHERE cart_id = :cart_id AND product_id = :product_id
+        """), {"cart_id": cart_id, "product_id": product_id}).fetchone()
+        if existing:
+            # Update the quantity
+            new_quantity = existing[1] + quantity
+            db.session.execute(text("""
+                UPDATE cart_items SET quantity = :quantity, updated_at = CURRENT_TIMESTAMP
+                WHERE cart_item_id = :cart_item_id
+            """), {"quantity": new_quantity, "cart_item_id": existing[0]})
+        else:
+            # Insert the new item
+            db.session.execute(text("""
+                INSERT INTO cart_items (cart_id, product_id, quantity)
+                VALUES (:cart_id, :product_id, :quantity)
+            """), {"cart_id": cart_id, "product_id": product_id, "quantity": quantity})
+        db.session.commit()
+        
+      @staticmethod
+      def update_quantity(cart_item_id, quantity):
+
+          sql = """
+          UPDATE cart_items
+          SET quantity = :quantity
+          WHERE cart_item_id = :cart_item_id
+          """
+
+          db.session.execute(
+              text(sql),
+              {
+                  "quantity": quantity,
+                  "cart_item_id": cart_item_id
+              }
+          )
+
+
+      @staticmethod
+      def clear_cart(cart_id):
+
+          sql = """
+          DELETE FROM cart_items
+          WHERE cart_id = :cart_id
+          """
+
+          db.session.execute(text(sql), {"cart_id": cart_id})

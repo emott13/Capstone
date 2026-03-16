@@ -52,4 +52,6 @@ def viewProduct():
         except Exception as error:
             error = "Error loading product."
     
-    return render_template("viewProduct.html", product=product, vendor=vendor, images=images, color=color, spec=spec, error=error, reviews=reviews)
+    return render_template("viewProduct.html", product=product, vendor=vendor, 
+                           images=images, color=color, spec=spec, error=error, 
+                           reviews=reviews)
