@@ -13,12 +13,14 @@ def search():
     category = request.args.get('category', '').strip()
 
     sql = """
-        SELECT DISTINCT p.*
+        SELECT DISTINCT p.*, v.store_name
         FROM products p
         LEFT JOIN product_category_map pcm
             ON p.product_id = pcm.product_id
         LEFT JOIN product_categories pc
             ON pcm.category_id = pc.category_id
+        LEFT JOIN vendors v
+            ON p.vendor_id = v.vendor_id
         WHERE 1=1
     """
 
@@ -30,6 +32,7 @@ def search():
             AND (
                 p.product_name ILIKE :query
                 OR p.description ILIKE :query
+                OR v.store_name ILIKE :query
             )
         """
         params["query"] = f"%{query}%"
@@ -38,6 +41,7 @@ def search():
     if category:
         sql += " AND pc.category_name ILIKE :category"
         params["category"] = category
+
 
     sql += " ORDER BY p.created_at DESC"
 
