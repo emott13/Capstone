@@ -24,12 +24,12 @@
                     <th>Price at Purchase</th>
                 </tr>
 
-                {% for item in order.items %}
-                <tr>
-                    <td>{{ item.product_name }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td>${{ item.price_at_purchase | priceFormat }}</td>
-                </tr>
+                {% for item in order.order_items %}
+                    <tr>
+                        <td>{{ item.product_name }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.price_at_purchase | priceFormat }}</td>
+                    </tr>
                 {% endfor %}
             </table>
         </div>

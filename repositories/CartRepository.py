@@ -6,6 +6,45 @@ import json
 class CartRepository:
 
     @staticmethod
+    def get_cart_items(cart_id):
+
+        sql = """
+        SELECT
+            ci.product_id,
+            ci.quantity,
+            p.price,
+            p.vendor_id
+        FROM cart_items ci
+        JOIN products p ON ci.product_id = p.product_id
+        WHERE ci.cart_id = :cart_id
+        """
+
+        result = db.session.execute(
+            text(sql),
+            {"cart_id": cart_id}
+        ).mappings().all()
+
+        return result
+
+
+    @staticmethod
+    def get_cart_id(customer_id):
+
+        sql = """
+        SELECT cart_id
+        FROM carts
+        WHERE customer_id = :customer_id
+        """
+
+        result = db.session.execute(
+            text(sql),
+            {"customer_id": customer_id}
+        ).scalar()
+
+        return result
+
+
+    @staticmethod
     def get_cart(customer_id):
         """
         Fetch the customer's cart and all items as Python-native list of dicts.
@@ -95,3 +134,31 @@ class CartRepository:
                 VALUES (:cart_id, :product_id, :quantity)
             """), {"cart_id": cart_id, "product_id": product_id, "quantity": quantity})
         db.session.commit()
+        
+      @staticmethod
+      def update_quantity(cart_item_id, quantity):
+
+          sql = """
+          UPDATE cart_items
+          SET quantity = :quantity
+          WHERE cart_item_id = :cart_item_id
+          """
+
+          db.session.execute(
+              text(sql),
+              {
+                  "quantity": quantity,
+                  "cart_item_id": cart_item_id
+              }
+          )
+
+
+      @staticmethod
+      def clear_cart(cart_id):
+
+          sql = """
+          DELETE FROM cart_items
+          WHERE cart_id = :cart_id
+          """
+
+          db.session.execute(text(sql), {"cart_id": cart_id})

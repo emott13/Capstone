@@ -1,6 +1,7 @@
 # services/CartService.py
 from repositories.CartRepository import CartRepository
 from services.OrderPricingService import OrderPricingService
+from extensions import db
 
 class CartService:
 
@@ -32,6 +33,28 @@ class CartService:
         print('CartService.get_cart - Final cart data:', cart)  # Debug log
         return cart
 
+
+    @staticmethod
+    def update_quantities(customer_id, form_data):
+
+        cart_id = CartRepository.get_cart_id(customer_id)
+
+        for field, value in form_data.items():
+
+            if field.startswith("quantity_"):
+
+                cart_item_id = field.replace("quantity_", "")
+                quantity = int(value)
+
+                if quantity < 1:
+                    quantity = 1
+
+                CartRepository.update_quantity(
+                    cart_item_id,
+                    quantity
+                )
+
+        db.session.commit()
     @staticmethod
     def add_item(customer_id, product_id, quantity):
         """

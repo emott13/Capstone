@@ -185,9 +185,13 @@ def seedPromotions(num_promotions=15):
     # -- redemptions -- #
     for order in orders:
         customer = Users.query.get(order.customer_id)
-        applied_non_stackable = False
+        applied_non_stackable = False  # Tracks if a non-stackable promo has been applied
+
+        # Optional: shuffle or sort promotions to simulate realistic application order
+        random.shuffle(promotions)
 
         for promo in promotions:
+            # Skip inactive, usage-limit exceeded, or conditions not met
             if not promotionIsActive(promo, order.order_date):
                 continue
             if not checkUsageLimits(promo, customer.id):
@@ -197,17 +201,20 @@ def seedPromotions(num_promotions=15):
             if not scopeMatches(promo, order):
                 continue
 
-            if applied_non_stackable and not promo.stackable:
-                continue
+            # Handle non-stackable promotions
+            if not promo.stackable and applied_non_stackable:
+                continue  # skip if a non-stackable promo already applied
+
+            # Calculate discount
             discount_amount = calculateDiscount(promo, order)
             if discount_amount <= 0:
                 continue
 
-            # record the redemption
+            # Record redemption and order discount
             redemption = PromotionRedemption(
                 promotion_id=promo.promotion_id,
                 order_id=order.order_id,
-                customer_id=customer.id,
+                customer_id=customer.user_id,
             )
 
             order_discount = OrderDiscount(
@@ -220,6 +227,7 @@ def seedPromotions(num_promotions=15):
             db.session.add(redemption)
             db.session.add(order_discount)
 
+            # Mark that a non-stackable promo has been applied
             if not promo.stackable:
                 applied_non_stackable = True
 
