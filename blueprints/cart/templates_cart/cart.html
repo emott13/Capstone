@@ -29,7 +29,7 @@
         </tr>
         {% for cartItem in cartItems %}
         <tr>
-            <td>{{ cartItem.product_name }}</td>
+            <td><a href="/view/product?id={{ cartItem.product_id }}" style="text-decoration: none;">{{ cartItem.product_name }}</a></td>
 
             <td>
                 <input 
