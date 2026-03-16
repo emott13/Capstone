@@ -46,13 +46,13 @@ class CartService:
                 cart_item_id = field.replace("quantity_", "")
                 quantity = int(value)
 
-                if quantity < 1:
-                    quantity = 1
-
-                CartRepository.update_quantity(
-                    cart_item_id,
-                    quantity
-                )
+                if quantity <= 0:
+                    CartRepository.remove_item(cart_item_id)
+                else:
+                    CartRepository.update_quantity(
+                        cart_item_id,
+                        quantity
+                    )
 
         db.session.commit()
     @staticmethod
