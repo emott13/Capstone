@@ -31,3 +31,11 @@ class CartService:
         cart.update(pricing)
         print('CartService.get_cart - Final cart data:', cart)  # Debug log
         return cart
+
+    @staticmethod
+    def add_item(customer_id, product_id, quantity):
+        """
+        Adds item to the customer's cart
+        """
+        cart_id = CartRepository.get_or_create_cart(customer_id)
+        CartRepository.add_item(cart_id, product_id, quantity)
