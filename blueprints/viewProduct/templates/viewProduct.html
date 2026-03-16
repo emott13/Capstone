@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Product Name {{ super() }}{% endblock %}
+{% block title %}{{ product.product_name }} {{ super() }}{% endblock %}
 {% block styles %}
 <style>
     .outer-wrapper{
@@ -48,13 +48,27 @@
         max-width: 1200px;
     }
     .review-hr {
-        border-color: var(--green-2);
-        filter: brightness(150%);
+        border-color: var(--green-1);
+        /* filter: brightness(100%); */
     }
     .review-star {
         color: var(--orange-1);
-        font-size: 2rem;
+        font-size: 1.5rem;
         margin: 0 .2rem;
+    }
+    .review-star-sm {
+        font-size: 1rem;
+    }
+    .review-ratings {
+        max-width: 300;
+    }
+    .review-left {
+        flex-grow: .1;
+    }
+    .review-right {
+        min-width: 300px;
+        max-width: 600px;
+        flex-grow: .9;
     }
     #zoomed-img{
         transition: transform .2s;
@@ -135,6 +149,16 @@
                 <h4>Description</h4>
                 <div class="description-box">
                     <p>{{ product.description if product else "No description is available for this product." }}</p>
+                </div>
+
+                <br>
+
+                <h4>Product Details</h4>
+                <div class="description-box">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <p style="margin: 0; display">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;"></div>
+                    </div>
+                    <p>Specifications: {{ spec.specification }}</p>
                 </div>
             </div>
         </div>

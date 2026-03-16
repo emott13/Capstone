@@ -11,6 +11,8 @@ def viewProduct():
     product = None
     vendor = None
     images = []
+    color = None
+    spec = None
 
     if product_id:
         try:
@@ -31,8 +33,21 @@ def viewProduct():
                     WHERE product_id = :product_id
                     ORDER BY image_id
                 """), {"product_id": product_id}).fetchall()
+
+                color = conn.execute(text("""
+                    SELECT hex_code FROM product_colors
+                    WHERE product_id = :product_id
+                    ORDER BY color_id
+                """), {"product_id": product_id}).fetchone()
+
+                spec = conn.execute(text("""
+                    SELECT specification FROM product_specs
+                    WHERE product_id = :product_id
+                    ORDER BY spec_id
+                """), {"product_id": product_id}).fetchone()
                 
-        except Exception as e:
+        except Exception as error:
             error = "Error loading product."
     
-    return render_template("viewProduct.html", product=product, vendor=vendor, images=images, error=error)
+    return render_template("viewProduct.html", product=product, vendor=vendor, 
+                           images=images, color=color, spec=spec, error=error)
