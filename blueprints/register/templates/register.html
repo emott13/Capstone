@@ -1,33 +1,68 @@
-<!-- <link rel="stylesheet" href="/static/styles/styles.css"> -->
-<script defer>
-    // prevents sending another POST request on refresh
-    if (window.history.replaceState)
-        window.history.replaceState( null, null, window.location.href );
-</script>
 {% extends 'base.html' %}
-{% block body %}
-    <section class="container">
-        <h1 class="">Register</h1>
-        
-        {% if error %}
-            <p class="alert alert-danger">{{ error }}</p>
-        {% endif %}
+{% block title %}Register {{ super() }}{% endblock %}
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('register.static', filename='register.css') }}">
+    {{ super() }}
+{% endblock %}
+{% block scripts %}{{ super() }}{% endblock %}
+{% block page_content %}
+    <h1 class="hw-light mt-3">Register</h1>
+    
+    {% if register_form.errors or error %}
+        <div class="alert alert-danger">
+            {{ error if error }}
+            <ul class="list-unstyled">
+            {% for er in register_form.errors.values() %}
+                <li class="">{{ er[0] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
 
-        <form class="register-form" action="/register" method="post">
-            <div class="input-row">
-                <div class="fancy-input full-width">
-                    <input class="full-width" type="text" name="username" placeholder="" required />
-                    <label for="username">Email or Username:</label>
-                </div>
+
+    <form id="register-form" class="" action="/register" method="post">
+        {{ register_form.hidden_tag() }}
+        <div class="form-group mb-1">
+            {{ register_form.email.label }}
+            {{ register_form.email( class="form-control", placeholder = "Email") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.username.label }}
+            {{ register_form.username( class="form-control", placeholder = "Username") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.password.label }}
+            {{ register_form.password( class="form-control", placeholder = "Password") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.confirm_password.label }}
+            {{ register_form.confirm_password( class="form-control", placeholder = "Confirm Password") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.first_name.label }}
+            {{ register_form.first_name( class="form-control", placeholder = "First Name") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.last_name.label }}
+            {{ register_form.last_name( class="form-control", placeholder = "Last Name") }}
+        </div>
+        <div class="form-group mb-1">
+            {{ register_form.dob.label }}
+            {{ register_form.dob( class="form-control") }}
+        </div>
+        <div class="form-group mb-1">
+            <label class="text-capitalize" for="role_id">type:</label>
+            {% for role in roles %} 
+            <div class="register-roles mb-1">
+                <span class="form-control">
+                    <input type="checkbox" class="register-role-checkbox" name="role_id" value="{{ role.role_id }}">
+                    {{ role.role_name|title }}
+                </span>
             </div>
-            <div class="input-row">
-                <div class="fancy-input full-width">
-                    <input class="full-width" type="password" name="password" placeholder="" required />
-                    <label for="password">Password:</label>
-                </div>
-            </div>
-            <p class="">Don't have an account? <a href="{{url_for('login.login')}}">Register Here</a></p>
-            <button class="btn" type="submit">Register</button>
-        </form>
-    </section>
+            {% endfor %}
+        </div>
+
+        <p class="">Already have an account? <a href="{{url_for('login.login')}}">Login Here</a></p>
+        {{ register_form.submit(class="btn btn-success") }}
+    </form>
 {% endblock %}

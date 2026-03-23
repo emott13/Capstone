@@ -1,0 +1,124 @@
+:root{
+    --font-main: 'Nunito Sans', sans-serif;
+    --green-1: #0A400C;
+    --green-2: #819067;
+    --tan-1: #B1AB86;
+    --tan-2: #FEFAE0;
+    --orange-1: #E67E22;
+    --orange-2: #f3ae53;
+    --purple-1: #400a3e;
+    --purple-2: #8d6790;
+
+    --info-blue: #93bbc7;
+    --warning-yellow: #F9CB43;
+    --warning-yellow-light: #f9e79f;
+    --error-red: #a03a13;
+    --error-red-light: #F5824A;
+
+    /* Order properties:
+    +-------------------+
+    |      display      |
+    |     properties    |
+    |                   |
+    |      margin       |
+    |                   |
+    |  +---border----+  |
+    |  |             |  |
+    |  |  background |  |
+    |  |    color    |  |
+    |  |             |  |
+    |  |   padding   |  |
+    |  |             |  |
+    |  |  +-------+  |  |
+    |  |  | height|  |  |
+    |  |  | width |  |  |
+    |  |  | list  |  |  |
+    |  |  | text  |  |  |
+    |  |  | color |  |  |
+    |  |  | font  |  |  |
+    |  |  | cursor|  |  |
+    |  |  +-------+  |  |
+    |  +-------------+  |
+    +-------------------+ 
+*/
+
+}
+
+body{
+    font-family: var(--font-main);
+    background-color: var(--tan-2);
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-column {
+    flex-direction: column;
+}
+
+.justify-content-center {
+    justify-content: center;
+}
+
+.align-items-center {
+    align-items: center;
+}
+
+.width-100 {
+    width: 100%;
+}
+
+.hr1 {
+    border-width: 4px;
+}
+
+.hr2 {
+    border-width: 3px;
+}
+
+.hr3 {
+    border-width: 2px;
+}
+
+.hr4 {
+    border-width: 1px;
+}
+
+.navbar{
+    font-family: var(--font-main);
+    background-color: var(--green-1);
+    margin: 0 !important;
+    padding: 1px !important;
+}
+.navbar-nav > li {
+    display: flex;
+}
+.navbar-nav > li > a{
+    color: var(--tan-2) !important;
+    padding: 10px 15px;
+    text-decoration: none;
+}
+.navbar-nav > li > a:hover{
+    background-color: var(--orange-2) !important;
+    color: var(--green-1) !important;
+}
+.navbar-nav > li.boostrap-select > a{
+    background-color: var(--purple-2) !important;
+}
+.navbar-nav > li.active > a{
+    background-color: var(--orange-2) !important;
+    color: var(--green-1) !important;
+}
+.navbar-search-form {
+    flex: 1;
+}
+.search-btn{
+    background-color: var(--purple-2) !important;
+    border: var(--purple-2) 1px solid !important;
+    height: 34px;
+}
+.search-btn:hover{
+    background-color: var(--purple-1) !important;
+    border: var(--purple-1) 1px solid !important;
+}
