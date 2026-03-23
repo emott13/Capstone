@@ -41,6 +41,7 @@
 
                 <label for="category">Category</label>
                 <select id="category" name="category">
+                    <option selected disabled>--</option>
                     {% for cat in filter_categories %}
                     <option value="{{ cat.category_name }}" {% if selected_category == cat.category_name %}selected{% endif %}>{{ cat.category_name }}</option>
                     {% endfor %}
@@ -48,6 +49,7 @@
 
                 <label for="color">Color</label>
                 <select id="color" name="color">
+                    <option selected disabled>--</option>
                     {% for col in filter_colors %}
                     <option value="{{ col.hex_code }}" {% if selected_color == col.hex_code %}selected{% endif %}>{{ col.hex_code }}</option>
                     {% endfor %}
