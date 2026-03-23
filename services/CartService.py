@@ -36,6 +36,10 @@ class CartService:
         print('CartService.get_cart - Final cart data:', cart)  # Debug log
         return cart
 
+    @staticmethod
+    def add_item(customer_id, product_id, quantity):
+        cart_id = CartRepository.get_or_cteate_cart(customer_id)
+        CartRepository.add_item(cart_id, product_id, quantity)
 
     @staticmethod
     def update_quantities(customer_id, form_data):
