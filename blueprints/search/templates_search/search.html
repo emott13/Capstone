@@ -40,24 +40,11 @@
             <form action="/search" method="POST">
 
                 <label for="category">Category</label>
-                <select id="category">
-                    {% for category in filter_categories %}
-                    <option>{{ category.category_name }}</option>
+                <select id="category" name="category">
+                    {% for cat in filter_categories %}
+                    <option value="{{ cat.category_name }}" {% if selected_category == cat.category_name %}selected{% endif %}>{{ cat.category_name }}</option>
                     {% endfor %}
                 </select><br>
-
-                <label for="color">Color</label>
-                <select id="color">
-                    {% for color in filter_colors %}
-                    <option>{{ color.hex_code }}</option>
-                    {% endfor %}
-                </select><br>
-
-                <input type="checkbox" id="in-stock">
-                <label for="in-stock">In Stock</label><br>
-
-                <input type="checkbox" id="out-of-stock">
-                <label for="out-of-stock">Out Of Stock</label><br>
 
                 <input type="submit" value="Apply">
 
