@@ -12,8 +12,10 @@ def search():
     query = request.args.get('search', '').strip()
     if request.method == 'POST':
         category = request.form.get('category', '').strip()
+        color = request.form.get('color', '').strip()
     else:
         category = request.args.get('category', '').strip()
+        color = request.args.get('color', '').strip()
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
@@ -55,6 +57,10 @@ def search():
         sql += " AND pc.category_name ILIKE :category"
         params["category"] = category
 
+    # Color filter
+    if color:
+        sql += " AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code ILIKE :color)"
+        params["color"] = color
 
     sql += " ORDER BY p.created_at DESC"
 
@@ -68,6 +74,7 @@ def search():
         image_dict=image_dict,
         query=query,
         selected_category=category,
+        selected_color=color,
 
         filter_categories=filter_categories,
         filter_colors=filter_colors

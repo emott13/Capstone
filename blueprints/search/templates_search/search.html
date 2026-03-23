@@ -46,6 +46,13 @@
                     {% endfor %}
                 </select><br>
 
+                <label for="color">Color</label>
+                <select id="color" name="color">
+                    {% for col in filter_colors %}
+                    <option value="{{ col.hex_code }}" {% if selected_color == col.hex_code %}selected{% endif %}>{{ col.hex_code }}</option>
+                    {% endfor %}
+                </select><br>
+
                 <input type="submit" value="Apply">
 
             </form>
