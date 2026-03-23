@@ -1,4 +1,7 @@
 # services/CartService.py
+from flask import request
+from flask_login import current_user
+
 from repositories.CartRepository import CartRepository
 from services.OrderPricingService import OrderPricingService
 from extensions import db
@@ -55,3 +58,18 @@ class CartService:
                 )
 
         db.session.commit()
+
+    def set_cart_address(user_id, add1, add2, city, state, zip_code, country):
+
+        # create cart address
+        CartRepository.create_cart_address(
+            user_id,
+            add1,
+            add2,
+            city,
+            state,
+            zip_code,
+            country
+        )
+
+       

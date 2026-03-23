@@ -120,3 +120,31 @@ class CartRepository:
         """
 
         db.session.execute(text(sql), {"cart_id": cart_id})
+
+    @staticmethod
+    def create_cart_address(user_id, add1, add2, city, state, zip_code, country):
+
+        sql = """
+        INSERT INTO addresses (user_id, address1, address2, city, state, zip_code, country)
+        VALUES (:user_id, :add1, :add2, :city, :state, :zip_code, :country)
+        RETURNING address_id
+        """
+
+        result = db.session.execute(
+            text(sql),
+            {
+                "user_id": user_id,
+                "add1": add1,
+                "add2": add2,
+                "city": city,
+                "state": state,
+                "zip_code": zip_code,
+                "country": country
+            }
+        )
+
+        address_id = result.scalar()
+
+        db.session.commit()
+
+        return address_id

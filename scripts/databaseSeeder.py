@@ -255,6 +255,7 @@ with app.app_context():
         # Payment
         db.session.add(Payments(
             order_id=order.order_id,
+            customer_id=order.customer_id,
             amount=order.order_total,
             payment_method=choice(['credit_card','paypal','bank_transfer']),
             paid_at=fake.date_time_this_year()

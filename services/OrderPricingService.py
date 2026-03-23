@@ -25,8 +25,14 @@ class OrderPricingService:
             import json
             items = json.loads(items)
 
+        # ensures iterating through the list of items from the dict but not the dict itself
+        if isinstance(items, dict) and "items" in items:
+            items = items["items"]
+
         subtotal = 0
+        print("ALL ITEMS", items)
         for item in items:
+            print("ITEM ________", item) # Debug log
             # Defensive casting
             price = int(item.get("price", 0))
             quantity = int(item.get("quantity", 0))

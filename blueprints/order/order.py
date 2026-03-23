@@ -25,10 +25,11 @@ def order():
 
         promo_code = request.form.get("promo_code")
 
-        OrderService.checkout_cart(
+        result = OrderService.checkout_cart(
             customer_id=customer_id,
             promo_code=promo_code
         )
+        print("Checkout result:", result)
 
         return redirect(url_for("order.order"))
 
