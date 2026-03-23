@@ -72,4 +72,6 @@ class CartService:
             country
         )
 
+        db.session.commit()
+
        

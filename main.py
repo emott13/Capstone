@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, url_for, redirect
 from sqlalchemy import text
 from extensions import *
 from flask_login import login_required, current_user
@@ -29,6 +29,11 @@ app.register_blueprint(view_product_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(order_bp)
 app.register_blueprint(checkout_bp)
+
+# redirect to home page
+@app.route("/")
+def index():
+    return redirect(url_for("home.home"))
 
 # quick route to see all routes
 @app.route("/routes")

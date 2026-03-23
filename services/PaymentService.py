@@ -15,3 +15,5 @@ class PaymentService:
             amount=amount,
             payment_method="card"
         )
+
+        db.session.commit()
