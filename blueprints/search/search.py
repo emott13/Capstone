@@ -6,11 +6,21 @@ from extensions import db
 
 search_bp = Blueprint('search', __name__, static_folder='static_search', template_folder='templates_search')
 
-@search_bp.route('/search', methods=['GET'])
+@search_bp.route('/search', methods=['GET', 'POST'])
 def search():
 
     query = request.args.get('search', '').strip()
     category = request.args.get('category', '').strip()
+
+    # Search filtering queries
+    filter_categories = conn.execute(text(""" 
+        SELECT category_name FROM product_categories;
+    """)).fetchall()
+    
+    filter_colors = conn.execute(text("""
+        SELECT hex_code FROM product_colors;
+    """)).fetchall()
+    
 
     sql = """
         SELECT DISTINCT p.*, v.store_name
@@ -54,7 +64,10 @@ def search():
         products=products,
         image_dict=image_dict,
         query=query,
-        selected_category=category
+        selected_category=category,
+
+        filter_categories=filter_categories,
+        filter_colors=filter_colors
     )
 
 # filter through products and adjust whether they display in the UI
