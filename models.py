@@ -259,6 +259,7 @@ class Payments(db.Model):
     __tablename__ = "payments"
     payment_id = db.Column(db.Integer, primary_key=True)
     order_id = db.Column(db.Integer, db.ForeignKey("orders.order_id"), nullable=False)
+    customer_id = db.Column(db.BigInteger, db.ForeignKey("customers.customer_id"), nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)  # e.g., credit card, PayPal
     paid_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     amount = db.Column(db.Integer, nullable=False)  # Store payment amount in cents

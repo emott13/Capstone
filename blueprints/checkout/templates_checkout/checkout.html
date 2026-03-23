@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% if cartItems %}
+    <div class="container">
+        <h2>Checkout</h2>
+        <p>Review your order and proceed to payment.</p>
+    </div>
+
+    <table class="table container">
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Price</th>
+        </tr>
+        {% for cartItem in cartItems %}
+        <tr>
+            <td>{{ cartItem.product_name }}</td>
+            <td>{{ cartItem.quantity }}</td>
+            <td>${{ cartItem.price | priceFormat }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+
+    <div class="totalsContainer container">
+        <table class="table">
+            {% if subtotal %}
+            <tr>
+                <td>Subtotal:</td>
+                <td>${{ subtotal | priceFormat }}</td> 
+            </tr>
+            {% endif %}
+            {% if tax %}
+            <tr>
+                <td>Tax:</td>
+                <td>${{ tax | priceFormat }}</td> 
+            </tr>
+            {% endif %}
+            {% if total %}
+            <tr>
+                <td>Total:</td>
+                <td>${{ total | priceFormat }}</td>
+            {% endif %}
+        </table>
+    </div>
+
+      <div class="paymentInformation container">
+        <h3>Payment Information</h3>
+        <p>Enter your payment details to complete the purchase.</p>
+        <form action="{{ url_for('checkout.payment') }}" method="post">
+            <div class="form-group">
+                <label for="cardNumber">
+                    Card Number
+                </label>
+                <input 
+                type="text" 
+                class="form-control" 
+                id="cardNumber" 
+                name="card_number" 
+                pattern="^(?:4[0-9]{12}(?:[0-9]{3})?|5[1-5][0-9]{14}|3[47][0-9]{13}|3(?:0[0-5]|[68][0-9])[0-9]{11}|6(?:011|5[0-9]{2})[0-9]{12}|(?:2131|1800|35\d{3})\d{11})$"
+                required>
+            </div>
+            <div class="form-group">
+                <label for="expiryDate">Expiry Date</label>
+                <input type="text" class="form-control" id="expiryDate"  pattern="^(0[1-9]|1[0-2])\/?([0-9]{2})$"name="expiry_date" required>
+            </div>
+            <div class="form-group">
+                <label for="cvv">CVV</label>
+                <input type="text" class="form-control" id="cvv" name="cvv" pattern="^[0-9]{3,4}$" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Complete Purchase</button>
+        </form>
+    </div>
+{% endif %}
+{% endblock %}

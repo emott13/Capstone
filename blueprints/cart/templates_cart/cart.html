@@ -95,7 +95,7 @@
                 </tr>
                 {% endif %}
             </table>
-            <form action="{{ url_for('order.order') }}" method="post">
+            <form action="{{ url_for('checkout.checkout') }}" method="post">
                 <input type="hidden" name="subtotal" value="{{ subtotal }}">
                 <input type="hidden" name="tax" value="{{ tax }}">
                 <input type="hidden" name="total" value="{{ total }}">
