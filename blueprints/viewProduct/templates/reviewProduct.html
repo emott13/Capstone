@@ -4,30 +4,38 @@
     <div class="flex width-100 flex-wrap">
         <div class="flex flex-column review-left">
             <div class="flex align-items-center flex-wrap">
-                <h3>4.0 </h3>
+                <h3>{{ reviews.getAverageRating() }} </h3>
                 <div class="flex flex-nowrap">
-                    <i class="review-star bi bi-star-fill"></i>
-                    <i class="review-star bi bi-star"></i>
-                    <i class="review-star bi bi-star"></i>
-                    <i class="review-star bi bi-star"></i>
-                    <i class="review-star bi bi-star"></i>
+                    {% for i in range(reviews.getFullStars()) %}
+                        <i class="review-star bi bi-star-fill"></i>
+                    {% endfor %}
+                    {% if reviews.getHalfStars() %}
+                        <i class="review-star bi bi-star-half"></i>
+                    {% endif %}
+                    {% for i in range(reviews.getEmptyStars()) %}
+                        <i class="review-star bi bi-star"></i>
+                    {% endfor %}
                 </div>
             </div>
-            <h4 class="">20 Reviews</h4>
+            <h4 class="">{{ reviews.getReviewCount() }} Reviews</h4>
         </div>
         <div class="flex flex-column review-right">
-            {% for starNumber in range(5, 0, -1) %}
+            {% for rating in range(5, 0, -1) %}
             <div class="review-ratings d-flex align-items-center">
                 <span class="me-2">
-                    {{ starNumber }} 
+                    {{ rating }} 
                     <i class="review-star review-star-sm bi bi-star-fill"></i>
-                    20
+                    {{ reviews.getRatingCount(rating) }}
                 </span>
                 <div class="progress flex-grow-1 h-90">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width:75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" style="width:{{ reviews.getRatingPercent(rating) }}%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
                 </div>
             </div>
             {% endfor %}
         </div>
     </div>
+
+    <hr class="hr3 review-hr">
+
+    <div class="reviews-individual flex width-100 flex-wrap"
 </div>
