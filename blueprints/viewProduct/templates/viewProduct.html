@@ -136,7 +136,7 @@
                 </div>
             </div>
 
-            <h3 style="margin-bottom: 30px;">${{ "%.2f"|format(product.price) if product else "00.00" }}</h3>
+            <h3 style="margin-bottom: 30px;">${{ product.price | priceFormat }}</h3>
             
             <form action="{{ url_for('cart.add_to_cart') }}" method="post">
                 <input type="hidden" name="product_id" value="{{ product.product_id }}">
