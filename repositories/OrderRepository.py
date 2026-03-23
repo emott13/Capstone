@@ -30,6 +30,7 @@ class OrderRepository:
             }
         )
 
+
         return result.scalar()
     
     @staticmethod
