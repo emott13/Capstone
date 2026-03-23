@@ -10,7 +10,10 @@ search_bp = Blueprint('search', __name__, static_folder='static_search', templat
 def search():
 
     query = request.args.get('search', '').strip()
-    category = request.args.get('category', '').strip()
+    if request.method == 'POST':
+        category = request.form.get('category', '').strip()
+    else:
+        category = request.args.get('category', '').strip()
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
