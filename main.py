@@ -11,6 +11,8 @@ from blueprints.viewProduct.viewProduct import view_product_bp
 from blueprints.cart.cart import cart_bp
 from blueprints.order.order import order_bp
 from blueprints.checkout.checkout import checkout_bp
+from blueprints.account.account import account_bp
+from blueprints.wishlist.wishlist import wishlist_bp
 from models import Users
 
 # load users
@@ -29,6 +31,8 @@ app.register_blueprint(view_product_bp)
 app.register_blueprint(cart_bp)
 app.register_blueprint(order_bp)
 app.register_blueprint(checkout_bp)
+app.register_blueprint(account_bp)
+app.register_blueprint(wishlist_bp)
 
 # redirect to home page
 @app.route("/")

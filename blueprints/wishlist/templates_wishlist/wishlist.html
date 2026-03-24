@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Wishlists{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 style="margin-top: 20px;">Wishlists</h1>
+
+    {% if wishlists %}
+        <ul>
+            {% for wishlist in wishlists %}
+                    <h3>{{ wishlist.title }}</h3>
+
+                    {% for item in wishlist.items %}
+                        <p>{{ item.product.product_name }} --- ${{ item.product.price | priceFormat }}</p>
+                    {% endfor %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>You have no wishlists yet. <a href="#">Create one now!</a></p>
+    {% endif %}
+</div>
+
+
+{% endblock %}
