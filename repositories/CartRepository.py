@@ -163,6 +163,15 @@ class CartRepository:
         db.session.execute(text(sql), {"cart_item_id": cart_item_id})
 
     @staticmethod
+    def clear_cart(cart_id):
+        sql = """
+            DELETE FROM cart_items
+            WHERE cart_id = :cart_id
+            """
+        
+        db.session.execute(text(sql), {"cart_id": cart_id})
+
+    @staticmethod
     def create_cart_address(user_id, add1, add2, city, state, zip_code, country):
 
         sql = """
