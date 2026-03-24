@@ -6,7 +6,6 @@ from wtforms.validators import InputRequired, Length, EqualTo
 from extensions import bcrypt, db
 from services.UserService import UserService
 
-
 account_bp = Blueprint("account", __name__, template_folder="templates_account")
 
 class ResetPasswordForm(FlaskForm):
