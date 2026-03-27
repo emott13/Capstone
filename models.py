@@ -149,6 +149,7 @@ class Products(db.Model):
         secondary=product_category_map,
         backref=db.backref("products", lazy="dynamic")
     )
+    wishlist_items = db.relationship("WishlistItems", back_populates="product")
 
 # product specs
 class ProductSpecs(db.Model):
@@ -212,6 +213,8 @@ class Wishlists(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
+    items = db.relationship("WishlistItems", backref="wishlist", lazy=True)
+
 # wishlist items
 class WishlistItems(db.Model):
     __tablename__ = "wishlist_items"
@@ -220,6 +223,7 @@ class WishlistItems(db.Model):
     product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+    product = db.relationship("Products", back_populates="wishlist_items")
 
 # orders
 class Orders(db.Model):

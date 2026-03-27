@@ -46,7 +46,7 @@
                 <button type="button" onclick="deleteItem('{{ cartItem.cart_item_id }}')">Remove</button>
             </td>
 
-            <td>${{ cartItem.price | priceFormat }}</td>
+            <td>${{ cartItem.line_total | priceFormat }}</td>
         </tr>
         {% endfor %}
         </table>
