@@ -39,6 +39,8 @@
 
             <form action="/search" method="POST">
 
+                <input type="hidden" name="search" value="{{ query }}">
+
                 <label for="category">Category</label>
                 <select id="category" name="category">
                     <option selected disabled>--</option>

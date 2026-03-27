@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from sqlalchemy import text
 from extensions import conn
 from extensions import db
@@ -9,13 +9,24 @@ search_bp = Blueprint('search', __name__, static_folder='static_search', templat
 @search_bp.route('/search', methods=['GET', 'POST'])
 def search():
 
-    query = request.args.get('search', '').strip()
     if request.method == 'POST':
+        query = request.form.get('search', '').strip()
         category = request.form.get('category', '').strip()
         color = request.form.get('color', '').strip()
-    else:
-        category = request.args.get('category', '').strip()
-        color = request.args.get('color', '').strip()
+        
+        params = {}
+        if query:
+            params['search'] = query
+        if category:
+            params['category'] = category
+        if color:
+            params['color'] = color
+        
+        return redirect(url_for('search.search', **params))
+    
+    query = request.args.get('search', '').strip()
+    category = request.args.get('category', '').strip()
+    color = request.args.get('color', '').strip()
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
