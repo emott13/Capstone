@@ -52,7 +52,7 @@
                                 <h4 class="card-title">{{ product.product_name }}</h4>
                                 <p class="card-text">{{ product.description }}</p>
                                 <p>{{ product.store_name }}</p>
-                                <small>${{ product.price }}</small>
+                                <small>${{ product.price | priceFormat }}</small>
                             </div>
                         </a>
                     </div>
