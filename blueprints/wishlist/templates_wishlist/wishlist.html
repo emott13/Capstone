@@ -7,15 +7,24 @@
     <h1 style="margin-top: 20px;">Wishlists</h1>
 
     {% if wishlists %}
-        <ul>
-            {% for wishlist in wishlists %}
-                    <h3>{{ wishlist.title }}</h3>
-
-                    {% for item in wishlist.items %}
-                        <p>{{ item.product.product_name }} --- ${{ item.product.price | priceFormat }}</p>
-                    {% endfor %}
+    <hr>
+    <table class="table">
+        {% for wishlist in wishlists %}
+            <p><strong>{{ wishlist.title }}</strong></p>
+            <tr>
+                <th>Item name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+            </tr>
+            {% for item in wishlist.items %}
+            <tr>
+                <td>{{ item.product.product_name }}</td>
+                <td>{{ item.product.quantity }}</td>
+                <td>${{ item.product.price | priceFormat}}</td>
+            </tr>
             {% endfor %}
-        </ul>
+        {% endfor %}
+    </table>
     {% else %}
         <p>You have no wishlists yet. <a href="#">Create one now!</a></p>
     {% endif %}
