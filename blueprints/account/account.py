@@ -5,6 +5,7 @@ from wtforms import PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, EqualTo
 from extensions import bcrypt, db
 from services.UserService import UserService
+from models import Users
 
 account_bp = Blueprint("account", __name__, template_folder="templates_account")
 
@@ -35,7 +36,10 @@ def account():
     customer_id = current_user.get_id()
 
     # get user information
-    user = UserService.get_user_by_id(customer_id)
+    user = Users.query.get(customer_id)
+
+    for phone in user.phone_numbers:
+        print("phone!   ", phone.phone_number)
 
     form = ResetPasswordForm()
     error = None
