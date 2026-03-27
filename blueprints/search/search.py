@@ -6,11 +6,26 @@ from extensions import db
 
 search_bp = Blueprint('search', __name__, static_folder='static_search', template_folder='templates_search')
 
-@search_bp.route('/search', methods=['GET'])
+@search_bp.route('/search', methods=['GET', 'POST'])
 def search():
 
     query = request.args.get('search', '').strip()
-    category = request.args.get('category', '').strip()
+    if request.method == 'POST':
+        category = request.form.get('category', '').strip()
+        color = request.form.get('color', '').strip()
+    else:
+        category = request.args.get('category', '').strip()
+        color = request.args.get('color', '').strip()
+
+    # Search filtering queries
+    filter_categories = conn.execute(text(""" 
+        SELECT category_name FROM product_categories;
+    """)).fetchall()
+    
+    filter_colors = conn.execute(text("""
+        SELECT hex_code FROM product_colors;
+    """)).fetchall()
+    
 
     sql = """
         SELECT DISTINCT p.*, v.store_name
@@ -42,6 +57,10 @@ def search():
         sql += " AND pc.category_name ILIKE :category"
         params["category"] = category
 
+    # Color filter
+    if color:
+        sql += " AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code ILIKE :color)"
+        params["color"] = color
 
     sql += " ORDER BY p.created_at DESC"
 
@@ -54,7 +73,11 @@ def search():
         products=products,
         image_dict=image_dict,
         query=query,
-        selected_category=category
+        selected_category=category,
+        selected_color=color,
+
+        filter_categories=filter_categories,
+        filter_colors=filter_colors
     )
 
 # filter through products and adjust whether they display in the UI
