@@ -9,7 +9,7 @@
         <h3>{{ customer.first_name + ' ' + customer.last_name }}</h1>
 
         <!-- Show Stars for their rating -->
-        <div class="flex flex-nowrap">
+        <div class="flex flex-nowrap review-rating">
             {% for i in range(review.rating) %}
                 <i class="review-star bi bi-star-fill"></i>
             {% endfor %}
@@ -21,6 +21,6 @@
 
     <div class="flex flex-column review-details">
         <h2 class="">{{ review.title }}</h2>
-        <p class="">{{ review.description }}</p>
+        <p class="text-wrap">{{ review.description }}</p>
     </div>
 </div>
