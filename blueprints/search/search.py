@@ -13,6 +13,8 @@ def search():
         query = request.form.get('search', '').strip()
         category = request.form.get('category', '').strip()
         color = request.form.get('color', '').strip()
+        min_price = request.form.get("min_price", "").strip()
+        max_price = request.form.get("max_price", "").strip()
         
         params = {}
         if query:
@@ -21,12 +23,18 @@ def search():
             params['category'] = category
         if color:
             params['color'] = color
+        if min_price:
+            params['min_price'] = min_price
+        if max_price:
+            params['max_price'] = max_price
         
         return redirect(url_for('search.search', **params))
     
     query = request.args.get('search', '').strip()
     category = request.args.get('category', '').strip()
     color = request.args.get('color', '').strip()
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
@@ -73,6 +81,15 @@ def search():
         sql += " AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code ILIKE :color)"
         params["color"] = color
 
+    # Price filter
+    if min_price:
+        sql += " AND p.price >= :min_price"
+        params["min_price"] = min_price
+
+    if max_price:
+        sql += " AND p.price <= :max_price"
+        params["max_price"] = max_price
+
     sql += " ORDER BY p.created_at DESC"
 
     products = conn.execute(text(sql), params).fetchall()
@@ -88,7 +105,9 @@ def search():
         selected_color=color,
 
         filter_categories=filter_categories,
-        filter_colors=filter_colors
+        filter_colors=filter_colors,
+        selected_min_price=min_price,
+        selected_max_price=max_price
     )
 
 # filter through products and adjust whether they display in the UI
