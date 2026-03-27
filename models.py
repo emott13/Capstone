@@ -43,6 +43,12 @@ class Users(UserMixin, db.Model):
         backref=db.backref("users", lazy="dynamic")
     )
 
+    phone_numbers = db.relationship(
+        "PhoneNumbers", 
+        secondary="user_phone_numbers", 
+        back_populates="users"
+        )
+
     def get_id(self):
         return self.user_id
     
@@ -110,6 +116,12 @@ class PhoneNumbers(db.Model):
     phone_number = db.Column(db.String(22), unique=True, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+    
+    users = db.relationship(
+        "Users",
+        secondary="user_phone_numbers",
+        back_populates="phone_numbers"
+    )
 
 # UserPhoneNumbers
 class UserPhoneNumbers(db.Model):

@@ -17,6 +17,10 @@
     <p>Welcome to your account page, {{ user.username }}!</p>
     <p>Email: {{ user.email }}</p>
     <p>Created at: {{ user.created_at.strftime("%c") }}</p>
+    <p>Phone numbers:</p>
+    {% for number in user.phone_numbers %}
+        <p>{{ number.phone_number }}</p>
+    {% endfor %}
     <hr>
     <div class="buttons">
         <a href="{{ url_for('order.order') }}" class="btn btn-main">Orders</a>
