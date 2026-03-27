@@ -40,11 +40,31 @@
 
     <hr class="hr3 review-hr">
 
-    <form id="review-sort" action="" method="POST">
+    <form id="review-sort" action="{{ url_for('viewProduct.viewProduct') + '#reviews' }}" method="GET">
+        <!-- Need the product id here because it is a GET 
+            parameter instead of a different URL -->
+        <input name="id" value="{{ product.product_id }}" hidden>
+        <label for="review-sort">Sort by </label>
+        <select id="review-sort" name="review-sort">
+            <option value="positive">Positive</option>
+            <option value="negative">Negative</option>
+            <option value="recent">Recent</option>
+            <option value="oldest">Oldest</option>
+        </select>
 
+        <label for="review-filter">Filter by </label>
+        <select id="review-filter" name="review-filter">
+            <option value="all">All</option>
+            <option value="5">5 star</option>
+            <option value="4">4 star</option>
+            <option value="3">3 star</option>
+            <option value="2">2 star</option>
+            <option value="1">1 star</option>
+        </select>
+
+        <input type="submit" value="Submit">
     </form>
-    <div class="reviews-individual flex width-100 flex-wrap">
-        <!-- Each Customer's review -->
+    <div id="reviews" class="reviews-individual flex width-100 flex-wrap">
         {% for i in range([100, reviews.getReviewCount()]|min) %}
             <!-- Handles each individual review's html -->
             {% include "singleReview.html" %}

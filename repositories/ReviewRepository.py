@@ -9,7 +9,7 @@ class ReviewRepository:
     Creates an object with an array of Reviews objects. Can retrieve data
     with getReviews().
     """
-    def __init__(self, product_id):
+    def __init__(self, product_id, sort=None, filter=None):
         self.product_id = product_id
         self.reviews = db.session.execute(
             db.select(Reviews).filter_by(product_id=product_id)

@@ -10,12 +10,17 @@ view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_
 def viewProduct():
     error = request.args.get("error", None)
     product_id = request.args.get("id")
+    # second arg is default value
+    review_sort = request.args.get("review-sort", "positive") 
+    review_filter = request.args.get("review-filter", "all")
     product = None
     vendor = None
     images = []
     color = None
     spec = None
-    reviews = ReviewRepository(product_id)
+    # contains an array of Reviews objects with the correct product_id
+    # and other data
+    reviews = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
 
     if product_id:
         try:
