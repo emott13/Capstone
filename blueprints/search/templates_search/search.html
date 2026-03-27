@@ -51,7 +51,11 @@
                 <select id="color" name="color">
                     <option selected disabled>--</option>
                     {% for col in filter_colors %}
-                    <option value="{{ col.hex_code }}" {% if selected_color == col.hex_code %}selected{% endif %}>{{ col.hex_code }}</option>
+                    <option value="{{ col.hex_code }}"
+                        style="background-color: {{ col.hex_code }};" 
+                        {% if selected_color == col.hex_code %}selected{% endif %}>
+                        {{ col.hex_code }}
+                    </option>
                     {% endfor %}
                 </select><br>
 
