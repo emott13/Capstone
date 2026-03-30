@@ -20,7 +20,8 @@ def viewProduct():
     spec = None
     # contains an array of Reviews objects with the correct product_id
     # and other data
-    reviews = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
+    reviews = ReviewRepository(product_id)
+    reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
 
     if product_id:
         try:
@@ -59,4 +60,5 @@ def viewProduct():
     
     return render_template("viewProduct.html", product=product, vendor=vendor, 
                            images=images, color=color, spec=spec, error=error, 
-                           reviews=reviews)
+                           reviews=reviews, reviews_filtered=reviews_filtered,
+                           review_sort=review_sort, review_filter=review_filter)
