@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, redirect, url_for
 from sqlalchemy import text
 from extensions import conn
 from extensions import db
@@ -6,11 +6,55 @@ from extensions import db
 
 search_bp = Blueprint('search', __name__, static_folder='static_search', template_folder='templates_search')
 
-@search_bp.route('/search', methods=['GET'])
+@search_bp.route('/search', methods=['GET', 'POST'])
 def search():
 
+    if request.method == 'POST':
+        query = request.form.get('search', '').strip()
+        categories = request.form.getlist('categories')
+        colors = request.form.getlist('colors')
+        min_price = request.form.get("min_price", "").strip()
+        max_price = request.form.get("max_price", "").strip()
+        min_rating = request.form.get("min_rating", "").strip()
+        max_rating = request.form.get("max_rating", "").strip()
+        
+        params = {}
+        if query:
+            params['search'] = query
+        if categories:
+            params['categories'] = ','.join(categories)
+        if colors:
+            params['colors'] = ','.join(colors)
+        if min_price:
+            params['min_price'] = min_price
+        if max_price:
+            params['max_price'] = max_price
+        if min_rating:
+            params['min_rating'] = min_rating
+        if max_rating:
+            params['max_rating'] = max_rating
+        
+        return redirect(url_for('search.search', **params))
+    
     query = request.args.get('search', '').strip()
-    category = request.args.get('category', '').strip()
+    categories_str = request.args.get('categories', '').strip()
+    colors_str = request.args.get('colors', '').strip()
+    min_price = request.args.get('min_price')
+    max_price = request.args.get('max_price')
+    min_rating = request.args.get('min_rating')
+    max_rating = request.args.get('max_rating')
+    selected_categories = categories_str.split(',') if categories_str else []
+    selected_colors = colors_str.split(',') if colors_str else []
+
+    # Search filtering queries
+    filter_categories = conn.execute(text(""" 
+        SELECT category_name FROM product_categories;
+    """)).fetchall()
+    
+    filter_colors = conn.execute(text("""
+        SELECT hex_code FROM product_colors;
+    """)).fetchall()
+    
 
     sql = """
         SELECT DISTINCT p.*, v.store_name
@@ -38,10 +82,36 @@ def search():
         params["query"] = f"%{query}%"
 
     # Category filter
-    if category:
-        sql += " AND pc.category_name ILIKE :category"
-        params["category"] = category
+    if selected_categories:
+        placeholders = ','.join([f':cat{i}' for i in range(len(selected_categories))])
+        sql += f" AND pc.category_name IN ({placeholders})"
+        for i, cat in enumerate(selected_categories):
+            params[f"cat{i}"] = cat
 
+    # Color filter
+    if selected_colors:
+        placeholders = ','.join([f':col{i}' for i in range(len(selected_colors))])
+        sql += f" AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code IN ({placeholders}))"
+        for i, col in enumerate(selected_colors):
+            params[f"col{i}"] = col
+
+    # Price filter
+    if min_price:
+        sql += " AND p.price >= :min_price"
+        params["min_price"] = min_price
+
+    if max_price:
+        sql += " AND p.price <= :max_price"
+        params["max_price"] = max_price
+
+    # Rating filter
+    if min_rating:
+        sql += " AND (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) >= :min_rating"
+        params["min_rating"] = min_rating
+
+    if max_rating:
+        sql += " AND (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) <= :max_rating"
+        params["max_rating"] = max_rating
 
     sql += " ORDER BY p.created_at DESC"
 
@@ -54,7 +124,15 @@ def search():
         products=products,
         image_dict=image_dict,
         query=query,
-        selected_category=category
+        selected_categories=selected_categories,
+        selected_colors=selected_colors,
+
+        filter_categories=filter_categories,
+        filter_colors=filter_colors,
+        selected_min_price=min_price,
+        selected_max_price=max_price,
+        selected_min_rating=min_rating,
+        selected_max_rating=max_rating
     )
 
 # filter through products and adjust whether they display in the UI

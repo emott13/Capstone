@@ -9,10 +9,12 @@ class ReviewRepository:
     Creates an object with an array of Reviews objects. Can retrieve data
     with getReviews().
     """
-    def __init__(self, product_id):
+    def __init__(self, product_id, sort=None, filter=None):
         self.product_id = product_id
         self.reviews = db.session.execute(
-            db.select(Reviews).filter_by(product_id=product_id)
+            db.select(Reviews)
+            .filter_by(product_id=product_id, rating=self._filter_by(filter))
+            .order_by(self._sort_by(sort))
         ).fetchall()
         self.reviewCount = len(self.reviews)
 
@@ -43,7 +45,7 @@ class ReviewRepository:
         """Returns a number that's the percentage of total/rating"""
         ratingCount = self.getRatingCount(rating)
 
-        if (ratingCount == 0):
+        if (ratingCount == 0 or self.reviewCount == 0):
             return 0
 
         return (ratingCount / self.reviewCount) * 100
@@ -60,6 +62,30 @@ class ReviewRepository:
         """How many empty stars to show on the page"""
         return 5 - self.getFullStars() - self.getHalfStars()
     
+    @staticmethod
+    def _sort_by(sort):
+        """Takes a variable 'sort' and returns the respective code 
+           for sorting a SQL statement"""
+        if (sort == 'positive'):
+            return Reviews.rating.desc()
+        elif (sort == 'negative'):
+            return Reviews.rating
+        elif (sort == 'recent'):
+            return Reviews.updated_at.desc()
+        elif (sort == 'oldest'):
+            return Reviews.updated_at.desc()
+        return Reviews.rating.desc()
+
+    @staticmethod
+    def _filter_by(filter):
+        """Takes a variable 'filter' and returns the respective code 
+           for filtering a SQL statement"""
+        if (filter == 'all'):
+            return Reviews.rating
+        if (filter in ['1', '2', '3', '4', '5']):
+            return filter
+        return Reviews.rating
+
     # constructor helper function. Not meant for external usage
     def _initStarCount(self):
         starCount = {rating: 0 for rating in range(1, 6)}
