@@ -59,3 +59,8 @@ class WishlistService:
 
         return total
 
+    @staticmethod
+    def remove_item(wishlist_item_id):
+        
+        WishlistRepository.remove_item(wishlist_item_id)
+        db.session.commit()

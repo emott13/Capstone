@@ -14,7 +14,7 @@ def wishlist():
 
         # get wishlist items from database using customer_id
         wishlist_items = WishlistService.get_wishlist_items(customer_id)
-        
+
 
         print("wishlist items", type(wishlist_items))
         for item in wishlist_items:
@@ -33,5 +33,14 @@ def update_wishlist():
         customer_id=current_user.get_id(),
         form_data=request.form
     )
+
+    return redirect(url_for("wishlist.wishlist"))
+
+@wishlist_bp.route("/remove_item", methods=["POST"])
+@login_required
+def remove_item():
+
+    wishlist_item_id = int(request.form.get("remove_item_id"))
+    WishlistService.remove_item(wishlist_item_id)
 
     return redirect(url_for("wishlist.wishlist"))

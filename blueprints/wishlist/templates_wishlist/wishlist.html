@@ -8,33 +8,58 @@
 
     {% if wishlists %}
     <hr>
-    <form action="{{ url_for('wishlist.update_wishlist') }}" method="post">
-        <table class="table">
-            {% for wishlist in wishlists %}
-                <p><strong>{{ wishlist.title }}</strong></p>
-                <tr>
-                    <th>Item name</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
-                </tr>
-                {% for item in wishlist.items %}
-                <tr>
-                    <td>{{ item.product.product_name }}</td>
-                    <td><input 
-                            type="number"
-                            name="quantity_{{ item.wishlist_item_id }}"
-                            min="1"
-                            step="1"
-                            value="{{ item.quantity }}"
-                            onchange="this.form.submit()"
-                        >
-                    </td>
-                    <td>${{ item.subtotal | priceFormat}}</td>
-                </tr>
-                {% endfor %}
+    <form method="post">
+    <table class="table">
+        {% for wishlist in wishlists %}
+            <p><strong>{{ wishlist.title }}</strong></p>
+
+            <tr>
+                <th>Item name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            {% for item in wishlist.items %}
+            <tr>
+                <td>{{ item.product.product_name }}</td>
+
+                <td>
+                    <input 
+                        type="number"
+                        name="quantity_{{ item.wishlist_item_id }}"
+                        min="1"
+                        step="1"
+                        value="{{ item.quantity }}"
+                    >
+                </td>
+
+                <td>${{ item.subtotal | priceFormat }}</td>
+
+                <td>
+                    <!-- Remove button -->
+                    <button 
+                        type="submit"
+                        name="remove_item_id"
+                        value="{{ item.wishlist_item_id }}"
+                        formaction="{{ url_for('wishlist.remove_item') }}"
+                    >
+                        Remove
+                    </button>
+                </td>
+            </tr>
             {% endfor %}
-        </table>
-    </form>
+        {% endfor %}
+    </table>
+
+    <!-- Update button -->
+    <button 
+        type="submit" 
+        formaction="{{ url_for('wishlist.update_wishlist') }}"
+    >
+        Update Quantities
+    </button>
+</form>
     
     {% else %}
         <p>You have no wishlists yet. <a href="#">Create one now!</a></p>
