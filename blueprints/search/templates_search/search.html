@@ -44,10 +44,15 @@
             <form action="/search" method="POST">
                 <input type="hidden" name="search" value="{{ query }}">
 
-                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
-                    <label>Category <i class="bi bi-chevron-down"></i></label>
-                    <div class="search-filter-options">
-                        <ul class="checkbox-list">
+                <div>
+                    <input type="submit" value="Apply">
+                    <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
+                </div>
+
+                <div class="search-filter-wrapper">
+                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options" style="padding-left: 10px;">
+                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for cat in filter_categories %}
                             <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
                         {% endfor %}
@@ -55,28 +60,23 @@
                     </div>
                 </div>
 
-                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
-                    <label>Color <i class="bi bi-chevron-down"></i></label>
-                    <div class="search-filter-options">
-                        <ul class="checkbox-list">
+                <div class="search-filter-wrapper">
+                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options" style="padding-left: 10px;">
+                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for col in filter_colors %}
-                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}> {{ col.hex_code }}</label></li>
+                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
-                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
-                    <label>Price <i class="bi bi-chevron-down"></i></label>
-                    <div class="search-filter-options">
+                <div class="search-filter-wrapper">
+                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options" style="padding-left: 10px;">
                         <input type="number" name="min_price" placeholder="Min" value="{{ selected_min_price }}">
                         <input type="number" name="max_price" placeholder="Max" value="{{ selected_max_price }}">
                     </div>
-                </div>
-
-                <div>
-                    <input type="submit" value="Apply">
-                    <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
                 </div>
 
             </form>
