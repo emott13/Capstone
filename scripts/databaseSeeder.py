@@ -154,7 +154,38 @@ with app.app_context():
     # can be adjusted later to hard code categories for specific products if needed
     categories_list = ProductCategories.query.all()
 
-    for product in products_list:
+    # hardcoded count: 34
+
+    # soils
+    for product in products_list[:5]:
+        product.categories.append(categories_list[0])
+
+    # fertilizers
+    for product in products_list[6:11]:
+        product.categories.append(categories_list[1])
+
+    # seeds
+    for product in products_list[12:18]:
+        product.categories.append(categories_list[2])
+
+    # bulbs
+    for product in products_list[19:23]:
+        product.categories.append(categories_list[3])
+
+    # plants
+    for product in products_list[24:27]:
+        product.categories.append(categories_list[4])
+
+    # trees
+    for product in products_list[28:32]:
+        product.categories.append(categories_list[5])
+
+    # pots
+    for product in products_list[33:34]:
+        product.categories.append(categories_list[6])
+
+    # randomly assignmed
+    for product in products_list[35:]:
         # each product gets 1–3 random categories
         assigned_categories = sample(categories_list, randint(1, 3))
 

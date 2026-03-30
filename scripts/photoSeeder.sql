@@ -238,4 +238,50 @@ INSERT INTO product_images (product_id, image_url) VALUES
 (27, 'https://mobileimages.lowes.com/productimages/3e477b51-1ef7-4732-9eec-03b367a569bd/15137605.jpg?size=mpdhi'),
 (27, 'https://mobileimages.lowes.com/productimages/82657ab5-a894-45ea-aa91-2901167bdb59/49347688.jpg?size=mpdhi'),
 (27, 'https://mobileimages.lowes.com/productimages/9e44f273-6610-4fdb-a226-aef02af6661d/49347690.jpg?size=mpdhi'),
-(27, 'https://mobileimages.lowes.com/productimages/8dfcdf13-2714-4514-91aa-7c2f7081d827/49347689.jpg?size=mpdhi');
+(27, 'https://mobileimages.lowes.com/productimages/8dfcdf13-2714-4514-91aa-7c2f7081d827/49347689.jpg?size=mpdhi'),
+
+-- trees
+(28, 'https://mobileimages.lowes.com/productimages/2bdb6293-923b-4445-995b-71aab3f9af1e/60284339.jpg?size=pdhism'),
+(28, 'https://mobileimages.lowes.com/productimages/84cd0de7-aed2-4e73-b92f-e42478092e68/72620529.jpeg?size=pdhism'),
+(28, 'https://mobileimages.lowes.com/productimages/b5c373b6-4bca-42d1-9bef-14d69b008f96/60284816.jpg?size=pdhism'),
+(28, 'https://mobileimages.lowes.com/productimages/c5270b3c-2005-4398-8990-335365b25101/60272730.jpg?size=pdhism'),
+
+(29, 'https://mobileimages.lowes.com/productimages/cba1bf4f-ac88-45e0-99a0-8aff8dbed35d/44300894.jpg?size=pdhism'),
+(29, 'https://mobileimages.lowes.com/productimages/1168b1f7-1163-41ce-8e41-4ffc9e34dc48/65185709.jpg?size=pdhism'),
+(29, 'https://mobileimages.lowes.com/productimages/4512eb4f-2ac7-4e4c-a25e-ea43194c5f33/50285621.jpg?size=pdhism'),
+(29, 'https://mobileimages.lowes.com/productimages/9a6aa059-5ab3-45a3-bde9-b506fc518340/46551663.jpg?size=pdhism'),
+
+(30, 'https://mobileimages.lowes.com/productimages/fe4d5f7e-cb33-40a7-86de-4f353dc86097/46551486.jpg?size=pdhism'),
+(30, 'https://mobileimages.lowes.com/productimages/ad4e2ce5-1518-4a4a-b4db-b1485ee99e70/44362236.jpg?size=pdhism'),
+(30, 'https://mobileimages.lowes.com/productimages/9fbba9bb-d980-4bb1-bfcd-15d0a4af1c3d/50289377.jpg?size=pdhism'),
+(30, 'https://mobileimages.lowes.com/productimages/aa60a0c2-c9d1-44c3-9580-b6e1fb056775/60284340.jpg?size=pdhism'),
+
+(31, 'https://mobileimages.lowes.com/productimages/031f5ff9-bde1-460c-8149-26874f4492ff/65138064.jpg?size=pdhism'),
+(31, 'https://mobileimages.lowes.com/productimages/412b5934-edf5-4857-8d7e-c7b61f6ecd8e/65514485.jpg?size=pdhism'),
+(31, 'https://mobileimages.lowes.com/productimages/17d45b9c-7165-41ee-ac4d-2549b634f2c4/65514488.jpg?size=pdhism'),
+(31, 'https://mobileimages.lowes.com/productimages/dc5d6be4-67ad-4063-b61c-27026f5ae6b9/60285402.jpg?size=pdhism'),
+
+(32, 'https://mobileimages.lowes.com/productimages/0ad6ef79-e861-4fa7-8c18-59324b77650f/72620012.jpeg?size=pdhism'),
+(32, 'https://mobileimages.lowes.com/productimages/809e71e8-ea17-4ecb-a255-65103213124e/72621326.jpeg?size=pdhism'),
+(32, 'https://mobileimages.lowes.com/productimages/88357214-ad97-478d-8d1d-ab077f1135a7/72621298.jpeg?size=pdhism'),
+(32, 'https://mobileimages.lowes.com/productimages/ccb40f6d-bb0b-45ca-8cf3-0a8c25fb6f66/60285379.jpg?size=pdhism'),
+
+-- pots -- 
+
+(33, 'https://mobileimages.lowes.com/productimages/15a4ab57-ef51-4eff-8a7d-213aaa184bda/47467596.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/47e27e8a-3da5-44b1-a9cc-49ccd2f1436e/10689897.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/fa968dcc-81eb-4c64-a805-cbacb7371274/08254897.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/f1501c22-0c6b-438a-b1a0-17562868f0ec/15613603.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/17599767-621a-4db6-8a4b-dfa71e0fba1e/15613604.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/7324d93c-1017-4c51-9c10-0a30e0da63e7/48380385.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/f0d69246-7c88-4cf4-874c-5810235ceff7/46495608.jpg?size=pdhism'),
+(33, 'https://mobileimages.lowes.com/productimages/96fac253-0b49-44e2-896c-b14e238f760c/48742171.jpg?size=pdhism'),
+
+(34, 'https://mobileimages.lowes.com/productimages/18a8ff79-a46f-41e9-928d-20369eb7d548/64467714.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/42627d4c-6236-4b60-94d8-cc0d42866ddd/65287439.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/486ae54b-5bdb-43a1-844f-6df676dce9c9/65287437.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/dc7114f1-881e-45db-af20-c3718b251d88/65287436.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/5b2fb58e-ad6b-4d13-ab56-84513481b530/64621825.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/a60ffe7c-3c0d-4628-b2a3-40a9c6a00673/65287440.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/d8b9ac12-797d-42de-8b27-5f48683af6f9/62499098.jpg?size=pdhism'),
+(34, 'https://mobileimages.lowes.com/productimages/2fcac598-acc2-4f74-9001-d98430a4e411/44295368.jpg?size=pdhism');
