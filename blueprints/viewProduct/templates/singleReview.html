@@ -1,0 +1,29 @@
+{% set review = reviews_filtered.getReviews()[i] %}
+{% set customer = review.getCustomer().getUser() %}
+<!-- relevant review attributes: 
+    rating, title, description, created_at, updated_at -->
+<!-- relevant customer attributes (Users): 
+    username, first_name, last_name, email -->
+<div class="card single-review flex flex-row">
+    <div class="flex flex-column">
+        <h3>{{ customer.first_name + ' ' + customer.last_name }}</h1>
+
+        <!-- Show Stars for their rating -->
+        <div class="flex flex-nowrap review-rating">
+            {% for i in range(review.rating) %}
+                <i class="review-star bi bi-star-fill"></i>
+            {% endfor %}
+            {% for i in range(5 - review.rating) %}
+                <i class="review-star bi bi-star"></i>
+            {% endfor %}
+        </div>
+
+        <!-- date -->
+        <p class="mt-2">{{ review.updated_at|dateOnlyFormat }}</p>
+    </div>
+
+    <div class="flex flex-column review-details">
+        <h2 class="">{{ review.title }}</h2>
+        <p class="text-wrap">{{ review.description }}</p>
+    </div>
+</div>

@@ -106,6 +106,9 @@ class Customers(db.Model):
         except Exception as exc:
             print("Error initializing customer's cart: ", exc)
     
+    def getUser(self):
+        return db.one_or_404(db.select(Users).filter_by(user_id=self.customer_id))
+
     # def getCart(self):
     #     return Carts.query.filter_by(text("customer_id = :customer_id", {"customer_id": self.customer_id})).get_or_404()
 
@@ -308,6 +311,9 @@ class Reviews(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    def getCustomer(self):
+        return db.one_or_404(db.select(Customers).filter_by(customer_id=self.customer_id))
 
 # discounts
 class Promotion(db.Model):

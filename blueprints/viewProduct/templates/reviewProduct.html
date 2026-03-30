@@ -28,7 +28,10 @@
                     {{ reviews.getRatingCount(rating) }}
                 </span>
                 <div class="progress flex-grow-1 h-90">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width:{{ reviews.getRatingPercent(rating) }}%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                    <div class="progress-bar bg-warning" role="progressbar" 
+                        style="width:{{ reviews.getRatingPercent(rating) }}%" aria-valuenow="75" 
+                        aria-valuemin="0" aria-valuemax="100">
+                    </div>
                 </div>
             </div>
             {% endfor %}
@@ -37,5 +40,38 @@
 
     <hr class="hr3 review-hr">
 
-    <div class="reviews-individual flex width-100 flex-wrap"
+    <form id="review-sort" action="{{ url_for('viewProduct.viewProduct') + '#reviews' }}" method="GET">
+        <!-- Need the product id here because it is a GET 
+            parameter instead of a different URL -->
+        <input name="id" value="{{ product.product_id }}" hidden>
+        <label for="review-sort">Sort by </label>
+        <select id="review-sort" name="review-sort">
+            <!-- selected jinja block is to retain what was previously selected -->
+            <option value="positive" {{ 'selected' if review_sort == 'positive' }}>Positive</option>
+            <option value="negative" {{ 'selected' if review_sort == 'negative' }}>Negative</option>
+            <option value="recent" {{ 'selected' if review_sort == 'recent' }}>Recent</option>
+            <option value="oldest" {{ 'selected' if review_sort == 'oldest' }}>Oldest</option>
+        </select>
+
+        <label for="review-filter">Filter by </label>
+        <select id="review-filter" name="review-filter">
+            <option value="all" {{ 'selected' if review_filter == 'all' }}>All</option>
+            <option value="5" {{ 'selected' if review_filter == '5' }}>5 star</option>
+            <option value="4" {{ 'selected' if review_filter == '4' }}>4 star</option>
+            <option value="3" {{ 'selected' if review_filter == '3' }}>3 star</option>
+            <option value="2" {{ 'selected' if review_filter == '2' }}>2 star</option>
+            <option value="1" {{ 'selected' if review_filter == '1' }}>1 star</option>
+        </select>
+
+        <input type="submit" value="Submit">
+    </form>
+    <div id="reviews" class="reviews-individual flex width-100 flex-wrap">
+        {% for i in range([100, reviews_filtered.getReviewCount()]|min) %}
+            <!-- Handles each individual review's html -->
+            {% include "singleReview.html" %}
+        {% endfor %}
+        {% if reviews_filtered.getReviewCount() == 0 %}
+            <h4 class="p-2">No reviews fit this filter :(</h3>
+        {% endif %}
+    </div>
 </div>
