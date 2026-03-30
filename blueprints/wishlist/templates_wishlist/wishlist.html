@@ -7,15 +7,68 @@
     <h1 style="margin-top: 20px;">Wishlists</h1>
 
     {% if wishlists %}
-        <ul>
-            {% for wishlist in wishlists %}
-                    <h3>{{ wishlist.title }}</h3>
+    <hr>
+    <form method="post">
+    <table class="table">
+        {% for wishlist in wishlists %}
+            <p><strong>{{ wishlist.title }}</strong></p>
 
-                    {% for item in wishlist.items %}
-                        <p>{{ item.product.product_name }} --- ${{ item.product.price | priceFormat }}</p>
-                    {% endfor %}
+            <tr>
+                <th>Item name</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+
+            {% for item in wishlist.items %}
+            <tr>
+                <td>{{ item.product.product_name }}</td>
+
+                <td>
+                    <input 
+                        type="number"
+                        name="quantity_{{ item.wishlist_item_id }}"
+                        min="1"
+                        step="1"
+                        value="{{ item.quantity }}"
+                    >
+                </td>
+
+                <td>${{ item.subtotal | priceFormat }}</td>
+
+                <td>
+                    <!-- Remove button -->
+                    <button 
+                        type="submit"
+                        name="remove_item_id"
+                        value="{{ item.wishlist_item_id }}"
+                        formaction="{{ url_for('wishlist.remove_item') }}"
+                    >
+                        Remove
+                    </button>
+                    <button 
+                        type="submit"
+                        name="add_to_cart_id"
+                        value="{{ item.wishlist_item_id }}"
+                        formaction="{{ url_for('wishlist.add_to_cart') }}"
+                    >
+                        Add to Cart
+                    </button>
+                </td>
+            </tr>
             {% endfor %}
-        </ul>
+        {% endfor %}
+    </table>
+
+    <!-- Update button -->
+    <button 
+        type="submit" 
+        formaction="{{ url_for('wishlist.update_wishlist') }}"
+    >
+        Update Quantities
+    </button>
+</form>
+    
     {% else %}
         <p>You have no wishlists yet. <a href="#">Create one now!</a></p>
     {% endif %}

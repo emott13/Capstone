@@ -202,7 +202,8 @@ with app.app_context():
             product = choice(products_list)
             db.session.add(WishlistItems(
                 wishlist_id=wishlist.wishlist_id,
-                product_id=product.product_id
+                product_id=product.product_id,
+                quantity=randint(1, 10)
             ))
     db.session.commit()
     print("Inserted wishlists and wishlist_items")
