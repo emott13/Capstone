@@ -3,8 +3,22 @@ from extensions import conn
 from models import Products
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
+from flask_wtf import FlaskForm
+from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField, TextAreaField)
+from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
+
+class CreateReviewForm(FlaskForm):    
+    title = StringField('Title',
+        validators=[
+            Length(max=100),
+        ])
+    desc = TextAreaField('Description',
+        validators=[
+            Length(max=1024),
+        ])
+    submit = SubmitField('Create')
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
 def viewProduct():
@@ -22,6 +36,7 @@ def viewProduct():
     # and other data
     reviews = ReviewRepository(product_id)
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
+    create_review_form = CreateReviewForm()
 
     if product_id:
         try:
@@ -61,4 +76,5 @@ def viewProduct():
     return render_template("viewProduct.html", product=product, vendor=vendor, 
                            images=images, color=color, spec=spec, error=error, 
                            reviews=reviews, reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter)
+                           review_sort=review_sort, review_filter=review_filter,
+                           create_review_form=create_review_form)
