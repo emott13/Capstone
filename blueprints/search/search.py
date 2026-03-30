@@ -11,18 +11,18 @@ def search():
 
     if request.method == 'POST':
         query = request.form.get('search', '').strip()
-        category = request.form.get('category', '').strip()
-        color = request.form.get('color', '').strip()
+        categories = request.form.getlist('categories')
+        colors = request.form.getlist('colors')
         min_price = request.form.get("min_price", "").strip()
         max_price = request.form.get("max_price", "").strip()
         
         params = {}
         if query:
             params['search'] = query
-        if category:
-            params['category'] = category
-        if color:
-            params['color'] = color
+        if categories:
+            params['categories'] = ','.join(categories)
+        if colors:
+            params['colors'] = ','.join(colors)
         if min_price:
             params['min_price'] = min_price
         if max_price:
@@ -31,10 +31,12 @@ def search():
         return redirect(url_for('search.search', **params))
     
     query = request.args.get('search', '').strip()
-    category = request.args.get('category', '').strip()
-    color = request.args.get('color', '').strip()
+    categories_str = request.args.get('categories', '').strip()
+    colors_str = request.args.get('colors', '').strip()
     min_price = request.args.get('min_price')
     max_price = request.args.get('max_price')
+    selected_categories = categories_str.split(',') if categories_str else []
+    selected_colors = colors_str.split(',') if colors_str else []
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
@@ -72,14 +74,18 @@ def search():
         params["query"] = f"%{query}%"
 
     # Category filter
-    if category:
-        sql += " AND pc.category_name ILIKE :category"
-        params["category"] = category
+    if selected_categories:
+        placeholders = ','.join([f':cat{i}' for i in range(len(selected_categories))])
+        sql += f" AND pc.category_name IN ({placeholders})"
+        for i, cat in enumerate(selected_categories):
+            params[f"cat{i}"] = cat
 
     # Color filter
-    if color:
-        sql += " AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code ILIKE :color)"
-        params["color"] = color
+    if selected_colors:
+        placeholders = ','.join([f':col{i}' for i in range(len(selected_colors))])
+        sql += f" AND EXISTS (SELECT 1 FROM product_colors pc2 WHERE pc2.product_id = p.product_id AND pc2.hex_code IN ({placeholders}))"
+        for i, col in enumerate(selected_colors):
+            params[f"col{i}"] = col
 
     # Price filter
     if min_price:
@@ -101,8 +107,8 @@ def search():
         products=products,
         image_dict=image_dict,
         query=query,
-        selected_category=category,
-        selected_color=color,
+        selected_categories=selected_categories,
+        selected_colors=selected_colors,
 
         filter_categories=filter_categories,
         filter_colors=filter_colors,

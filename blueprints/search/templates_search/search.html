@@ -24,6 +24,10 @@
         .image-container:hover .img-primary {
             opacity: 0;
         }
+
+        .search-filter-options {
+            display: none;
+        }
     </style>
     {{ super() }}
 {% endblock %}
@@ -38,35 +42,42 @@
             <h2>Filters</h2>
 
             <form action="/search" method="POST">
-
                 <input type="hidden" name="search" value="{{ query }}">
 
-                <label for="category">Category</label>
-                <select id="category" name="category">
-                    <option selected disabled>--</option>
-                    {% for cat in filter_categories %}
-                    <option value="{{ cat.category_name }}" {% if selected_category == cat.category_name %}selected{% endif %}>{{ cat.category_name }}</option>
-                    {% endfor %}
-                </select><br>
+                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
+                    <label>Category <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <ul class="checkbox-list">
+                        {% for cat in filter_categories %}
+                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
 
-                <label for="color">Color</label>
-                <select id="color" name="color">
-                    <option selected disabled>--</option>
-                    {% for col in filter_colors %}
-                    <option value="{{ col.hex_code }}"
-                        style="background-color: {{ col.hex_code }};" 
-                        {% if selected_color == col.hex_code %}selected{% endif %}>
-                        {{ col.hex_code }}
-                    </option>
-                    {% endfor %}
-                </select><br>
+                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
+                    <label>Color <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <ul class="checkbox-list">
+                        {% for col in filter_colors %}
+                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}> {{ col.hex_code }}</label></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
 
-                <label>Price</label>
-                <input type="number" name="min_price" placeholder="Min" value="{{ selected_min_price }}">
-                <input type="number" name="max_price" placeholder="Max" value="{{ selected_max_price }}"><br>
+                <div class="search-filter-wrapper" onclick="toggleOptions(event)">
+                    <label>Price <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <input type="number" name="min_price" placeholder="Min" value="{{ selected_min_price }}">
+                        <input type="number" name="max_price" placeholder="Max" value="{{ selected_max_price }}">
+                    </div>
+                </div>
 
-                <input type="submit" value="Apply">
-                <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
+                <div>
+                    <input type="submit" value="Apply">
+                    <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
+                </div>
 
             </form>
         </div>
@@ -106,4 +117,14 @@
         </div>
 
     </div>
+    <script>
+        function toggleOptions(event) {
+            let options = event.target.nextElementSibling;
+            if (options.style.display === 'none' || options.style.display === '') {
+                options.style.display = 'block';
+            } else {
+                options.style.display = 'none';
+            }
+        }
+    </script>
 {% endblock %}
