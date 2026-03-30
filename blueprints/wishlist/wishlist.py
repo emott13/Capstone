@@ -3,6 +3,8 @@ from flask import render_template
 from flask import request, redirect, url_for
 from flask_login import current_user, login_required
 from services.WishlistService import WishlistService
+from services.CartService import CartService
+from repositories.WishlistRepository import WishlistRepository
 
 wishlist_bp = Blueprint("wishlist", __name__, static_folder="static_wishlist",
                   template_folder="templates_wishlist")
@@ -41,6 +43,33 @@ def update_wishlist():
 def remove_item():
 
     wishlist_item_id = int(request.form.get("remove_item_id"))
+    WishlistService.remove_item(wishlist_item_id)
+
+    return redirect(url_for("wishlist.wishlist"))
+
+@wishlist_bp.route("/add_to_cart", methods=["POST"])
+@login_required
+def add_to_cart():
+    wishlist_item_id = request.form.get("add_to_cart_id")
+
+    if not wishlist_item_id:
+        return "Invalid request", 400
+
+    wishlist_item_id = int(wishlist_item_id)
+
+    # Get the wishlist item
+    wishlist_item = WishlistRepository.get_wishlist_item(wishlist_item_id)
+    if not wishlist_item:
+        return "Item not found", 404
+
+    # Add to cart
+    CartService.add_item(
+        customer_id=current_user.get_id(),
+        product_id=wishlist_item.product_id,
+        quantity=wishlist_item.quantity
+    )
+
+    # Remove from wishlist
     WishlistService.remove_item(wishlist_item_id)
 
     return redirect(url_for("wishlist.wishlist"))

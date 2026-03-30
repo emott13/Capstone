@@ -17,6 +17,11 @@ class WishlistService:
         return wishlists
     
     @staticmethod
+    def get_wishlist_item(wishlist_item_id):
+        return WishlistRepository.get_wishlist_item(wishlist_item_id)
+
+    
+    @staticmethod
     def update_quantities(customer_id, form_data):
         print('start')
 
@@ -61,6 +66,6 @@ class WishlistService:
 
     @staticmethod
     def remove_item(wishlist_item_id):
-        
+
         WishlistRepository.remove_item(wishlist_item_id)
         db.session.commit()

@@ -46,6 +46,14 @@
                     >
                         Remove
                     </button>
+                    <button 
+                        type="submit"
+                        name="add_to_cart_id"
+                        value="{{ item.wishlist_item_id }}"
+                        formaction="{{ url_for('wishlist.add_to_cart') }}"
+                    >
+                        Add to Cart
+                    </button>
                 </td>
             </tr>
             {% endfor %}
