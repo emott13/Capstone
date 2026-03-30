@@ -1,4 +1,11 @@
 {% extends "base.html" %}
+{% block title %}
+    {% if query %}
+        Search results for "{{ query }}" {{ super() }}
+        {% else %}
+        Search {{ super() }}
+    {% endif %}
+{% endblock %}
 {% block styles %}
     <style>
         .image-container {
@@ -52,6 +59,9 @@
         .card-price{
             font-size: 22px;
             font-weight: 700;
+        }
+        .color-orange{
+            color: var(--orange-1);
         }
     </style>
     {{ super() }}
@@ -151,7 +161,23 @@
 
                                 <div class="card-body">
                                     <h4 class="card-title">{{ product.product_name }}</h4>
-                                    <p class="card-vendor"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
+                                    <p class="card-vendor" style="margin-bottom: 0;"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
+                                    <div class="d-flex align-items-center" style="margin-bottom: 15px; margin-top: 0;">
+                                        {% set avg = product.average_rating %}
+                                        {% set full = avg | int %}
+                                        {% set half = 1 if (avg - full) >= 0.5 else 0 %}
+                                        {% set empty = 5 - full - half %}
+                                        {% for i in range(full) %}
+                                            <i class="color-orange bi bi-star-fill"></i>
+                                        {% endfor %}
+                                        {% if half %}
+                                            <i class="color-orange bi bi-star-half"></i>
+                                        {% endif %}
+                                        {% for i in range(empty) %}
+                                            <i class="color-orange bi bi-star"></i>
+                                        {% endfor %}
+                                        <span class="ms-2">{{ "%.1f"|format(avg) }} ({{ product.review_count }} reviews)</span>
+                                    </div>
                                     <big class="card-price">${{ product.price | priceFormat }}</big>
                                     <p class="card-text">{{ product.description }}</p>
                                 </div>

@@ -57,7 +57,7 @@ def search():
     
 
     sql = """
-        SELECT DISTINCT p.*, v.store_name
+        SELECT DISTINCT p.*, v.store_name, (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) as average_rating, (SELECT COUNT(*) FROM reviews WHERE product_id = p.product_id) as review_count
         FROM products p
         LEFT JOIN product_category_map pcm
             ON p.product_id = pcm.product_id
