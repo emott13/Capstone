@@ -18,8 +18,11 @@
             {% endfor %}
         </div>
 
-        <!-- date -->
-        <p class="mt-2">{{ review.updated_at|dateOnlyFormat }}</p>
+        <!-- created / updated at -->
+        <p class="mt-2 mb-0">Created {{ review.created_at|dateOnlyFormat }}</p>
+        {% if review.created_at != review.updated_at %}
+        <p class="mt-0 mb-0">Updated {{ review.updated_at|dateOnlyFormat }}</p>
+        {% endif %}
     </div>
 
     <div class="flex flex-column review-details">
