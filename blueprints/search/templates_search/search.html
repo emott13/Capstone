@@ -28,12 +28,39 @@
         .search-filter-options {
             display: none;
         }
+        a.card{
+            text-decoration: none;
+            color: inherit;
+        }
+        a.card:hover{
+            text-decoration: underline;
+        }
+        .card-title{
+            font-size: 22px;
+            font-weight: 600;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-text{
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        .card-price{
+            font-size: 22px;
+            font-weight: 700;
+        }
     </style>
     {{ super() }}
 {% endblock %}
 {% block page_content %}
     <h1 class="mt-5">Search Results</h1>
-    <p class="lead">Showing results for "{{ query }}"</p>
+    {% if query %}
+        <p class="lead">Showing results for "{{ query }}"</p>
+    {% endif %}
     <hr>
     <div class="row">
 
@@ -109,6 +136,7 @@
                     {% for product in products %}
                         <div class="product list-group-item col-sm-3 d-flex">
                             <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card">
+
                                 <div class="image-container card-img-top">
                                     {% set images = image_dict.get(product.product_id, []) %}
 
@@ -120,12 +148,14 @@
                                         <img src="{{ images[1].image_url }}" class="img-hover">
                                     {% endif %}
                                 </div>
+
                                 <div class="card-body">
                                     <h4 class="card-title">{{ product.product_name }}</h4>
+                                    <p class="card-vendor"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
+                                    <big class="card-price">${{ product.price | priceFormat }}</big>
                                     <p class="card-text">{{ product.description }}</p>
-                                    <p>{{ product.store_name }}</p>
-                                    <small>${{ product.price }}</small>
                                 </div>
+                                
                             </a>
                         </div>
                         
