@@ -218,6 +218,7 @@ class WishlistItems(db.Model):
     wishlist_item_id = db.Column(db.Integer, primary_key=True)
     wishlist_id = db.Column(db.Integer, db.ForeignKey("wishlists.wishlist_id"), nullable=False)
     product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
     product = db.relationship("Products", back_populates="wishlist_items")

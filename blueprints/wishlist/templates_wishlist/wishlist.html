@@ -8,23 +8,34 @@
 
     {% if wishlists %}
     <hr>
-    <table class="table">
-        {% for wishlist in wishlists %}
-            <p><strong>{{ wishlist.title }}</strong></p>
-            <tr>
-                <th>Item name</th>
-                <th>Quantity</th>
-                <th>Price</th>
-            </tr>
-            {% for item in wishlist.items %}
-            <tr>
-                <td>{{ item.product.product_name }}</td>
-                <td>{{ item.product.quantity }}</td>
-                <td>${{ item.product.price | priceFormat}}</td>
-            </tr>
+    <form action="{{ url_for('wishlist.update_wishlist') }}" method="post">
+        <table class="table">
+            {% for wishlist in wishlists %}
+                <p><strong>{{ wishlist.title }}</strong></p>
+                <tr>
+                    <th>Item name</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                </tr>
+                {% for item in wishlist.items %}
+                <tr>
+                    <td>{{ item.product.product_name }}</td>
+                    <td><input 
+                            type="number"
+                            name="quantity_{{ item.wishlist_item_id }}"
+                            min="1"
+                            step="1"
+                            value="{{ item.quantity }}"
+                            onchange="this.form.submit()"
+                        >
+                    </td>
+                    <td>${{ item.subtotal | priceFormat}}</td>
+                </tr>
+                {% endfor %}
             {% endfor %}
-        {% endfor %}
-    </table>
+        </table>
+    </form>
+    
     {% else %}
         <p>You have no wishlists yet. <a href="#">Create one now!</a></p>
     {% endif %}

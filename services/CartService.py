@@ -74,4 +74,9 @@ class CartService:
 
         db.session.commit()
 
+    @staticmethod
+    def add_item(customer_id, product_id, quantity):
+        cart_id = CartRepository.get_or_create_cart(customer_id)
+        CartRepository.add_item(cart_id, product_id, quantity)
+
        
