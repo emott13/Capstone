@@ -95,6 +95,23 @@
     .review-details {
         max-width: 900px;
     }
+    #create-review-rating {
+        width: 200px;
+        height: 60px;
+    }
+    .review-create-star-selected {
+        color: var(--orange-1);
+    }
+    .review-create-rating input {
+        margin: -1rem;
+    }
+    .btn-star {
+        cursor: pointer;
+    }
+    .btn-star:hover {
+        color: var(--orange-1);
+        filter: brightness(110%);
+    }
     /* End Individual Reviews */
 
     #zoomed-img{
@@ -206,6 +223,12 @@
 
 {% include "reviewProduct.html" %}
 <script>
+    let createReviewForm = document.getElementById("create-review");
+
+    // Make create review stars show correctly
+    updateReviewCreate(createReviewForm.rating.value);
+
+
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
         if(main){
@@ -272,6 +295,27 @@
         /* toggles the div for creating/updating/deleting a review */
         let createReviewElem = document.getElementById("create-review");
         createReviewElem.hidden = !createReviewElem.hidden;
+    }
+
+    function updateReviewCreate(rating) {
+        /* 
+            Makes the create review stars responsive. Ex. pressing 3rd star makes all 
+            current and previous stars orange 
+        */
+        let createReviewLabels = document.getElementsByClassName('create-review-label') ;
+
+        for (let i = 1; i <= 5; i++) {
+            // gets the <i> elem containing the icon within the label
+            let starElem = createReviewLabels[i-1].children[0];
+            if (i <= rating) {
+                starElem.classList.add("review-star");
+                starElem.classList.remove("review-star-gray");
+            }
+            else {
+                starElem.classList.add("review-star-gray");
+                starElem.classList.remove("review-star");
+            }
+        }
     }
 
     // Reviews End

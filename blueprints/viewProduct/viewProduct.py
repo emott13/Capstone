@@ -4,8 +4,8 @@ from models import Products
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
 from flask_wtf import FlaskForm
-from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField, TextAreaField)
-from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
+from wtforms import (StringField, SubmitField, TextAreaField, RadioField)
+from wtforms.validators import InputRequired, Length
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -17,6 +17,13 @@ class CreateReviewForm(FlaskForm):
     desc = TextAreaField('Description',
         validators=[
             Length(max=1024),
+        ])
+    rating = RadioField('Rating',
+        choices=[
+            ('1'), ('2'), ('3'), ('4'), ('5'),
+        ],
+        validators=[
+            InputRequired(),
         ])
     submit = SubmitField('Create')
 
