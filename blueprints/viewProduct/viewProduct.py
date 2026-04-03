@@ -1,11 +1,12 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from extensions import conn
-from models import Products
+from models import Products, Reviews
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, TextAreaField, RadioField)
 from wtforms.validators import InputRequired, Length
+from flask_login import current_user, login_required
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -85,3 +86,13 @@ def viewProduct():
                            reviews=reviews, reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
                            create_review_form=create_review_form)
+
+@login_required
+@view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
+def createReview(product_id):
+    # error checks
+    error = ""
+    if Reviews.query.filter(text("customer_id = :customer_id"), {"customer_id": current_user.get_id()}):
+        error = "Unable to create review" 
+
+    return 
