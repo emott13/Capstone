@@ -5,8 +5,8 @@
     {% for order in orders %}
         <div class="order">
             <h3>
-                Order #{{ order.order_id }} -
-                {{ order.order_date.strftime('%Y-%m-%d %H:%M:%S') }}
+                Order #{{ order.order_id }}: 
+                {{ order.order_date.strftime('%m-%d-%Y %H:%M:%S') }}
             </h3>
 
 
