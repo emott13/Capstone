@@ -47,6 +47,8 @@ def viewProduct(error=None):
     reviews = ReviewRepository(product_id)
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
     create_review_form = CreateReviewForm()
+    review_exists = bool(
+        Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first())
 
     if product_id:
         try:
@@ -88,7 +90,8 @@ def viewProduct(error=None):
                            error=error, reviews=reviews,
                            reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
-                           create_review_form=create_review_form)
+                           create_review_form=create_review_form,
+                           review_exists=review_exists)
 
 @login_required
 @view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
@@ -110,6 +113,30 @@ def createReview(product_id):
                          rating=rating, title=title, description=desc)
         try:
             db.session.add(review)         
+            db.session.commit()
+        except Exception as exc:
+            print(f"Error: {exc}")
+            error = "Unknown error"
+
+    print(error)
+    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
+
+@login_required
+@view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
+def deleteReview(product_id):
+    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+
+    # error checks
+    error = ""
+    # unique check
+    duplicate = query.first()
+    if not duplicate:
+        error = "Review does not exist" 
+    
+    if not error:
+        # delete customer review
+        try:
+            query.delete()
             db.session.commit()
         except Exception as exc:
             print(f"Error: {exc}")

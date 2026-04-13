@@ -41,12 +41,22 @@
     {% if current_user.is_authenticated %}
     <hr class="hr3 review-hr">
 
+    {% if not review_exists %}
     <button onclick="toggleReviewCreate()" class="btn btn-outline-success">
         Create a review!
     </button>
+    {% else %}
+    <form action="{{ url_for('viewProduct.deleteReview', product_id=product_id) }}"
+        method="POST" id="delete-review">
+        <button class="btn btn-outline-danger">
+            Delete Review!
+        </button>
+    </form>
+    {% endif %}
 
     <form action="{{ url_for('viewProduct.createReview', product_id=product_id)}}" 
-        method="POST" id="create-review" class="mt-2 flex flex-column review-rating">
+        method="POST" id="create-review" class="mt-2 flex flex-column review-rating"
+        hidden>
         {{ create_review_form.hidden_tag() }}
         {% if create_review_form.errors or error %}
             <div class="alert alert-danger">
@@ -63,7 +73,8 @@
                 <p class="mb-0">Rating</p>
                 {% for subfield in create_review_form.rating %}
                     {{ subfield( checked="checked", hidden="hidden") }}
-                    <button type="button" class="btn btn-star p-0" onclick="updateReviewCreate({{ subfield.label.text }})">
+                    <button type="button" class="btn btn-star p-0" 
+                        onclick="updateReviewCreate({{ subfield.label.text }})">
                         <label class="create-review-label btn-star" for="{{ subfield.label.field_id }}">
                             <i class="review-star bi bi-star-fill btn-star"></i>
                         </label>
