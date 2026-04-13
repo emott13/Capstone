@@ -11,7 +11,7 @@ from sqlalchemy import func
 from extensions import db, app, bcrypt
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import text
-from models import Users, Roles, UserRoles, Admins, Vendors, Customers
+from models import UserInteractions, Users, Roles, UserRoles, Admins, Vendors, Customers
 from models import PhoneNumbers, UserPhoneNumbers, Addresses
 from models import Products, ProductSpecs, ProductColors, ProductCategories
 from models import Carts, CartItems, Wishlists, WishlistItems
@@ -527,5 +527,55 @@ with app.app_context():
     db.session.commit()
     print("Inserted promotions, targets, and redemptions")
         
+    # --- USER INTERACTIONS --- #
+    # simulating user interactions like adding items to cart, placing orders, writing reviews, etc.
+
+    # --- purchases (5) ---
+    orders = db.session.query(OrderItems).all()
+    for item in orders:
+        interaction = UserInteractions(
+            user_id=item.order.customer_id,
+            product_id=item.product_id,
+            interaction_type="purchase",
+            interaction_value=5.0
+        )
+        db.session.add(interaction)
+
+    # --- carts (3) ---
+    cart_items = db.session.query(CartItems).all()
+    for item in cart_items:
+        interaction = UserInteractions(
+            user_id=item.cart.customer_id,
+            product_id=item.product_id,
+            interaction_type="add_to_cart",
+            interaction_value=3.0
+        )
+        db.session.add(interaction)
+
+    # --- wishlists (2) ---
+    wishlist_items = db.session.query(WishlistItems).all()
+    for item in wishlist_items:
+        interaction = UserInteractions(
+            user_id=item.wishlist.customer_id,
+            product_id=item.product_id,
+            interaction_type="add_to_wishlist",
+            interaction_value=2.0
+        )
+        db.session.add(interaction)
+
+    # --- reviews (rating) ---
+    reviews = db.session.query(Reviews).all()
+    for review in reviews:
+        interaction = UserInteractions(
+            user_id=review.customer_id,
+            product_id=review.product_id,
+            interaction_type="review",
+            interaction_value=float(review.rating)  # using rating as interaction value
+        )
+        db.session.add(interaction)
+
+    db.session.commit() # commit all interactions
+
+    print('User Interactions seeded successfully')
         
     print("Seeder finished successfully")

@@ -95,16 +95,16 @@ class Customers(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, **kwargs):
-        super(Users, self).__init__(**kwargs)
-        # Custom initialization
-        # this might not work. Sorry if this errors for one of you
-        try:
-            cart = Carts(customer_id=self.customer_id)
-            db.session.add(cart)
-            db.session.commit()
-        except Exception as exc:
-            print("Error initializing customer's cart: ", exc)
+    # def __init__(self, **kwargs):
+    #     super(Users, self).__init__(**kwargs)
+    #     # Custom initialization
+    #     # this might not work. Sorry if this errors for one of you
+    #     try:
+    #         cart = Carts(customer_id=self.customer_id)
+    #         db.session.add(cart)
+    #         db.session.commit()
+    #     except Exception as exc:
+    #         print("Error initializing customer's cart: ", exc)
     
     def getUser(self):
         return db.one_or_404(db.select(Users).filter_by(user_id=self.customer_id))
@@ -218,6 +218,8 @@ class CartItems(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    cart = db.relationship("Carts", backref="cart_items")
 
 # wishlists
 class Wishlists(db.Model):
