@@ -109,6 +109,17 @@
                 </div>
 
                 <div class="search-filter-wrapper">
+                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options" style="padding-left: 10px;">
+                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
+                        {% for ven in filter_vendors %}
+                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="search-filter-wrapper">
                     <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
