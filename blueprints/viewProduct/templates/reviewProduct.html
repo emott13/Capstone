@@ -45,7 +45,8 @@
         Create a review!
     </button>
 
-    <form action="" method="POST" id="create-review" class="mt-2 flex flex-nowrap review-rating">
+    <form action="" method="POST" id="create-review" class="mt-2 flex flex-wrap review-rating">
+        {{ create_review_form.hidden_tag() }}
         {% if create_review_form.errors or error %}
             <div class="alert alert-danger">
                 {{ error if error }}
@@ -57,15 +58,20 @@
             </div>
         {% endif %}
 
-        <div class="flex flex-nowrap review-rating">
-            {% for i in range(5) %}
-                <i class="review-star-gray bi bi-star-fill"></i>
+        <div id="create-review-rating" class="review-rating review-create-rating">
+            <p class="mb-0">Rating</p>
+            {% for subfield in create_review_form.rating %}
+                {{ subfield( checked="checked", hidden="hidden") }}
+                <button type="button" class="btn btn-star p-0" onclick="updateReviewCreate({{ subfield.label.text }})">
+                    <label class="create-review-label btn-star" for="{{ subfield.label.field_id }}">
+                        <i class="review-star bi bi-star-fill btn-star"></i>
+                    </label>
+                </button>
             {% endfor %}
         </div>
 
 
         <div class="flex flex-column">
-            {{ create_review_form.hidden_tag() }}
             <div class="form-group mb-1">
                 {{ create_review_form.title.label }}
                 {{ create_review_form.title( class="form-control", placeholder = "Title") }}
