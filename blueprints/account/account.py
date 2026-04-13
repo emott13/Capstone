@@ -58,6 +58,18 @@ def account():
         success=success
     )
 
+@account_bp.route("/account/phone", methods=["POST"])
+def add_phone_number():
+    # Implementation for adding phone number
+    number = request.form.get("phone_number")
+    if not number:
+        return redirect(url_for("account.account"))
+
+    user_service = UserService.add_phone_number(current_user.get_id(), number)
+
+    return redirect(url_for("account.account"))
+    
+
 def reset_password_post(form) -> str:
     old_password = form.old_password.data
     new_password = form.new_password.data
