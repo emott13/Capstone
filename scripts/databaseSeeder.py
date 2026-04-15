@@ -579,3 +579,4 @@ with app.app_context():
     print('User Interactions seeded successfully')
         
     print("Seeder finished successfully")
+

@@ -522,3 +522,11 @@ class UserInteractions(db.Model):
         )
         db.session.add(interaction)
         db.session.commit()
+
+class Recommendations(db.Model):
+    __tablename__ = "recommendations"
+
+    recommendation_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.BigInteger, db.ForeignKey("users.user_id"))
+    product_id = db.Column(db.BigInteger, db.ForeignKey("products.product_id"))
+    score = db.Column(db.Float)
