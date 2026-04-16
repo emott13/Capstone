@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_user
 from sqlalchemy import text
 from extensions import bcrypt, db
-from models import Users, UserRoles, Roles
+from models import Users, UserRoles, Roles, Customers, Carts
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
@@ -44,7 +44,6 @@ class RegisterForm(FlaskForm):
     dob = DateField('Date Of Birth',
         validators=[
             InputRequired(),
-            
         ])
     submit = SubmitField('Sign Up')
 
@@ -53,6 +52,12 @@ class RegisterForm(FlaskForm):
             raise ValidationError("Date of birth must be greater than the year 1900")
         elif field.data > datetime.today().date():
             raise ValidationError("Date of birth can not be in the future")
+
+    def validate_username(form, field):
+        username_exists = db.session.execute(text("SELECT username FROM users WHERE username = :username"),
+                                             {"username": field.data}).one_or_none()
+        if username_exists:
+            raise ValidationError("Username already exists")
 
 register_bp = Blueprint("register", __name__, static_folder="register_static",
                   template_folder="templates")
@@ -93,9 +98,18 @@ def register_post(register_form) -> str:
     db.session.add(user)
     db.session.commit()
 
+    customer_role_id = db.session.execute(
+        text("SELECT role_id FROM roles WHERE role_name = :role_name"), {"role_name": "customer"}
+    ).one()[0]
+
     roles = []
     for role_id in role_ids:
         roles.append(UserRoles(user_id=user.user_id, role_id=role_id))
+        if int(role_id) == int(customer_role_id):
+            customer = Customers(customer_id=user.user_id)
+            db.session.add(customer)
+            db.session.commit()
+            db.session.add(Carts(customer_id=customer.customer_id))
     db.session.add_all(roles)
     db.session.commit()
     
