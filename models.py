@@ -159,13 +159,20 @@ class Products(db.Model):
     price = db.Column(db.Integer, nullable=False)  # Store price in cents to avoid float issues
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+    
+    # Relationships
     categories = db.relationship(
         "ProductCategories",
         secondary=product_category_map,
         backref=db.backref("products", lazy="dynamic")
     )
     wishlist_items = db.relationship("WishlistItems", back_populates="product")
-
+    images = db.relationship(
+        "ProductImages",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    
 # product specs
 class ProductSpecs(db.Model):
     __tablename__ = "product_specs"
@@ -189,6 +196,7 @@ class ProductCategories(db.Model):
     __tablename__ = "product_categories"
     category_id = db.Column(db.Integer, primary_key=True)
     category_name = db.Column(db.String(50), unique=True, nullable=False)
+    category_image = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
@@ -200,6 +208,11 @@ class ProductImages(db.Model):
     image_url = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    product = db.relationship(
+        "Products",
+        back_populates="images"
+    )
 
 # carts
 class Carts(db.Model):

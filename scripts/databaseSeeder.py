@@ -146,7 +146,56 @@ with app.app_context():
     # Product categories
     categories = ['Soils','Fertilizers', 'Seeds', 'Bulbs', 'Plants', 'Trees', 'Pots', 'Lawn Care', 'Garden Tools', 'Outdoor Furniture', 'Outdoor Decor', 'Indoor Gardening']
     for cat in categories:
-        db.session.add(ProductCategories(category_name=cat))
+        match (cat):
+            case 'Soils': 
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.thetreecenter.com/c/uploads/2018/01/Garden_Soil_1-copy-jpg.webp'))
+            case 'Fertilizers':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.gardendesign.com/pictures/images/900x705Max/site_3/applying-fertilizer-blue-trowel-fertilizing-tomato-plant-shutterstock-com_15275.jpg'))
+            case 'Seeds':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://cdn.mos.cms.futurecdn.net/2KimaEYUTZk2qzNZjnLWYP.jpg'))
+            case 'Bulbs':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://millcreekgardens.com/wp-content/uploads/2017/08/Depositphotos_65388297_m-2015.jpg'))
+            case 'Plants':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.wagnergreenhouses.com/wp-content/uploads/2017/01/shutterstock_2061262208-1-scaled.jpg'))
+            case 'Trees':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://t3.ftcdn.net/jpg/14/62/47/02/360_F_1462470203_3wXjC5IeReCDn6LgJwQFxFxvmH3iLzUX.jpg'))
+            case 'Pots':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://mulhalls.com/wp-content/uploads/2024/01/Template-Website-Post-Image3.jpg'))
+            case 'Lawn Care':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://huntersgardencentre.com/wp-content/uploads/2025/04/Blog-Post-Featured-Pic-lawn-care.jpg'))
+            case 'Garden Tools':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://m.media-amazon.com/images/I/81BPQvrklaL._AC_UF350,350_QL80_.jpg'))
+            case 'Outdoor Furniture':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://images.thdstatic.com/productImages/d86b6b44-e9c5-4005-aebd-2986d252ce6f/svn/hooowooo-fire-pit-patio-sets-rfp54-tbs210-64_600.jpg'))
+            case 'Outdoor Decor':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://resources.itemint.com/hs-fs/hubfs/acogedor-patio-trasero-flores-al-atardecer.webp?width=1000&height=667&name=acogedor-patio-trasero-flores-al-atardecer.webp'))
+            case 'Indoor Gardening':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.greengenius.com.au/cdn/shop/articles/6809d4a59bd9ce97f26c0270-1745475945147_3f99913f-dca2-487c-bcd4-300cd6b3de39.jpg?v=1755573292'))
+    
     db.session.commit()
     print("Inserted product colors and categories")
 

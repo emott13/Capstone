@@ -59,66 +59,79 @@
 
     /* -- categories -- */
 
-    .soils{
-        background-image: url(https://www.thetreecenter.com/c/uploads/2018/01/Garden_Soil_1-copy-jpg.webp);
+    .cat{
         background-size: auto 120%;
         background-position: center;
     }
-    .fertilizers{
-        background-image: url(https://www.gardendesign.com/pictures/images/900x705Max/site_3/applying-fertilizer-blue-trowel-fertilizing-tomato-plant-shutterstock-com_15275.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    /* -- carousel -- */
+
+    .carousel-container {
+        position: relative;
+        margin-top: 20px;
+        padding: 20px;
+        border-radius: 20px;
+        background-color: var(--green-1);
     }
-    .seeds{
-        background-image: url(https://cdn.mos.cms.futurecdn.net/2KimaEYUTZk2qzNZjnLWYP.jpg);
-        background-size: auto 120%;
-        background-position: center;
+    .carousel-container > h3{
+        color: white;
     }
-    .bulbs{
-        background-image: url(https://millcreekgardens.com/wp-content/uploads/2017/08/Depositphotos_65388297_m-2015.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .carousel-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
     }
-    .plants{
-        background-image: url(https://www.wagnergreenhouses.com/wp-content/uploads/2017/01/shutterstock_2061262208-1-scaled.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .carousel-track {
+        display: flex;
+        overflow-x: auto;
+        scroll-behavior: smooth;
+        gap: 15px;
+        padding: 10px;
+        scrollbar-width: none; /* Firefox */
     }
-    .trees{
-        background-image: url(https://t3.ftcdn.net/jpg/14/62/47/02/360_F_1462470203_3wXjC5IeReCDn6LgJwQFxFxvmH3iLzUX.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .carousel-track::-webkit-scrollbar {
+        display: none; /* Chrome */
     }
-    .pots{
-        background-image: url(https://mulhalls.com/wp-content/uploads/2024/01/Template-Website-Post-Image3.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .product-card {
+        min-width: 180px;
+        flex: 0 0 auto;
+        border-radius: 10px;
+        background: white;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        padding: 10px;
+        transition: transform 0.2s ease;
     }
-    .lawn_care{
-        background-image: url(https://huntersgardencentre.com/wp-content/uploads/2025/04/Blog-Post-Featured-Pic-lawn-care.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .product-card:hover {
+        transform: scale(1.05);
     }
-    .garden_tools{
-        background-image: url(https://m.media-amazon.com/images/I/81BPQvrklaL._AC_UF350,350_QL80_.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .product-card img {
+        width: 100%;
+        height: 140px;
+        object-fit: cover;
+        border-radius: 8px;
     }
-    .outdoor_furniture{
-        background-image: url(https://images.thdstatic.com/productImages/d86b6b44-e9c5-4005-aebd-2986d252ce6f/svn/hooowooo-fire-pit-patio-sets-rfp54-tbs210-64_600.jpg);
-        background-size: auto 120%;
-        background-position: center;
+
+    .carousel-btn {
+        background: rgba(0,0,0,0.6);
+        color: white;
+        border: none;
+        width: 40px;
+        height: 80px;
+        cursor: pointer;
+        z-index: 10;
+        font-size: 24px;
     }
-    .outdoor_decor{
-        background-image: url(https://resources.itemint.com/hs-fs/hubfs/acogedor-patio-trasero-flores-al-atardecer.webp?width=1000&height=667&name=acogedor-patio-trasero-flores-al-atardecer.webp);
-        background-size: auto 120%;
-        background-position: center;
+
+    .carousel-btn:hover {
+        background: rgba(0,0,0,0.8);
     }
-    .indoor_gardening{
-        background-image: url(https://www.greengenius.com.au/cdn/shop/articles/6809d4a59bd9ce97f26c0270-1745475945147_3f99913f-dca2-487c-bcd4-300cd6b3de39.jpg?v=1755573292);
-        background-size: auto 120%;
-        background-position: center;
-    }
+
 </style>
     {{ super() }}
 {% endblock %}
@@ -129,153 +142,71 @@
         <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
     </div>
     <div class="row">
-        <div class="col-sm-3">
-            <div class="home-card card_circle soils">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Soils') }}" class="btn btn-primary">View Soils</a>
+        {% for c in categories %}
+            <div class="col-sm-3">
+                <div class="home-card card_circle cat" style="background-image: url({{ c.category_image }});">
+                    <div class="ratio ratio-1x1 rounded-circle">
+                    </div>
+                    <div class="card-body">
+                        <a href="{{ url_for('search.search', category='c.category_name') }}" class="btn btn-primary">View {{ c.category_name }}</a>
+                    </div>
                 </div>
             </div>
-        </div>
+        {% endfor %}
 
-        <div class="col-sm-3">
-            <div class="home-card card_circle fertilizers">
-                <div class="ratio ratio-1x1 rounded-circle">
+    </div>
+    <div class="carousel-container">
+        <h3 class="mb-3">Popular Products</h3>
+        <div class="carousel-wrapper">
+            <button class="carousel-btn left" onclick="scrollLeft()">
+                &#10094;
+            </button>
+            <div id="carouselTrack" class="carousel-track">
+                {% for p in products %}
+                <div class="product-card">
+                    <img src="{{ p.images[0].image_url if p.images else '/static/default.png' }}">
+                    <div class="info">
+                        <h6>{{ p.product_name }}</h6>
+                        <p>${{ p.price | priceFormat }}</p>
+                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                            View
+                        </a>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Fertilizers') }}" class="btn btn-primary">View Fertilizers</a>
-                </div>
+                {% endfor %}
             </div>
-        </div>
 
-        <div class="col-sm-3">
-            <div class="home-card card_circle seeds">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Seeds') }}" class="btn btn-primary">View Seeds</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle bulbs">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Bulbs') }}" class="btn btn-primary">View Bulbs</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle plants">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Plants') }}" class="btn btn-primary">View Plants</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle trees">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Trees') }}" class="btn btn-primary">View Trees</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle pots">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Pots') }}" class="btn btn-primary">View Pots</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle lawn_care">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Lawn Care') }}" class="btn btn-primary">View Lawn Care</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle garden_tools">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Garden Tools') }}" class="btn btn-primary">View Garden Tools</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle outdoor_furniture">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Outdoor Furniture') }}" class="btn btn-primary">View Outdoor Furniture</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle outdoor_decor">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Outdoor Decor') }}" name="category" class="btn btn-primary">View Outdoor Decor</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-sm-3">
-            <div class="home-card card_circle indoor_gardening">
-                <div class="ratio ratio-1x1 rounded-circle">
-                </div>
-                <div class="card-body">
-                    <a href="{{ url_for('search.search', category='Indoor Gardening') }}" name="category" class="btn btn-primary">View Indoor Gardening</a>
-                </div>
-            </div>
+            <button class="carousel-btn right" onclick="scrollRight()">
+                &#10095;
+            </button>
         </div>
     </div>
-    <div class="d-flex container_specials mt-5">
-        <div class="col-sm-4">
-            <div class="home-card">
-                <div class="card-body best_sellers" id="best_sellers">
-                    <h2 class="card-title">Best Sellers</h2>
-                    <p class="card-text">Shop our best-selling products</p>
-                    <a href="#" class="btn btn-primary">Learn More</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="home-card">
-                <div class="card-body new" id="new">
-                    <h2 class="card-title">New Arrivals</h2>
-                    <p class="card-text">Check out our latest products</p>
-                    <a href="#" class="btn btn-primary">Learn More</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-4">
-            <div class="home-card" id="sale">
-                <div class="card-body sale">
-                    <h2 class="card-title">On Sale</h2>
-                    <p class="card-text">Don't miss our current discounts</p>
-                    <a href="#" class="btn btn-primary">Learn More</a>
-                </div>
-            </div>
-        </div>
-    </div>
+
+<script>
+    function scrollLeft() {
+        document.getElementById("carouselTrack").scrollBy({
+            left: -300,
+            behavior: "smooth"
+        });
+    }
+
+    function scrollRight() {
+        document.getElementById("carouselTrack").scrollBy({
+            left: 300,
+            behavior: "smooth"
+        });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const track = document.getElementById("carouselTrack");
+
+        // Clone items for illusion of infinity
+        const items = Array.from(track.children);
+
+        items.forEach(item => {
+            const clone = item.cloneNode(true);
+            track.appendChild(clone);
+        });
+    });
+</script>
 {% endblock %}

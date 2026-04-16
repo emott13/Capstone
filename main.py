@@ -1,4 +1,4 @@
-from flask import Flask, url_for, redirect
+from flask import Flask, jsonify, url_for, redirect
 from sqlalchemy import text
 from extensions import *
 from flask_login import login_required, current_user
@@ -13,6 +13,7 @@ from blueprints.order.order import order_bp
 from blueprints.checkout.checkout import checkout_bp
 from blueprints.account.account import account_bp
 from blueprints.wishlist.wishlist import wishlist_bp
+from ml.inference.popular import get_popular_products
 from models import Users
 
 # load users
@@ -69,6 +70,11 @@ def db_info():
 @app.route("/test")
 def test():
     return f"{current_user}"
+
+@app.route("/popular-products")
+def popular_products():
+    products = get_popular_products(limit=10)
+    return jsonify(products)
 
 
 

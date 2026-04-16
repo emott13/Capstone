@@ -23,6 +23,7 @@ pandas==3.0.2
 psycopg2-binary==2.9.11
 python-dotenv==1.2.1
 SQLAlchemy==2.0.46
+torch==2.10.0+cu126
 typing_extensions==4.15.0
 validators==0.35.0
 visitor==0.1.3
