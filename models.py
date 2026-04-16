@@ -95,17 +95,16 @@ class Customers(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
-    def __init__(self, **kwargs):
-        # super(Users, self).__init__(**kwargs)
-        super().__init__(**kwargs)
-        # # Custom initialization
-        # # this might not work. Sorry if this errors for one of you
-        # try:
-        #     cart = Carts(customer_id=self.customer_id)
-        #     db.session.add(cart)
-        #     db.session.commit()
-        # except Exception as exc:
-        #     print("Error initializing customer's cart: ", exc)
+    # def __init__(self, **kwargs):
+    #     super(Users, self).__init__(**kwargs)
+    #     # Custom initialization
+    #     # this might not work. Sorry if this errors for one of you
+    #     try:
+    #         cart = Carts(customer_id=self.customer_id)
+    #         db.session.add(cart)
+    #         db.session.commit()
+    #     except Exception as exc:
+    #         print("Error initializing customer's cart: ", exc)
     
     def getUser(self):
         return db.one_or_404(db.select(Users).filter_by(user_id=self.customer_id))
@@ -219,6 +218,8 @@ class CartItems(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    cart = db.relationship("Carts", backref="cart_items")
 
 # wishlists
 class Wishlists(db.Model):
@@ -501,3 +502,31 @@ class OrderDiscount(db.Model):
     discount_amount_applied = db.Column(db.Integer, nullable=False)  # in cents
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+# user interactions
+class UserInteractions(db.Model):
+    __tablename__ = "user_interactions"
+    interaction_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.BigInteger, db.ForeignKey("users.user_id"), nullable=False)
+    product_id = db.Column(db.Integer, db.ForeignKey("products.product_id"), nullable=False)
+    interaction_type = db.Column(db.String(50), nullable=False)  # e.g., view, add_to_cart, purchase, wishlist, review
+    interaction_value = db.Column(db.Float, default=1.0, nullable=True) 
+    created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
+
+    def log_interaction(user_id, product_id, interaction_type, value=1.0):
+        interaction = UserInteractions(
+            user_id=user_id,
+            product_id=product_id,
+            interaction_type=interaction_type,
+            interaction_value=value
+        )
+        db.session.add(interaction)
+        db.session.commit()
+
+class Recommendations(db.Model):
+    __tablename__ = "recommendations"
+
+    recommendation_id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.BigInteger, db.ForeignKey("users.user_id"))
+    product_id = db.Column(db.BigInteger, db.ForeignKey("products.product_id"))
+    score = db.Column(db.Float)

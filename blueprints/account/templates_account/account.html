@@ -21,6 +21,10 @@
     {% for number in user.phone_numbers %}
         <p>{{ number.phone_number }}</p>
     {% endfor %}
+    <form action="{{ url_for('account.add_phone_number') }}" method="POST">
+        <input type="text" name="phone_number" placeholder="Add phone number">
+        <button type="submit">Add</button>
+    </form>
     <hr>
     <div class="buttons">
         <a href="{{ url_for('order.order') }}" class="btn btn-main">Orders</a>
