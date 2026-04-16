@@ -2,7 +2,7 @@ import pandas as pd
 
 from models import UserInteractions
 from extensions import db
-from datetime import datetime
+from datetime import datetime, timezone
 
 """
 This module is responsible for loading the data from the database and preparing it for preprocessing.
@@ -44,7 +44,7 @@ For example, if a user interacted with a product 30 days ago, the value of that 
 
 def apply_time_decay(value, created_at):
     # Calculate how many days old the interaction is
-    days_old = (datetime.utcnow() - created_at).days
+    days_old = (datetime.now(timezone.utc) - created_at).days
     # Compute decay factor
     decay = 0.95 ** days_old
     return value * decay

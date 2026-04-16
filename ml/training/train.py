@@ -6,7 +6,7 @@ from extensions import app
 
 from ml.data.loader import load_data
 from ml.data.preprocessing import encode_ids
-from ml.training.dataset import InteractionDataset
+from ml.training.dataset import BPRDataset
 from ml.models.recommender_model import RecommenderModel
 
 
@@ -14,15 +14,25 @@ from ml.models.recommender_model import RecommenderModel
 BATCH_SIZE = 64
 EPOCHS = 5
 LEARNING_RATE = 0.001
+
 MODEL_PATH = "ml/saved_models/recommender.pt"
 MAPPINGS_PATH = "ml/saved_models/mappings.pkl"
+
+
+def bpr_loss(pos_scores, neg_scores):
+    """
+    Bayesian Personalized Ranking loss
+
+    Encourages:
+        pos_score > neg_score
+    """
+    return -torch.mean(torch.log(torch.sigmoid(pos_scores - neg_scores) + 1e-8))
 
 
 def train():
     print("Loading data...")
     df = load_data()
 
-    # Check if data is empty
     if df.empty:
         raise ValueError("No interaction data found. Did you backfill?")
 
@@ -37,9 +47,13 @@ def train():
 
     print(f"Users: {num_users}, Items: {num_items}")
 
-    # ---------- DATASET ----------
-    dataset = InteractionDataset(df)
-    dataloader = DataLoader(dataset, batch_size=BATCH_SIZE, shuffle=True)
+    # ---------- DATASET (BPR VERSION) ----------
+    dataset = BPRDataset(df, num_items)
+    dataloader = DataLoader(
+        dataset,
+        batch_size=BATCH_SIZE,
+        shuffle=True
+    )
 
     # ---------- DEVICE ----------
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -49,24 +63,27 @@ def train():
     model = RecommenderModel(num_users, num_items).to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=LEARNING_RATE)
-    loss_fn = torch.nn.MSELoss()
 
     # ---------- TRAIN LOOP ----------
-    print("Starting training...\n")
+    print("Starting BPR training...\n")
 
     for epoch in range(EPOCHS):
         model.train()
         total_loss = 0
 
-        for user, item, label in dataloader:
+        for user, pos_item, neg_item in dataloader:
             user = user.to(device)
-            item = item.to(device)
-            label = label.to(device)
+            pos_item = pos_item.to(device)
+            neg_item = neg_item.to(device)
 
-            preds = model(user, item)
+            # ---------- FORWARD PASS ----------
+            pos_scores = model(user, pos_item)
+            neg_scores = model(user, neg_item)
 
-            loss = loss_fn(preds, label)
+            # ---------- LOSS ----------
+            loss = bpr_loss(pos_scores, neg_scores)
 
+            # ---------- BACKPROP ----------
             optimizer.zero_grad()
             loss.backward()
             optimizer.step()
@@ -74,14 +91,13 @@ def train():
             total_loss += loss.item()
 
         avg_loss = total_loss / len(dataloader)
-        # helps to track training quality
-        print(f"Epoch {epoch+1}/{EPOCHS} - Loss: {avg_loss:.4f}")
+        print(f"Epoch {epoch+1}/{EPOCHS} - BPR Loss: {avg_loss:.4f}")
 
     # ---------- SAVE MODEL ----------
     os.makedirs("ml/saved_models", exist_ok=True)
 
     torch.save(model.state_dict(), MODEL_PATH)
-    print(f"\n Model saved to {MODEL_PATH}")
+    print(f"\nModel saved to {MODEL_PATH}")
 
     # ---------- SAVE MAPPINGS ----------
     with open(MAPPINGS_PATH, "wb") as f:

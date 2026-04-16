@@ -3,9 +3,8 @@ import pickle
 import os
 
 from ml.models.recommender_model import RecommenderModel
-from models import UserInteractions
 from extensions import db
-from models import OrderItems
+from models import OrderItems, UserInteractions
 from sqlalchemy import func
 
 
@@ -80,15 +79,15 @@ def recommend_for_user(user_id, top_k=5):
         scores = model(user_tensor, all_item_indices)
 
     # Get top K items
-    top_items = torch.topk(scores, top_k).indices
+    top_items = torch.topk(scores, top_k).indices.tolist()
 
     # Convert back to real product IDs
     reverse_product_map = {v: k for k, v in product_map.items()}
     recommended_product_ids = [
-        reverse_product_map[i.item()] for i in top_items
+        reverse_product_map[i.item() if hasattr(i, "item") else i] for i in top_items
     ]
 
-    return recommended_product_ids
+    return [int(i) for i in recommended_product_ids]
 
 
 """
