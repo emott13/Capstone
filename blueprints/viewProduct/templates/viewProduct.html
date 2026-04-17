@@ -1,146 +1,29 @@
 {% extends "base.html" %}
 {% block title %}{{ product.product_name }} {{ super() }}{% endblock %}
 {% block styles %}
-<style>
-    .color-orange{
-        color: var(--orange-1);
-    }
-    .outer-wrapper{
-        margin: 50px 0 50px 0;
-    }
-    .row-eq-height{
-        display: flex;
-        flex-wrap: wrap;
-    }
-    .product-img-main{
-        max-height: 100%;
-        max-width: 100%;
-    }
-    .ruler{
-        margin-top: 30px;
-        margin-bottom: 30px;
-        border: none;
-        border-top: 1px solid black;
-        background: none;
-        height: 0;
-    }
-    .description-box{
-        border: 1px solid black;
-        max-height: 300px;
-        overflow-y: scroll;
-    }
-    .open-image-zoom{
-        position: fixed;
-        z-index: 1;
-        padding: 100px 20px 0 20px;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        overflow: auto;
-        cursor: zoom-out;
-        background-color: rgba(0, 0, 0, 0.8);
-    }
-    .open-image-zoom-content{
-        display: flex;
-        justify-content: center;
-        position: relative;
-        margin: auto;
-        padding: 0;
-        width: 90%;
-        max-width: 1200px;
-    }
-    .review-hr {
-        border-color: var(--green-1);
-        /* filter: brightness(100%); */
-    }
-    .review-star {
-        color: var(--orange-1);
-        font-size: 1.5rem;
-        margin: 0 .2rem;
-    }
-    .review-star-gray {
-        color: var(--bs-gray);
-        font-size: 1.5rem;
-        margin: 0 .2rem;
-    }
-    .review-star-sm {
-        font-size: 1rem;
-    }
-    .review-ratings {
-        max-width: 300;
-    }
-    .review-left {
-        flex-grow: .1;
-    }
-    .review-right {
-        min-width: 300px;
-        max-width: 600px;
-        flex-grow: .9;
-    }
-
-    /* Start Individual Reviews*/
-    .single-review {
-        width: 100% !important;
-        padding: 2rem;
-        margin: .5rem 0;
-        flex-wrap: wrap;
-    }
-    .single-review > div {
-        padding: 0.5rem;
-    }
-    .review-rating {
-        margin-right: 1rem;
-    }
-    .review-details {
-        max-width: 900px;
-    }
-    #create-review-rating {
-        width: 200px;
-        height: 60px;
-    }
-    .review-create-star-selected {
-        color: var(--orange-1);
-    }
-    .review-create-rating input {
-        margin: -1rem;
-    }
-    .btn-star {
-        cursor: pointer;
-    }
-    .btn-star:hover {
-        color: var(--orange-1);
-        filter: brightness(110%);
-    }
-    /* End Individual Reviews */
-
-    #zoomed-img{
-        transition: transform .2s;
-    }
-    #zoomed-img:hover{
-        transform: scale(1.7);
-    }
-</style>
 {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/viewProduct.css') }}">
 {% endblock %}
 {% block page_content %}
 
 <div class="outer-wrapper">
     <div class="row row-eq-height d-flex">
 
+        <!-- Column with product images + image zoom -->
         <div class="col-sm-6">
             {% if images and images|length > 1 %}
-                <div class="mb-2" style="display: flex; align-items: center; margin-bottom: 15px;">
+            <!-- Product image carosuel -->
+                <div class="mb-2 viewproduct-thumbnail-bar">
                     <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px; cursor: pointer;" onclick="scrollThumbs(-1)"></span>
-                    <div id="thumbnail-container" style="display: flex; gap: 5px; overflow-x: auto;">
+                    <div id="thumbnail-container">
                         {% for img in images %}
-                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor: pointer;" onclick="setMainImage('{{ img.image_url }}')">
+                            <img src="{{ img.image_url }}" class="img-thumbnail thumbnail-img" onclick="setMainImage('{{ img.image_url }}')">
                         {% endfor %}
                     </div>
                     <span class="glyphicon glyphicon-chevron-right" style="cursor: pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
                 </div>
             {% endif %}
-
+            <!-- Main product image -->
             {% if images and images|length > 0 %}
                 <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
             {% else %}
@@ -148,13 +31,12 @@
             {% endif %}
         </div>
 
-        <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
-            <h1>{{ product.product_name if product else "Product Name" }}</h1>
-            <h4 style="margin: 0 0 10px 0;">
-                <i class="bi bi-person-fill"></i>
-                {{ vendor.store_name if vendor else "Vendor Name" }}
-            </h4>
+        <!-- Column with product information + quantity selection + add to cart -->
+        <div class="col-sm-6 product-info-col">
+            <h1>{{ product.product_name if product else "Unknown Product" }}</h1>
+            <h4 style="margin: 0 0 10px 0;"><i class="bi bi-person-fill"></i>{{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
 
+            <!-- Product ratings display -->
             <div class="row" style="margin-bottom: 10px;">
                 <div class="d-flex flex-wrap" style="padding: 0 15px;">
                     <h4 class="p-1">
@@ -177,23 +59,26 @@
                 </div>
             </div>
 
+            <!-- Pricing -->
             <h3 style="margin-bottom: 30px;">${{ product.price | priceFormat }}</h3>
             
+            <!-- Quantity adjustment and add to cart button -->
             <form action="{{ url_for('cart.add_to_cart') }}" method="post">
                 <input type="hidden" name="product_id" value="{{ product.product_id }}">
                 <h4>Quantity</h4>
                 <div class="row">
                     <div class="col-sm-3" style="padding-right: 0;">
-                        <input type="number" name="quantity" value="1" min="1" style="width: 100%;">
+                        <input type="number" name="quantity" value="1" min="1" class="product-quantity-input">
                     </div>
                     <div class="col-sm-9" style="padding-left: 0;">
-                        <button type="submit" style="width: 100%;"><i class="bi bi-cart-fill"></i> Add To Cart</button>
+                        <button type="submit" class="product-quantity-button"><i class="bi bi-cart-fill"></i> Add To Cart</button>
                     </div>
                 </div>
             </form>
 
             <hr class="ruler">
 
+            <!-- Product description and specifications -->
             <div>
                 <h4>Description</h4>
                 <div class="description-box">
@@ -215,6 +100,7 @@
     </div>    
 </div>
 
+<!-- Main image zoom function -->
 <div class="open-image-zoom" id="image-zoom" style="display: none;" onclick="closeZoom()">
         <div class="open-image-zoom-content">
         <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}" onclick="event.stopPropagation()">
@@ -229,6 +115,7 @@
     updateReviewCreate(createReviewForm.rating.value);
 
 
+    // Set main product image for zoom function
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
         if(main){
@@ -240,12 +127,14 @@
             zoomed.src = url;
         }
     }
+    // Scrolling smoothness on image zoom
     function scrollThumbs(dir){
         let container = document.getElementById('thumbnail-container');
         if(container){
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
+    // Image zoom movement on cursor
     function zoomPan(e) {
         let zoomed = e.currentTarget;
         let rect = zoomed.getBoundingClientRect();
@@ -255,12 +144,14 @@
         let yPct = (y / rect.height) * 100;
         zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
     }
+    // Image zoom resets after cursor moved away
     function resetZoomOrigin(){
         const zoomed = document.getElementById('zoomed-img');
         if(zoomed){
             zoomed.style.transformOrigin = 'center center';
         }
     }
+    // Open lightbox for image zoom
     function openZoom(src){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -274,6 +165,7 @@
         zoomed.addEventListener('mousemove', zoomPan);
         zoomed.addEventListener('mouseleave', resetZoomOrigin);
     }
+    // Close lightbox
     function closeZoom(){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
