@@ -1,8 +1,9 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-from extensions import conn
+from extensions import conn, db
 from models import Products
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
+from ml.inference.also_bought import get_also_bought
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -57,8 +58,18 @@ def viewProduct():
                 
         except Exception as error:
             error = "Error loading product."
+
+
+    also_bought_ids = get_also_bought(product_id)
+
+    also_bought_products = (
+        db.session.query(Products)
+        .filter(Products.product_id.in_(also_bought_ids))
+        .all()
+    )
     
     return render_template("viewProduct.html", product=product, vendor=vendor, 
                            images=images, color=color, spec=spec, error=error, 
                            reviews=reviews, reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter)
+                           review_sort=review_sort, review_filter=review_filter,
+                           also_bought=also_bought_products)
