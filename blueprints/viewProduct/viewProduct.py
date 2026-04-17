@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-from extensions import conn
+from extensions import conn, db
 from models import Products, Reviews
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
@@ -29,8 +29,10 @@ class CreateReviewForm(FlaskForm):
     submit = SubmitField('Create')
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
-def viewProduct():
-    error = request.args.get("error", None)
+def viewProduct(error=None):
+    if error == None:
+        error = request.args.get("error", None)
+
     product_id = request.args.get("id")
     # second arg is default value
     review_sort = request.args.get("review-sort", "positive") 
@@ -45,6 +47,8 @@ def viewProduct():
     reviews = ReviewRepository(product_id)
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
     create_review_form = CreateReviewForm()
+    review_exists = bool(
+        Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first())
 
     if product_id:
         try:
@@ -81,18 +85,62 @@ def viewProduct():
         except Exception as error:
             error = "Error loading product."
     
-    return render_template("viewProduct.html", product=product, vendor=vendor, 
-                           images=images, color=color, spec=spec, error=error, 
-                           reviews=reviews, reviews_filtered=reviews_filtered,
+    return render_template("viewProduct.html", product=product, product_id=product_id, 
+                           vendor=vendor, images=images, color=color, spec=spec,
+                           error=error, reviews=reviews,
+                           reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
-                           create_review_form=create_review_form)
+                           create_review_form=create_review_form,
+                           review_exists=review_exists)
 
 @login_required
 @view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
 def createReview(product_id):
+    rating = request.form['rating']
+    title = request.form['title']
+    desc = request.form['desc']
+
     # error checks
     error = ""
-    if Reviews.query.filter(text("customer_id = :customer_id"), {"customer_id": current_user.get_id()}):
-        error = "Unable to create review" 
+    # unique check
+    duplicate = Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first()
+    if duplicate:
+        error = "Review already exists" 
+    
+    if not error:
+        # add review to database
+        review = Reviews(product_id=product_id, customer_id=current_user.get_id(),
+                         rating=rating, title=title, description=desc)
+        try:
+            db.session.add(review)         
+            db.session.commit()
+        except Exception as exc:
+            print(f"Error: {exc}")
+            error = "Unknown error"
 
-    return 
+    print(error)
+    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
+
+@login_required
+@view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
+def deleteReview(product_id):
+    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+
+    # error checks
+    error = ""
+    # unique check
+    duplicate = query.first()
+    if not duplicate:
+        error = "Review does not exist" 
+    
+    if not error:
+        # delete customer review
+        try:
+            query.delete()
+            db.session.commit()
+        except Exception as exc:
+            print(f"Error: {exc}")
+            error = "Unknown error"
+
+    print(error)
+    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')

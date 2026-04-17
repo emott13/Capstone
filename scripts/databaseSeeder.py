@@ -11,7 +11,7 @@ from sqlalchemy import func
 from extensions import db, app, bcrypt
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import text
-from models import Users, Roles, UserRoles, Admins, Vendors, Customers
+from models import UserInteractions, Users, Roles, UserRoles, Admins, Vendors, Customers
 from models import PhoneNumbers, UserPhoneNumbers, Addresses
 from models import Products, ProductSpecs, ProductColors, ProductCategories
 from models import Carts, CartItems, Wishlists, WishlistItems
@@ -146,7 +146,56 @@ with app.app_context():
     # Product categories
     categories = ['Soils','Fertilizers', 'Seeds', 'Bulbs', 'Plants', 'Trees', 'Pots', 'Lawn Care', 'Garden Tools', 'Outdoor Furniture', 'Outdoor Decor', 'Indoor Gardening']
     for cat in categories:
-        db.session.add(ProductCategories(category_name=cat))
+        match (cat):
+            case 'Soils': 
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.thetreecenter.com/c/uploads/2018/01/Garden_Soil_1-copy-jpg.webp'))
+            case 'Fertilizers':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.gardendesign.com/pictures/images/900x705Max/site_3/applying-fertilizer-blue-trowel-fertilizing-tomato-plant-shutterstock-com_15275.jpg'))
+            case 'Seeds':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://cdn.mos.cms.futurecdn.net/2KimaEYUTZk2qzNZjnLWYP.jpg'))
+            case 'Bulbs':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://millcreekgardens.com/wp-content/uploads/2017/08/Depositphotos_65388297_m-2015.jpg'))
+            case 'Plants':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.wagnergreenhouses.com/wp-content/uploads/2017/01/shutterstock_2061262208-1-scaled.jpg'))
+            case 'Trees':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://t3.ftcdn.net/jpg/14/62/47/02/360_F_1462470203_3wXjC5IeReCDn6LgJwQFxFxvmH3iLzUX.jpg'))
+            case 'Pots':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://mulhalls.com/wp-content/uploads/2024/01/Template-Website-Post-Image3.jpg'))
+            case 'Lawn Care':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://huntersgardencentre.com/wp-content/uploads/2025/04/Blog-Post-Featured-Pic-lawn-care.jpg'))
+            case 'Garden Tools':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://m.media-amazon.com/images/I/81BPQvrklaL._AC_UF350,350_QL80_.jpg'))
+            case 'Outdoor Furniture':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://images.thdstatic.com/productImages/d86b6b44-e9c5-4005-aebd-2986d252ce6f/svn/hooowooo-fire-pit-patio-sets-rfp54-tbs210-64_600.jpg'))
+            case 'Outdoor Decor':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://resources.itemint.com/hs-fs/hubfs/acogedor-patio-trasero-flores-al-atardecer.webp?width=1000&height=667&name=acogedor-patio-trasero-flores-al-atardecer.webp'))
+            case 'Indoor Gardening':
+                db.session.add(ProductCategories(
+                    category_name=cat,
+                    category_image='https://www.greengenius.com.au/cdn/shop/articles/6809d4a59bd9ce97f26c0270-1745475945147_3f99913f-dca2-487c-bcd4-300cd6b3de39.jpg?v=1755573292'))
+    
     db.session.commit()
     print("Inserted product colors and categories")
 
@@ -527,5 +576,56 @@ with app.app_context():
     db.session.commit()
     print("Inserted promotions, targets, and redemptions")
         
+    # --- USER INTERACTIONS --- #
+    # simulating user interactions like adding items to cart, placing orders, writing reviews, etc.
+
+    # --- purchases (5) ---
+    orders = db.session.query(OrderItems).all()
+    for item in orders:
+        interaction = UserInteractions(
+            user_id=item.order.customer_id,
+            product_id=item.product_id,
+            interaction_type="purchase",
+            interaction_value=5.0
+        )
+        db.session.add(interaction)
+
+    # --- carts (3) ---
+    cart_items = db.session.query(CartItems).all()
+    for item in cart_items:
+        interaction = UserInteractions(
+            user_id=item.cart.customer_id,
+            product_id=item.product_id,
+            interaction_type="add_to_cart",
+            interaction_value=3.0
+        )
+        db.session.add(interaction)
+
+    # --- wishlists (2) ---
+    wishlist_items = db.session.query(WishlistItems).all()
+    for item in wishlist_items:
+        interaction = UserInteractions(
+            user_id=item.wishlist.customer_id,
+            product_id=item.product_id,
+            interaction_type="add_to_wishlist",
+            interaction_value=2.0
+        )
+        db.session.add(interaction)
+
+    # --- reviews (rating) ---
+    reviews = db.session.query(Reviews).all()
+    for review in reviews:
+        interaction = UserInteractions(
+            user_id=review.customer_id,
+            product_id=review.product_id,
+            interaction_type="review",
+            interaction_value=float(review.rating)  # using rating as interaction value
+        )
+        db.session.add(interaction)
+
+    db.session.commit() # commit all interactions
+
+    print('User Interactions seeded successfully')
         
     print("Seeder finished successfully")
+
