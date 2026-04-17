@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user
 from extensions import bcrypt
 from models import Users
 from flask_wtf import FlaskForm
@@ -58,3 +58,10 @@ def login_post(login_form) -> str:
         return "Invalid username or password"
     
     return ""
+
+@login_required
+@login_bp.route("/logout", methods=["GET"])
+def logout():
+    logout_user()
+
+    return redirect(url_for("login.login", success="Success. You are now logged out"))

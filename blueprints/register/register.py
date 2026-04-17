@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, request, url_for, redirect
 from flask_login import login_user
 from sqlalchemy import text
 from extensions import bcrypt, db
-from models import Users, UserRoles, Roles, Customers, Carts
+from models import Users, UserRoles, Roles, Customers, Carts, Vendors
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
@@ -101,6 +101,9 @@ def register_post(register_form) -> str:
     customer_role_id = db.session.execute(
         text("SELECT role_id FROM roles WHERE role_name = :role_name"), {"role_name": "customer"}
     ).one()[0]
+    vendor_role_id = db.session.execute(
+        text("SELECT role_id FROM roles WHERE role_name = :role_name"), {"role_name": "vendor"}
+    ).one()[0]
 
     roles = []
     for role_id in role_ids:
@@ -110,6 +113,9 @@ def register_post(register_form) -> str:
             db.session.add(customer)
             db.session.commit()
             db.session.add(Carts(customer_id=customer.customer_id))
+        elif int(role_id) == int(vendor_role_id):
+            vendor = Vendors(vendor_id=user.user_id, store_name=user.username)
+            db.session.add(vendor)
     db.session.add_all(roles)
     db.session.commit()
     
