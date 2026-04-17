@@ -1,4 +1,9 @@
 "# Capstone" 
 
 
-Database seeder is located in scripts/databaseSeeder.py. Run the file to seed db. Let me know about any issues. -Ellie
+1) Seed database: "python scripts/databaseSeeder.py" and type "YES"
+2) Delete mappings.pkl and recommender.pt from ml/saved_models
+3) Train ml model: "python -m ml/training/train"
+
+Step 2 must be completed before every time the ml model is retrained. 
+
