@@ -36,7 +36,7 @@ with app.app_context():
 
     # --- USERS --- #
     users_list = []
-    for _ in range(10):
+    for _ in range(40):
         password = bcrypt.generate_password_hash("password").decode("utf-8")
         user = Users(
             username=fake.user_name(),
@@ -119,7 +119,7 @@ with app.app_context():
     vendors_list = Vendors.query.all()
     products_list = []
     for vendor in vendors_list:
-        for _ in range(randint(5, 10)):
+        for _ in range(randint(15, 20)):
             product = Products(
                 vendor_id=vendor.vendor_id,
                 product_name=fake.catch_phrase(),
@@ -273,12 +273,12 @@ with app.app_context():
     # Cart items
     cart_list = Carts.query.all()
     for cart in cart_list:
-        for _ in range(randint(1, 5)):
+        for _ in range(randint(5, 15)):
             product = choice(products_list)
             db.session.add(CartItems(
                 cart_id=cart.cart_id,
                 product_id=product.product_id,
-                quantity=randint(1, 10),
+                quantity=randint(1, 5),
             ))
     db.session.commit()
     print("Inserted carts and cart_items")
@@ -286,12 +286,12 @@ with app.app_context():
     # Wishlist items
     wishlists_list = Wishlists.query.all()
     for wishlist in wishlists_list:
-        for _ in range(randint(1, 5)):
+        for _ in range(randint(5, 15)):
             product = choice(products_list)
             db.session.add(WishlistItems(
                 wishlist_id=wishlist.wishlist_id,
                 product_id=product.product_id,
-                quantity=randint(1, 10)
+                quantity=randint(1, 5)
             ))
     db.session.commit()
     print("Inserted wishlists and wishlist_items")
