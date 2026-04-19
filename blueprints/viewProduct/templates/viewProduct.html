@@ -335,8 +335,8 @@
         <p>{{ p.product_name }}</p>
     {% endfor %}
 </div> -->
-
-<div class="carousel-container">
+{% if also_bought %}
+    <div class="carousel-container">
         <h3 class="mb-3">Customers Also Bought</h3>
         <div class="carousel-wrapper">
             <button class="carousel-btn left" onclick="scrollLeft()">
@@ -362,6 +362,6 @@
             </button>
         </div>
     </div>
-
+{% endif %}
 
 {% endblock %}
