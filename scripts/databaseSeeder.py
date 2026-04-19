@@ -36,7 +36,7 @@ with app.app_context():
 
     # --- USERS --- #
     users_list = []
-    for _ in range(40):
+    for _ in range(30):
         password = bcrypt.generate_password_hash("password").decode("utf-8")
         user = Users(
             username=fake.user_name(),
@@ -296,59 +296,130 @@ with app.app_context():
     db.session.commit()
     print("Inserted wishlists and wishlist_items")
 
-    # --- ORDERS AND PAYMENTS --- #
+
+    # --- BUILD CATEGORY-BASED BUNDLES --- #
+    category_map = {}
+
+    for product in products_list:
+        for category in product.categories:
+            category_map.setdefault(category.category_id, []).append(product)
+
+    product_bundles = []
+
+    for category_id, products in category_map.items():
+        if len(products) >= 3:
+            # create multiple bundles per category
+            for _ in range(3):
+                bundle_size = randint(3, 5)
+                bundle = sample(products, bundle_size)
+                product_bundles.append(bundle)
+
+    print(f"Created {len(product_bundles)} bundles")
+
+    # --- CROSS CATEGORY BUNDLES --- #
+    cross_bundles = []
+
+    for _ in range(20):
+        bundle = sample(products_list, randint(3, 5))
+        cross_bundles.append(bundle)
+
+    product_bundles.extend(cross_bundles)
+
+    # --- HOT BUNDLES --- #
+    hot_bundles = sample(product_bundles, min(10, len(product_bundles)))
+
+    # --- ORDERS --- #
     for customer in customers_list:
-        for _ in range(randint(1, 3)):
-            subtotal = round(fake.random_number(digits=5)/100, 2)
-            tax = round(subtotal * 0.06, 2)  # example tax calculation
-            total = round(subtotal + tax, 2)
+        for _ in range(randint(5, 10)):
             order = Orders(
                 customer_id=customer.customer_id,
                 order_status=choice(['pending', 'shipped', 'delivered', 'cancelled']),
                 order_date=fake.date_time_this_year(),
-                order_subtotal=subtotal,
-                order_tax=tax,
-                order_total=total
+                order_subtotal=0,
+                order_tax=0,
+                order_total=0
             )
             db.session.add(order)
+
     db.session.commit()
 
+
+    # --- ORDER ITEMS + PAYMENTS --- #
     orders_list = Orders.query.all()
     addresses_all = Addresses.query.all()
+
     for order in orders_list:
-        for _ in range(randint(1, 3)):
-            product = choice(products_list)
-            db.session.add(OrderItems(
-                order_id=order.order_id,
-                product_id=product.product_id,
-                quantity=randint(1, 5),
-                price_at_purchase=product.price
-            ))
-            
-        # Add shipping & billing addresses
+
+        use_bundle = random.random() < 0.75  # 75% bundle-based orders
+        subtotal = 0
+
+        if use_bundle and product_bundles:
+
+            # 60% chance: reuse a hot bundle for stronger cooccurrance
+            if random.random() < 0.6:
+                bundle = choice(hot_bundles)
+            else:
+                bundle = choice(product_bundles)
+
+            for product in bundle:
+                qty = randint(1, 5)
+                subtotal += product.price * qty
+
+                db.session.add(OrderItems(
+                    order_id=order.order_id,
+                    product_id=product.product_id,
+                    quantity=qty,
+                    price_at_purchase=product.price
+                ))
+
+        else:
+            # fallback random products
+            items = sample(products_list, randint(2, 4))
+
+            for product in items:
+                qty = randint(1, 3)
+                subtotal += product.price * qty
+
+                db.session.add(OrderItems(
+                    order_id=order.order_id,
+                    product_id=product.product_id,
+                    quantity=qty,
+                    price_at_purchase=product.price
+                ))
+
+        # --- Update totals based on actual items --- #
+        tax = int(subtotal * 0.06)
+        total = subtotal + tax
+
+        order.order_subtotal = subtotal
+        order.order_tax = tax
+        order.order_total = total
+
+        # --- Addresses --- #
         shipping_addr = choice(addresses_all)
         billing_addr = choice(addresses_all)
-        
+
         db.session.add(OrderAddresses(
             order_id=order.order_id,
             address_id=shipping_addr.address_id,
             address_type="shipping"
         ))
-        
+
         db.session.add(OrderAddresses(
             order_id=order.order_id,
             address_id=billing_addr.address_id,
             address_type="billing"
         ))
 
-        # Payment
+        # --- Payment --- #
         db.session.add(Payments(
             order_id=order.order_id,
             customer_id=order.customer_id,
-            amount=order.order_total,
+            amount=total,
             payment_method=choice(['credit_card','paypal','bank_transfer']),
             paid_at=fake.date_time_this_year()
         ))
+
     db.session.commit()
     print("Inserted orders, order_items, order_addresses, payments")
 

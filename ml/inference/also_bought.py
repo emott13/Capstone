@@ -4,14 +4,17 @@ from extensions import db
 import math
 
 def get_also_bought(product_id, limit=5):
+
+    product_id = int(product_id)
     print('get_also_bought called with: ', product_id)
     cooccurrence, product_counts = get_cooccurrence_cached()
 
     # debug
-    print("cooccurrence keys:", list(cooccurrence.keys())[:10])
+    print("cooccurrence keys:", list(cooccurrence.keys())[:])
     print("checking product_id:", product_id)
 
     if product_id not in cooccurrence:
+        print(product_id, ' is not found in ', list(cooccurrence.keys())[:10])
         print('early fail') # debug
         return []
 
