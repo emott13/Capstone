@@ -1,9 +1,11 @@
 from flask import Blueprint, render_template, request, url_for, redirect
+from flask_login import current_user
 from extensions import conn, db
 from models import Products, ProductCategories
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
 from ml.inference.also_bought import get_also_bought
+from ml.inference.recommend import recommend_for_user
 
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
@@ -95,6 +97,21 @@ def viewProduct():
         .all()
     )
 
+    if current_user.is_authenticated:
+        user_id = current_user.get_id()
+        user_products_ids = recommend_for_user(user_id, 8)
+        user_products = (
+            db.session.query(Products)
+            .filter(Products.product_id.in_(user_products_ids))
+            .all()
+        )
+
+        return render_template("viewProduct.html", product=product, vendor=vendor, 
+                           images=images, color=color, spec=spec, error=error, 
+                           reviews=reviews, reviews_filtered=reviews_filtered,
+                           review_sort=review_sort, review_filter=review_filter,
+                           also_bought=also_bought_products, related_products=related_products,
+                           user_products=user_products)
     
     return render_template("viewProduct.html", product=product, vendor=vendor, 
                            images=images, color=color, spec=spec, error=error, 

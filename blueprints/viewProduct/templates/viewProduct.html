@@ -393,6 +393,35 @@
     </div>
 {% endif %}
 
+{% if user_products %}
+    <div class="carousel-container">
+        <h3 class="mb-3">Recommended For You</h3>
+        <div class="carousel-wrapper">
+            <button class="carousel-btn left" onclick="scrollLeft()">
+                &#10094;
+            </button>
+            <div id="carouselTrack" class="carousel-track">
+                {% for p in user_products %}
+                <div class="product-card">
+                    <img src="{{ p.images[0].image_url if p.images else '/static/default.png' }}">
+                    <div class="info">
+                        <h6>{{ p.product_name }}</h6>
+                        <p>${{ p.price | priceFormat }}</p>
+                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                            View
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-btn right" onclick="scrollRight()">
+                &#10095;
+            </button>
+        </div>
+    </div>
+{% endif %}
+
 <script>
     function scrollLeft() {
         document.getElementById("carouselTrack").scrollBy({
