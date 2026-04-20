@@ -4,11 +4,36 @@
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('vendor.static', filename='styles/vendor.css') }}">
 {% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('vendor.static', filename='scripts/vendor.js') }}"></script>
+{% endblock %}
 {% block page_content %}
     <h1 class="text-center mt-3">Vendor Home</h1>
 
-    <h2>Create Product</h2>
-    <div>
+    <form id="create-product" class="vendor-table container">
+        <h2>Create Product</h2>
+        <div class="row">
+            <div class="col">
+                <label for="name">Product Name</label>
+                <input type="text" name="name" placeholder="Input here">
+            </div>
+            <div class="col">
+                <label for="desc">Description</label>
+                <textarea class="form-control" cols="64" id="desc" 
+                    maxlength="1024" name="desc" placeholder="Description" 
+                    rows="8">
+                </textarea>
+                <!-- <input type="" name="desc" placeholder="Input here"> -->
+            </div>
+            <div class="col">
+                <label for="price">Price</label>
+                <input type="text" name="price" placeholder="Input here">
+            </div>
+        </div>
+    </form>
+
+    <div class="mt-5">
         <table>
             <tr>
                 <td>Product Name</th>
