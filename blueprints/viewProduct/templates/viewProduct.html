@@ -2,7 +2,7 @@
 {% block title %}{{ product.product_name }} {{ super() }}{% endblock %}
 {% block styles %}
 {{ super() }}
-<link rel="stylesheet" href="{{ url_for('static', filename='styles/viewProduct.css') }}">
+<link rel="stylesheet" href="{{ url_for('viewProduct.static', filename='styles/viewProduct.css') }}">
 {% endblock %}
 {% block page_content %}
 
