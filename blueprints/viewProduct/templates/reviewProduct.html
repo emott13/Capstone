@@ -54,7 +54,7 @@
     </form>
     {% endif %}
 
-    <form action="{{ url_for('viewProduct.createReview', product_id=product_id)}}" 
+    <form action="{{ url_for('viewProduct.createReview', product_id=product.product_id) }}" 
         method="POST" id="create-review" class="mt-2 flex flex-column review-rating"
         hidden>
         {{ create_review_form.hidden_tag() }}
