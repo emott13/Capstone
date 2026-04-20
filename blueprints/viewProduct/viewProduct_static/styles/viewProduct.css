@@ -21,7 +21,7 @@
     height: 0;
 }
 .description-box{
-    border: 1px solid black;
+    border: 1px solid #C0CEC1;
     max-height: 300px;
     overflow-y: scroll;
 }
@@ -128,6 +128,8 @@
 .product-info-col{
     padding: 15px;
     background-color: var(--tan-2);
+    border: 2px solid #C0CEC1;
+    border-radius: 10px;
 }
 .review-stars-block{
     margin-bottom: 10px;
