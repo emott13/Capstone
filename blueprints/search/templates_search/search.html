@@ -7,64 +7,109 @@
     {% endif %}
 {% endblock %}
 {% block styles %}
-    <style>
-        .image-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-        .image-container img {
-            width: 100%;
-            display: block;
-            transform: scale(1.05);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        .img-hover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-        }
-        .image-container:hover .img-hover {
-            opacity: 1;
-        }
-        .image-container:hover .img-primary {
-            opacity: 0;
-        }
-
-        .search-filter-options {
-            display: none;
-        }
-        a.card{
-            text-decoration: none;
-            color: inherit;
-        }
-        a.card:hover{
-            text-decoration: underline;
-        }
-        .card-title{
-            font-size: 22px;
-            font-weight: 600;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .card-text{
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .card-price{
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .color-orange{
-            color: var(--orange-1);
-        }
-    </style>
-    {{ super() }}
+<style>
+    body{
+        background-color: #f8f9fa;
+    }
+    .filters-container{
+        padding-right: 20px;
+        border-right: 1px solid #eee;
+        position: sticky;
+        top: 20px;
+        height: fit-content;
+    }
+    .results-container{
+        padding-left: 30px;
+    }
+    .product {
+        margin-bottom: 25px;
+    }
+    .card-vendor{
+        font-size: 14px;
+    }
+    .image-container{
+        position: relative;
+        width: 100%;
+        overflow: hidden;
+        border-radius: 12px 12px 0 0;
+    }
+    .image-container img{
+        width: 100%;
+        display: block;
+        transform: scale(1.05);
+        transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .img-hover{
+        position: absolute;
+        top: 0;
+        left: 0;
+        opacity: 0;
+    }
+    .image-container:hover .img-hover{
+        opacity: 1;
+    }
+    .image-container:hover .img-primary{
+        opacity: 0;
+    }
+    .search-filter-wrapper{
+        margin-bottom: 15px;
+    }
+    .search-filter-wrapper label{
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 10px;
+    }
+    .search-filter-options.open{
+        max-height: 500px;
+    }
+    .filter-actions{
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+    .search-filter-options{
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        padding-left: 10px;
+    }
+    a.card{
+        text-decoration: none;
+        color: inherit;
+        border: 1px solid #dddddd;
+        overflow: hidden;
+        transition: transform 0.2s ease;
+    }
+    a.card:hover{
+        transform: translateY(-5px);
+        text-decoration: underline;
+    }
+    .card-price{
+        font-size: 20px;
+        font-weight: 700;
+    }
+    .card-title{
+        font-size: 22px;
+        font-weight: 600;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .card-text{
+        font-size: 14px;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .color-orange{
+        color: var(--orange-1);
+    }
+</style>
+{{ super() }}
 {% endblock %}
 {% block page_content %}
     <h1 class="mt-5">Search Results</h1>
@@ -212,14 +257,10 @@
         </div>
 
     </div>
-    <script>
-        function toggleOptions(event) {
-            let options = event.target.nextElementSibling;
-            if (options.style.display === 'none' || options.style.display === '') {
-                options.style.display = 'block';
-            } else {
-                options.style.display = 'none';
-            }
-        }
-    </script>
+<script>
+    function toggleOptions(event){
+        let options = event.target.nextElementSibling;
+        options.classList.toggle("open");
+    }
+</script>
 {% endblock %}
