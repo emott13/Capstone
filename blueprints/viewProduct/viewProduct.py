@@ -8,9 +8,29 @@ from ml.inference.also_bought import get_also_bought
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
+class CreateReviewForm(FlaskForm):    
+    title = StringField('Title',
+        validators=[
+            Length(max=100),
+        ])
+    desc = TextAreaField('Description',
+        validators=[
+            Length(max=1024),
+        ])
+    rating = RadioField('Rating',
+        choices=[
+            ('1'), ('2'), ('3'), ('4'), ('5'),
+        ],
+        validators=[
+            InputRequired(),
+        ])
+    submit = SubmitField('Create')
+
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
-def viewProduct():
-    error = request.args.get("error", None)
+def viewProduct(error=None):
+    if error == None:
+        error = request.args.get("error", None)
+
     product_id = request.args.get("id")
     # second arg is default value
     review_sort = request.args.get("review-sort", "positive") 
@@ -24,6 +44,9 @@ def viewProduct():
     # and other data
     reviews = ReviewRepository(product_id)
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
+    create_review_form = CreateReviewForm()
+    review_exists = bool(
+        Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first())
 
     if product_id:
         try:

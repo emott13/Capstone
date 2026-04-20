@@ -17,6 +17,7 @@ def search():
         max_price = request.form.get("max_price", "").strip()
         min_rating = request.form.get("min_rating", "").strip()
         max_rating = request.form.get("max_rating", "").strip()
+        vendors = request.form.getlist('vendors')
         
         params = {}
         if query:
@@ -33,6 +34,8 @@ def search():
             params['min_rating'] = min_rating
         if max_rating:
             params['max_rating'] = max_rating
+        if vendors:
+            params['vendors'] = ','.join(vendors)
         
         return redirect(url_for('search.search', **params))
     
@@ -45,6 +48,8 @@ def search():
     max_rating = request.args.get('max_rating')
     selected_categories = categories_str.split(',') if categories_str else []
     selected_colors = colors_str.split(',') if colors_str else []
+    selected_vendors_str = request.args.get('vendors', '').strip()
+    selected_vendors = selected_vendors_str.split(',') if selected_vendors_str else []
 
     # Search filtering queries
     filter_categories = conn.execute(text(""" 
@@ -55,9 +60,13 @@ def search():
         SELECT hex_code FROM product_colors;
     """)).fetchall()
     
+    filter_vendors = conn.execute(text("""
+        SELECT DISTINCT store_name FROM vendors;
+    """)).fetchall()
+    
 
     sql = """
-        SELECT DISTINCT p.*, v.store_name
+        SELECT DISTINCT p.*, v.store_name, (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) as average_rating, (SELECT COUNT(*) FROM reviews WHERE product_id = p.product_id) as review_count
         FROM products p
         LEFT JOIN product_category_map pcm
             ON p.product_id = pcm.product_id
@@ -95,6 +104,13 @@ def search():
         for i, col in enumerate(selected_colors):
             params[f"col{i}"] = col
 
+    # Vendor filter
+    if selected_vendors:
+        placeholders = ','.join([f':ven{i}' for i in range(len(selected_vendors))])
+        sql += f" AND v.store_name IN ({placeholders})"
+        for i, ven in enumerate(selected_vendors):
+            params[f"ven{i}"] = ven
+
     # Price filter
     if min_price:
         sql += " AND p.price >= :min_price"
@@ -126,9 +142,11 @@ def search():
         query=query,
         selected_categories=selected_categories,
         selected_colors=selected_colors,
+        selected_vendors=selected_vendors,
 
         filter_categories=filter_categories,
         filter_colors=filter_colors,
+        filter_vendors=filter_vendors,
         selected_min_price=min_price,
         selected_max_price=max_price,
         selected_min_rating=min_rating,

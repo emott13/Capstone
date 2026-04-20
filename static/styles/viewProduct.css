@@ -1,0 +1,149 @@
+.color-orange{
+    color: var(--orange-1);
+}
+.outer-wrapper{
+    margin: 50px 0;
+}
+.row-eq-height{
+    display: flex;
+    flex-wrap: wrap;
+}
+.product-img-main{
+    max-height: 100%;
+    max-width: 100%;
+}
+.ruler{
+    margin-top: 30px;
+    margin-bottom: 30px;
+    border: none;
+    border-top: 1px solid black;
+    background: none;
+    height: 0;
+}
+.description-box{
+    border: 1px solid black;
+    max-height: 300px;
+    overflow-y: scroll;
+}
+.open-image-zoom{
+    position: fixed;
+    z-index: 1;
+    padding: 100px 20px 0 20px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    cursor: zoom-out;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+.open-image-zoom-content{
+    display: flex;
+    justify-content: center;
+    position: relative;
+    margin: auto;
+    padding: 0;
+    width: 90%;
+    max-width: 1200px;
+}
+.review-hr{
+    border-color: var(--green-1);
+}
+.review-star{
+    color: var(--orange-1);
+    font-size: 1.5rem;
+    margin: 0 .2rem;
+}
+.review-star-gray{
+    color: var(--bs-gray);
+    font-size: 1.5rem;
+    margin: 0 .2rem;
+}
+.review-star-sm{
+    font-size: 1rem;
+}
+.review-ratings{
+    max-width: 300px;
+}
+.review-left{
+    flex-grow: .1;
+}
+.review-right{
+    min-width: 300px;
+    max-width: 600px;
+    flex-grow: .9;
+}
+.single-review{
+    width: 100% !important;
+    padding: 2rem;
+    margin: .5rem 0;
+    flex-wrap: wrap;
+}
+.single-review > div{
+    padding: 0.5rem;
+}
+.review-rating{
+    margin-right: 1rem;
+}
+.review-details{
+    max-width: 900px;
+}
+#create-review-rating{
+    width: 200px;
+    height: 60px;
+}
+.review-create-star-selected{
+    color: var(--orange-1);
+}
+.review-create-rating input{
+    margin: -1rem;
+}
+.btn-star{
+    cursor: pointer;
+}
+.btn-star:hover{
+    color: var(--orange-1);
+    filter: brightness(110%);
+}
+#zoomed-img{
+    transition: transform .2s;
+}
+#zoomed-img:hover{
+    transform: scale(1.7);
+}
+.viewproduct-thumbnail-bar{
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+}
+#thumbnail-container{
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+}
+.thumbnail-img{
+    width: 60px;
+    cursor: pointer;
+}
+.product-info-col{
+    padding: 15px;
+    background-color: var(--tan-2);
+}
+.review-stars-block{
+    margin-bottom: 10px;
+    padding: 0 15px;
+}
+.product-quantity-input{
+    width: 100%;
+}
+.product-quantity-button{
+    width: 100%;
+}
+#image-zoom{
+    display: none;
+}
+#zoomed-img{
+    max-height: 80vh;
+    max-width: 90%;
+    cursor: zoom-in;
+}
