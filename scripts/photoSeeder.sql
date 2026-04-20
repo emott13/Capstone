@@ -240,7 +240,7 @@ INSERT INTO product_images (product_id, image_url) VALUES
 (27, 'https://mobileimages.lowes.com/productimages/9e44f273-6610-4fdb-a226-aef02af6661d/49347690.jpg?size=mpdhi'),
 (27, 'https://mobileimages.lowes.com/productimages/8dfcdf13-2714-4514-91aa-7c2f7081d827/49347689.jpg?size=mpdhi'),
 
--- trees
+-- trees --
 (28, 'https://mobileimages.lowes.com/productimages/2bdb6293-923b-4445-995b-71aab3f9af1e/60284339.jpg?size=pdhism'),
 (28, 'https://mobileimages.lowes.com/productimages/84cd0de7-aed2-4e73-b92f-e42478092e68/72620529.jpeg?size=pdhism'),
 (28, 'https://mobileimages.lowes.com/productimages/b5c373b6-4bca-42d1-9bef-14d69b008f96/60284816.jpg?size=pdhism'),
@@ -284,4 +284,85 @@ INSERT INTO product_images (product_id, image_url) VALUES
 (34, 'https://mobileimages.lowes.com/productimages/5b2fb58e-ad6b-4d13-ab56-84513481b530/64621825.jpg?size=pdhism'),
 (34, 'https://mobileimages.lowes.com/productimages/a60ffe7c-3c0d-4628-b2a3-40a9c6a00673/65287440.jpg?size=pdhism'),
 (34, 'https://mobileimages.lowes.com/productimages/d8b9ac12-797d-42de-8b27-5f48683af6f9/62499098.jpg?size=pdhism'),
-(34, 'https://mobileimages.lowes.com/productimages/2fcac598-acc2-4f74-9001-d98430a4e411/44295368.jpg?size=pdhism');
+(34, 'https://mobileimages.lowes.com/productimages/2fcac598-acc2-4f74-9001-d98430a4e411/44295368.jpg?size=pdhism'),
+
+(35, 'https://mobileimages.lowes.com/productimages/8ad9deea-4514-4691-aaae-dc6c4b3d324b/16008594.jpg?size=pdhism'),
+(35, 'https://mobileimages.lowes.com/productimages/38e8c119-7707-4a8b-a4cf-882af3e5e495/17765575.jpg?size=pdhism'),
+(35, 'https://mobileimages.lowes.com/productimages/f4f39c10-cde8-4cf8-9708-a356f51170cf/17765570.jpg?size=pdhism'),
+(35, 'https://mobileimages.lowes.com/productimages/6afd9da4-f242-41fb-96d6-2c2526ab4f34/68383619.jpeg?size=pdhism'),
+(35, 'https://mobileimages.lowes.com/productimages/843f39a9-0330-4e9d-aca8-5c5a71b8e967/17765574.jpg?size=pdhism'),
+
+(36, 'https://mobileimages.lowes.com/productimages/9ecd8e66-8e04-48c1-bd95-e2b70ffe1e9b/68034592.jpeg?size=pdhism'),
+(36, 'https://mobileimages.lowes.com/productimages/8e8c6092-7b93-4a64-8c61-f124fe22bc53/80579505.jpeg?size=pdhism'),
+(36, 'https://mobileimages.lowes.com/productimages/a11c89d7-c2a4-4809-9532-c4e334220cf4/69133613.jpeg?size=pdhism'),
+(36, 'https://mobileimages.lowes.com/productimages/d1a37f2b-ffd7-4003-a930-d28371bbcf51/68375464.jpeg?size=pdhism'),
+(36, 'https://mobileimages.lowes.com/productimages/bb110f91-3d08-4943-8166-a230f1b641d6/68034593.jpeg?size=pdhism'),
+(36, 'https://mobileimages.lowes.com/productimages/d6e2fe33-5c56-4df3-81ec-7023fbdb458a/68034591.jpeg?size=pdhism'),
+
+(37, 'https://mobileimages.lowes.com/productimages/4e33279d-6305-444b-bb32-b17e3d26f59b/66572007.jpeg?size=pdhism'),
+(37, 'https://mobileimages.lowes.com/productimages/148c5f00-b4ea-46c8-a975-007d74e2961e/79813977.jpeg?size=pdhism'),
+(37, 'https://mobileimages.lowes.com/productimages/5be3a92d-71d7-4de6-9326-7ee2ed2e57bf/79813976.jpeg?size=pdhism'),
+(37, 'https://mobileimages.lowes.com/productimages/afdc77cc-e818-4aaf-ba43-bc1d8387ab5a/68828893.jpeg?size=pdhism'),
+(37, 'https://mobileimages.lowes.com/productimages/5537a145-3db5-48e1-9cf5-3d88e9fd6ace/68375484.jpeg?size=pdhism'),
+
+-- lawn care --
+(38, 'https://mobileimages.lowes.com/productimages/210ff9ef-b79d-40d7-b187-d0dbf09eb118/63074857.jpg?size=pdhism'),
+(38, 'https://mobileimages.lowes.com/productimages/6cdedbe8-9cd7-4940-b1cc-6184c5351ec5/07925598.jpg?size=pdhism'),
+(38, 'https://mobileimages.lowes.com/productimages/2f4473b9-788d-4366-8eb5-b8729917cb96/07925597.jpg?size=pdhism'),
+(38, 'https://mobileimages.lowes.com/productimages/3419de1f-c719-444d-a3be-8b8c379a7097/63077956.jpg?size=pdhism'),
+(38, 'https://mobileimages.lowes.com/productimages/56cf6163-8593-47b6-9e58-76c1b89b9bb6/63079764.jpg?size=pdhism'),
+
+(39, 'https://mobileimages.lowes.com/productimages/b4199a5e-6e54-49a0-a75b-984d9fb996f6/65214996.jpg?size=pdhism'),
+(39, 'https://mobileimages.lowes.com/productimages/9fe91424-dab2-4b08-9537-986223f1c656/83437462.png?size=pdhism'),
+(39, 'https://mobileimages.lowes.com/productimages/9ad42b7c-8864-43a6-965d-94daa1c28c9c/83317922.png?size=pdhism'),
+(39, 'https://mobileimages.lowes.com/productimages/3236be24-d338-4719-9c0b-903bc41a38bb/65214980.jpg?size=pdhism'),
+(39, 'https://mobileimages.lowes.com/productimages/756ce7e4-60a8-4881-bf62-f9a018998df0/65214979.jpg?size=pdhism'),
+
+(40, 'https://mobileimages.lowes.com/productimages/5b9284ab-c2c4-47d6-af57-9892083cc93c/65261692.jpg?size=pdhism'),
+(40, 'https://mobileimages.lowes.com/productimages/b091f9ed-6f16-4fca-9c65-63a9b3191321/83437459.png?size=pdhism'),
+(40, 'https://mobileimages.lowes.com/productimages/9ad42b7c-8864-43a6-965d-94daa1c28c9c/83317922.png?size=pdhism'),
+(40, 'https://mobileimages.lowes.com/productimages/f615f5d5-3712-4730-8d06-a12f5a9c70f9/61233973.jpg?size=pdhism'),
+(40, 'https://mobileimages.lowes.com/productimages/eb668e7c-5817-4654-8d56-9bf4fe67b2de/61233980.jpg?size=pdhism'),
+
+(41, 'https://mobileimages.lowes.com/productimages/5221a4b4-8d65-4d4c-b323-c5474bb7c0b3/09635373.jpg?size=pdhism'),
+(41, 'https://mobileimages.lowes.com/productimages/f5c8eb32-156e-4e8e-8bba-c93089fd32d6/64032000.jpg?size=pdhism'),
+(41, 'https://mobileimages.lowes.com/productimages/0f13a705-d8c6-483c-8cd1-640206c01a53/64032002.jpg?size=pdhism'),
+(41, 'https://mobileimages.lowes.com/productimages/8870780c-0886-4d2d-8006-fc823d103458/64032001.jpg?size=pdhism'),
+(41, 'https://mobileimages.lowes.com/productimages/0a556ada-1263-40af-b429-7a2531de0d18/64031812.jpg?size=pdhism'),
+
+(42, 'https://mobileimages.lowes.com/productimages/8ccbb0c9-7aab-4122-837a-58a935f316d6/64220715.jpg?size=pdhism'),
+(42, 'https://mobileimages.lowes.com/productimages/2f68034d-848f-4148-b4a5-1fc7c7210859/07925575.jpg?size=pdhism'),
+(42, 'https://mobileimages.lowes.com/productimages/08ceefcc-7865-40db-805a-2c542cc439bd/64220716.jpg?size=pdhism'),
+(42, 'https://mobileimages.lowes.com/productimages/da1531c0-7648-47b9-b542-7fad091eb9a7/64220717.jpg?size=pdhism'),
+(42, 'https://mobileimages.lowes.com/productimages/e66b574e-7f7e-4738-a993-97c8670ed940/64220731.jpg?size=pdhism'),
+
+-- garden tools --
+(43, 'https://www.gardeners.com/cdn/shop/files/8608883_0936-tif.png?v=1758829696&width=1600'),
+(43, 'https://www.gardeners.com/cdn/shop/files/8611647-Gardener-s-Lifetime-Dutch-Hand-Hoes.jpg?v=1758834586&width=800'),
+(43, 'https://www.gardeners.com/cdn/shop/files/8608883_0938-tif.png?v=1758559264&width=1300'),
+(43, 'https://www.gardeners.com/cdn/shop/files/8608884_0935-tif.png?v=1758287861&width=1300'),
+(43, 'https://www.gardeners.com/cdn/shop/files/8608884_0940-tif.png?v=1758829080&width=1300'),
+
+(44, 'https://www.gardeners.com/cdn/shop/files/8613473_8037_gardeners-lifetime-dutch-digging-fork.png?v=1758829172&width=1800'),
+(44, 'https://www.gardeners.com/cdn/shop/files/8613473_0146.jpg?v=1758828492&width=1300'),
+(44, 'https://www.gardeners.com/cdn/shop/files/8613473_0335.jpg?v=1758828242&width=1300'),
+(44, 'https://www.gardeners.com/cdn/shop/files/8613473_0380.jpg?v=1758829684&width=1300'),
+(44, 'https://www.gardeners.com/cdn/shop/files/8613473_0142.jpg?v=1758561930&width=1300'),
+
+(45, 'https://www.gardeners.com/cdn/shop/files/8614554_11534_gardeners-lifetime-little-shovel.png?v=1758288149&width=1800'),
+(45, 'https://www.gardeners.com/cdn/shop/files/8614554_0116.jpg?v=1758287937&width=1300'),
+(45, 'https://www.gardeners.com/cdn/shop/files/8614554_11538.png?v=1758830569&width=1300'),
+(45, 'https://www.gardeners.com/cdn/shop/files/8614554_0070.jpg?v=1758561932&width=1300'),
+(45, 'https://www.gardeners.com/cdn/shop/files/8614554_0053.jpg?v=1758830504&width=1300'),
+
+(46, 'https://www.gardeners.com/cdn/shop/files/8592103_0967.jpg?v=1758836024&width=800'),
+(46, 'https://www.gardeners.com/cdn/shop/files/8592103-Gardener-s-Lifetime-Dutch-Hoe.jpg?v=1758835391&width=800'),
+(46, 'https://www.gardeners.com/cdn/shop/files/8592103_2456-tif.jpg?v=1758560990&width=1300'),
+(46, 'https://www.gardeners.com/cdn/shop/files/8592103_1333-tif.jpg?v=1758827958&width=1300'),
+(46, 'https://www.gardeners.com/cdn/shop/files/8592103_1538z-tif.png?v=1758828751&width=1300'),
+
+(47, 'https://www.gardeners.com/cdn/shop/files/8586973_010-tif.png?v=1758830229&width=1800'),
+(47, 'https://www.gardeners.com/cdn/shop/files/8586973-Gardener-s-Lifetime-Spork-1.jpg?v=1758837343&width=800'),
+(47, 'https://www.gardeners.com/cdn/shop/files/8586973_2385-tif.jpg?v=1758561551&width=1300'),
+(47, 'https://www.gardeners.com/cdn/shop/files/8586973_3461-tif.jpg?v=1758561714&width=1300'),
+(47, 'https://www.gardeners.com/cdn/shop/files/8586973_2383-tif.jpg?v=1758560978&width=1300');

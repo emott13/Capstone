@@ -147,3 +147,71 @@
     max-width: 90%;
     cursor: zoom-in;
 }
+
+/* -- carousel -- */
+
+.carousel-container {
+    position: relative;
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 20px;
+    background-color: var(--green-1);
+}
+.carousel-container > h3{
+    color: white;
+}
+
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 15px;
+    padding: 10px;
+    scrollbar-width: none; /* Firefox */
+}
+
+.carousel-track::-webkit-scrollbar {
+    display: none; /* Chrome */
+}
+
+.product-card {
+    min-width: 180px;
+    flex: 0 0 auto;
+    border-radius: 10px;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    padding: 10px;
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+}
+
+.product-card img {
+    width: 100%;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.carousel-btn {
+    background: rgba(0,0,0,0.6);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 80px;
+    cursor: pointer;
+    z-index: 10;
+    font-size: 24px;
+}
+
+.carousel-btn:hover {
+    background: rgba(0,0,0,0.8);
+}
