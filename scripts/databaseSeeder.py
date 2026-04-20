@@ -83,7 +83,7 @@ with app.app_context():
 
     # --- PHONE NUMBERS --- #
     phone_list = []
-    for _ in range(20):
+    for _ in range(50):
         phone = PhoneNumbers(phone_number=fake.phone_number())
         db.session.add(phone)
         phone_list.append(phone)
@@ -91,7 +91,7 @@ with app.app_context():
 
     # Assign phones to users
     for user in users_list:
-        assigned_phones = sample(phone_list, randint(0, 2))
+        assigned_phones = sample(phone_list, randint(1, 2))
         for phone in assigned_phones:
             db.session.add(UserPhoneNumbers(user_id=user.user_id, phone_id=phone.phone_id))
     db.session.commit()
@@ -424,23 +424,38 @@ with app.app_context():
     print("Inserted orders, order_items, order_addresses, payments")
 
     # --- REVIEWS --- #
-    for _ in range(20):
-        customer = choice(customers_list)
-        product = choice(products_list)
-        review = Reviews(
-            customer_id=customer.customer_id,
-            product_id=product.product_id,
-            rating=randint(1,5),
-            title=fake.sentence(nb_words=6),
-            description=fake.text(max_nb_chars=200)
-        )
-        try:
-            db.session.add(review)
-            db.session.commit()
-        except IntegrityError:
-            db.session.rollback()  # skip duplicate customer-product reviews
-    print("Inserted reviews")
+    orders = Orders.query.all()
 
+    reviews_created = 0
+
+    for order in orders:
+        # Only allow reviews for delivered orders (more realistic)
+        if order.order_status != "delivered":
+            continue
+
+        # Get all products in this order
+        order_items = OrderItems.query.filter_by(order_id=order.order_id).all()
+
+        for item in order_items:
+            # 80% chance a purchased product gets reviewed
+            if random.random() < 0.8:
+                review = Reviews(
+                    customer_id=order.customer_id,
+                    product_id=item.product_id,
+                    rating=randint(3, 5) if random.random() < 0.8 else randint(1, 2),  
+                    title=fake.sentence(nb_words=6),
+                    description=fake.text(max_nb_chars=200)
+                )
+
+                try:
+                    db.session.add(review)
+                    db.session.flush()  # prevents full commit spam
+                    reviews_created += 1
+                except IntegrityError:
+                    db.session.rollback()
+
+    db.session.commit()
+    print(f"Inserted {reviews_created} realistic reviews")
     # --- PROMOTIONS --- #
 
     # --- UTILITY FUNCTIONS --- #
