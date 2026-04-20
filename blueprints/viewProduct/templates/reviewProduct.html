@@ -38,6 +38,67 @@
         </div>
     </div>
 
+    {% if current_user.is_authenticated %}
+    <hr class="hr3 review-hr">
+
+    {% if not review_exists %}
+    <button onclick="toggleReviewCreate()" class="btn btn-outline-success">
+        Create a review!
+    </button>
+    {% else %}
+    <form action="{{ url_for('viewProduct.deleteReview', product_id=product_id) }}"
+        method="POST" id="delete-review">
+        <button class="btn btn-outline-danger">
+            Delete Review!
+        </button>
+    </form>
+    {% endif %}
+
+    <form action="{{ url_for('viewProduct.createReview', product_id=product_id)}}" 
+        method="POST" id="create-review" class="mt-2 flex flex-column review-rating"
+        hidden>
+        {{ create_review_form.hidden_tag() }}
+        {% if create_review_form.errors or error %}
+            <div class="alert alert-danger">
+                {{ error if error }}
+                <ul class="list-unstyled">
+                {% for er in create_review_form.errors.values() %}
+                    <li class="">{{ er[0] }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+        <div class="flex flex-wrap">
+            <div id="create-review-rating" class="review-rating review-create-rating">
+                <p class="mb-0">Rating</p>
+                {% for subfield in create_review_form.rating %}
+                    {{ subfield( checked="checked", hidden="hidden") }}
+                    <button type="button" class="btn btn-star p-0" 
+                        onclick="updateReviewCreate({{ subfield.label.text }})">
+                        <label class="create-review-label btn-star" for="{{ subfield.label.field_id }}">
+                            <i class="review-star bi bi-star-fill btn-star"></i>
+                        </label>
+                    </button>
+                {% endfor %}
+            </div>
+
+
+            <div class="flex flex-column">
+                <div class="form-group mb-1">
+                    {{ create_review_form.title.label }}
+                    {{ create_review_form.title( class="form-control", placeholder = "Title") }}
+                </div>
+                <div class="form-group mb-1">
+                    {{ create_review_form.desc.label }}
+                    {{ create_review_form.desc( class="form-control", 
+                        cols="64", rows="8", placeholder = "Description") }}
+                </div>
+                {{ create_review_form.submit(class="btn btn-success") }}
+            </div>
+        </div>
+    </form>
+    {% endif %}
+
     <hr class="hr3 review-hr">
 
     <form id="review-sort" action="{{ url_for('viewProduct.viewProduct') + '#reviews' }}" method="GET">

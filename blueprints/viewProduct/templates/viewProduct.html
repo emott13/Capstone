@@ -2,25 +2,28 @@
 {% block title %}{{ product.product_name }} {{ super() }}{% endblock %}
 {% block styles %}
 {{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles/viewProduct.css') }}">
 {% endblock %}
 {% block page_content %}
 
 <div class="outer-wrapper">
     <div class="row row-eq-height d-flex">
 
+        <!-- Column with product images + image zoom -->
         <div class="col-sm-6">
             {% if images and images|length > 1 %}
-                <div class="mb-2" style="display: flex; align-items: center; margin-bottom: 15px;">
+            <!-- Product image carosuel -->
+                <div class="mb-2 viewproduct-thumbnail-bar">
                     <span class="glyphicon glyphicon-chevron-left" style="margin-right: 5px; cursor: pointer;" onclick="scrollThumbs(-1)"></span>
-                    <div id="thumbnail-container" style="display: flex; gap: 5px; overflow-x: auto;">
+                    <div id="thumbnail-container">
                         {% for img in images %}
-                            <img src="{{ img.image_url }}" class="img-thumbnail" style="width: 60px; cursor: pointer;" onclick="setMainImage('{{ img.image_url }}')">
+                            <img src="{{ img.image_url }}" class="img-thumbnail thumbnail-img" onclick="setMainImage('{{ img.image_url }}')">
                         {% endfor %}
                     </div>
                     <span class="glyphicon glyphicon-chevron-right" style="cursor: pointer; margin-left:5px;" onclick="scrollThumbs(1)"></span>
                 </div>
             {% endif %}
-
+            <!-- Main product image -->
             {% if images and images|length > 0 %}
                 <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
             {% else %}
@@ -28,13 +31,12 @@
             {% endif %}
         </div>
 
-        <div class="col-sm-6" style="padding: 15px; background-color: var(--tan-2);">
-            <h1>{{ product.product_name if product else "Product Name" }}</h1>
-            <h4 style="margin: 0 0 10px 0;">
-                <i class="bi bi-person-fill"></i>
-                {{ vendor.store_name if vendor else "Vendor Name" }}
-            </h4>
+        <!-- Column with product information + quantity selection + add to cart -->
+        <div class="col-sm-6 product-info-col">
+            <h1>{{ product.product_name if product else "Unknown Product" }}</h1>
+            <h4 style="margin: 0 0 10px 0;"><i class="bi bi-person-fill"></i>{{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
 
+            <!-- Product ratings display -->
             <div class="row" style="margin-bottom: 10px;">
                 <div class="d-flex flex-wrap" style="padding: 0 15px;">
                     <h4 class="p-1">
@@ -49,31 +51,34 @@
                         {% endfor %}
                     </h4>
                     <h4 class="p-1">
-                        {{ reviews.getAverageRating() }} <a href="#">({{ reviews.getReviewCount() }} Reviews)</a>
+                        {{ reviews.getAverageRating() }} <a href="#reviews">({{ reviews.getReviewCount() }} Reviews)</a>
                     </h4>
                     <h4 class="p-1">
-                        <a href="#"><h4>Write a Review...</h4></a>
+                        <a href="#reviews"><h4>Write a Review...</h4></a>
                     </h4>
                 </div>
             </div>
 
+            <!-- Pricing -->
             <h3 style="margin-bottom: 30px;">${{ product.price | priceFormat }}</h3>
             
+            <!-- Quantity adjustment and add to cart button -->
             <form action="{{ url_for('cart.add_to_cart') }}" method="post">
                 <input type="hidden" name="product_id" value="{{ product.product_id }}">
                 <h4>Quantity</h4>
                 <div class="row">
                     <div class="col-sm-3" style="padding-right: 0;">
-                        <input type="number" name="quantity" value="1" min="1" style="width: 100%;">
+                        <input type="number" name="quantity" value="1" min="1" class="product-quantity-input">
                     </div>
                     <div class="col-sm-9" style="padding-left: 0;">
-                        <button type="submit" style="width: 100%;"><i class="bi bi-cart-fill"></i> Add To Cart</button>
+                        <button type="submit" class="product-quantity-button"><i class="bi bi-cart-fill"></i> Add To Cart</button>
                     </div>
                 </div>
             </form>
 
             <hr class="ruler">
 
+            <!-- Product description and specifications -->
             <div>
                 <h4>Description</h4>
                 <div class="description-box">
@@ -95,6 +100,7 @@
     </div>    
 </div>
 
+<!-- Main image zoom function -->
 <div class="open-image-zoom" id="image-zoom" style="display: none;" onclick="closeZoom()">
         <div class="open-image-zoom-content">
         <img id="zoomed-img" class="product-img-main" style="max-height: 80vh; max-width: 90%; cursor: zoom-in;" src="" alt="{{ product.product_name }}" onclick="event.stopPropagation()">
@@ -103,6 +109,13 @@
 
 {% include "reviewProduct.html" %}
 <script>
+    let createReviewForm = document.getElementById("create-review");
+
+    // Make create review stars show correctly
+    updateReviewCreate(createReviewForm.rating.value);
+
+
+    // Set main product image for zoom function
     function setMainImage(url){
         let main = document.getElementById('main-product-img');
         if(main){
@@ -114,12 +127,14 @@
             zoomed.src = url;
         }
     }
+    // Scrolling smoothness on image zoom
     function scrollThumbs(dir){
         let container = document.getElementById('thumbnail-container');
         if(container){
             container.scrollBy({ left: dir * 70, behavior: 'smooth' });
         }
     }
+    // Image zoom movement on cursor
     function zoomPan(e) {
         let zoomed = e.currentTarget;
         let rect = zoomed.getBoundingClientRect();
@@ -129,12 +144,14 @@
         let yPct = (y / rect.height) * 100;
         zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
     }
+    // Image zoom resets after cursor moved away
     function resetZoomOrigin(){
         const zoomed = document.getElementById('zoomed-img');
         if(zoomed){
             zoomed.style.transformOrigin = 'center center';
         }
     }
+    // Open lightbox for image zoom
     function openZoom(src){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -148,6 +165,7 @@
         zoomed.addEventListener('mousemove', zoomPan);
         zoomed.addEventListener('mouseleave', resetZoomOrigin);
     }
+    // Close lightbox
     function closeZoom(){
         let overlay = document.getElementById('image-zoom');
         let zoomed = document.getElementById('zoomed-img');
@@ -162,6 +180,37 @@
             zoomed.removeEventListener('mouseleave', resetZoomOrigin);
         }
     }
+
+    // Reviews Start
+
+    function toggleReviewCreate() {
+        /* toggles the div for creating/updating/deleting a review */
+        let createReviewElem = document.getElementById("create-review");
+        createReviewElem.hidden = !createReviewElem.hidden;
+    }
+
+    function updateReviewCreate(rating) {
+        /* 
+            Makes the create review stars responsive. Ex. pressing 3rd star makes all 
+            current and previous stars orange 
+        */
+        let createReviewLabels = document.getElementsByClassName('create-review-label') ;
+
+        for (let i = 1; i <= 5; i++) {
+            // gets the <i> elem containing the icon within the label
+            let starElem = createReviewLabels[i-1].children[0];
+            if (i <= rating) {
+                starElem.classList.add("review-star");
+                starElem.classList.remove("review-star-gray");
+            }
+            else {
+                starElem.classList.add("review-star-gray");
+                starElem.classList.remove("review-star");
+            }
+        }
+    }
+
+    // Reviews End
 </script>
 
 <!-- <div class="mt-4 p-5 rounded">
