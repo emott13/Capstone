@@ -1,10 +1,13 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from extensions import conn, db
-from models import Products, ProductCategories
+from models import Products, Reviews, ProductCategories
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
+from flask_wtf import FlaskForm
+from wtforms import (StringField, SubmitField, TextAreaField, RadioField)
+from wtforms.validators import InputRequired, Length
+from flask_login import current_user, login_required
 from ml.inference.also_bought import get_also_bought
-
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -119,8 +122,64 @@ def viewProduct(error=None):
     )
 
     
-    return render_template("viewProduct.html", product=product, vendor=vendor, 
-                           images=images, color=color, spec=spec, error=error, 
-                           reviews=reviews, reviews_filtered=reviews_filtered,
+    return render_template("viewProduct.html", product=product, product_id=product_id,
+                           vendor=vendor, images=images, color=color, spec=spec,
+                           error=error, reviews=reviews,
+                           reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
-                           also_bought=also_bought_products, related_products=related_products)
+                           create_review_form=create_review_form,
+                           review_exists=review_exists,
+                           also_bought=also_bought_products,
+                           related_products=related_products,)
+
+@login_required
+@view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
+def createReview(product_id):
+    rating = request.form['rating']
+    title = request.form['title']
+    desc = request.form['desc']
+
+    # error checks
+    error = ""
+    # unique check
+    duplicate = Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first()
+    if duplicate:
+        error = "Review already exists" 
+    
+    if not error:
+        # add review to database
+        review = Reviews(product_id=product_id, customer_id=current_user.get_id(),
+                         rating=rating, title=title, description=desc)
+        try:
+            db.session.add(review)         
+            db.session.commit()
+        except Exception as exc:
+            print(f"Error: {exc}")
+            error = "Unknown error"
+
+    print(error)
+    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
+
+@login_required
+@view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
+def deleteReview(product_id):
+    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+
+    # error checks
+    error = ""
+    # unique check
+    duplicate = query.first()
+    if not duplicate:
+        error = "Review does not exist" 
+    
+    if not error:
+        # delete customer review
+        try:
+            query.delete()
+            db.session.commit()
+        except Exception as exc:
+            print(f"Error: {exc}")
+            error = "Unknown error"
+
+    print(error)
+    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
