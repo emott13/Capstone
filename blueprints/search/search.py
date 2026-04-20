@@ -12,7 +12,6 @@ def search():
     if request.method == 'POST':
         query = request.form.get('search', '').strip()
         sortby = request.args.get('sortby')
-        sortby = 
         categories = request.form.getlist('categories')
         colors = request.form.getlist('colors')
         min_price = request.form.get("min_price", "").strip()
