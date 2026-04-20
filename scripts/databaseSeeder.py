@@ -258,11 +258,11 @@ with app.app_context():
 
     # outdoor decor
     for product in products_list[53:57]:
-        product.categories.append(categories_list[9])
+        product.categories.append(categories_list[10])
 
     # indoor gardening
     for product in products_list[58:63]:
-        product.categories.append(categories_list[9])
+        product.categories.append(categories_list[11])
 
 
     db.session.commit()
