@@ -11,6 +11,8 @@ def search():
 
     if request.method == 'POST':
         query = request.form.get('search', '').strip()
+        sortby = request.args.get('sortby')
+        sortby = 
         categories = request.form.getlist('categories')
         colors = request.form.getlist('colors')
         min_price = request.form.get("min_price", "").strip()
@@ -18,6 +20,7 @@ def search():
         min_rating = request.form.get("min_rating", "").strip()
         max_rating = request.form.get("max_rating", "").strip()
         vendors = request.form.getlist('vendors')
+        price = request.form.getlist('price')
         
         params = {}
         if query:
@@ -36,6 +39,10 @@ def search():
             params['max_rating'] = max_rating
         if vendors:
             params['vendors'] = ','.join(vendors)
+        if price:
+            params['price'] = ','.join(price)
+        if sortby:
+            params['sortby'] = sortby
         
         return redirect(url_for('search.search', **params))
     
@@ -46,6 +53,7 @@ def search():
     max_price = request.args.get('max_price')
     min_rating = request.args.get('min_rating')
     max_rating = request.args.get('max_rating')
+    sortby = request.args.get('sortby')
     selected_categories = categories_str.split(',') if categories_str else []
     selected_colors = colors_str.split(',') if colors_str else []
     selected_vendors_str = request.args.get('vendors', '').strip()
@@ -65,7 +73,7 @@ def search():
     """)).fetchall()
     
 
-    sql = """
+    sql = """ 
         SELECT DISTINCT p.*, v.store_name, (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) as average_rating, (SELECT COUNT(*) FROM reviews WHERE product_id = p.product_id) as review_count
         FROM products p
         LEFT JOIN product_category_map pcm
@@ -129,7 +137,18 @@ def search():
         sql += " AND (SELECT COALESCE(AVG(rating), 0) FROM reviews WHERE product_id = p.product_id) <= :max_rating"
         params["max_rating"] = max_rating
 
-    sql += " ORDER BY p.created_at DESC"
+    # Order by
+    if sortby == "a-z":
+        order_by = "p.product_name ASC"
+    elif sortby == "z-a":
+        order_by = "p.product_name DESC"
+    elif sortby == "low-to-high":
+        order_by = "p.price ASC"
+    elif sortby == "high-to-low":
+        order_by = "p.price DESC"
+    else:
+        order_by = "p.created_at DESC"
+    sql += f" ORDER BY {order_by}"
 
     products = conn.execute(text(sql), params).fetchall()
 
@@ -150,7 +169,8 @@ def search():
         selected_min_price=min_price,
         selected_max_price=max_price,
         selected_min_rating=min_rating,
-        selected_max_rating=max_rating
+        selected_max_rating=max_rating,
+        sortby=sortby
     )
 
 # filter through products and adjust whether they display in the UI

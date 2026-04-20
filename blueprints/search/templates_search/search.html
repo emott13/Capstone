@@ -71,6 +71,14 @@
     {% if query %}
         <p class="lead">Showing results for "{{ query }}"</p>
     {% endif %}
+    <form action="{{ url_for('search.search') }}" method="GET">
+        <select name="sortby" id="sortby" onchange="this.form.submit()">
+            <option value="a-z" {% if sortby == 'a-z' %}selected{% endif %}>Order: A-Z</option>
+            <option value="z-a" {% if sortby == 'z-a' %}selected{% endif %}>Order: Z-A</option>
+            <option value="high-to-low" {% if sortby == 'high-to-low' %}selected{% endif %}>Price: High to Low</option>
+            <option value="low-to-high" {% if sortby == 'low-to-high' %}selected{% endif %}>Price: Low to High</option>
+        </select>
+    </form>
     <hr>
     <div class="row">
 
