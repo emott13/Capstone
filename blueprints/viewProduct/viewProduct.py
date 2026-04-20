@@ -1,5 +1,8 @@
 from flask import Blueprint, render_template, request, url_for, redirect
-from flask_login import current_user
+from flask_login import current_user, login_required
+from flask_wtf import FlaskForm
+from wtforms import RadioField, StringField, SubmitField, TextAreaField
+from wtforms.validators import InputRequired, Length
 from extensions import conn, db
 from models import Products, Reviews, ProductCategories
 from sqlalchemy import text
@@ -123,6 +126,8 @@ def viewProduct(error=None):
         .all()
     )
 
+    create_review_form = CreateReviewForm()
+
     if current_user.is_authenticated:
         user_id = current_user.get_id()
         user_products_ids = recommend_for_user(user_id, 8)
@@ -137,7 +142,7 @@ def viewProduct(error=None):
                            reviews=reviews, reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
                            also_bought=also_bought_products, related_products=related_products,
-                           user_products=user_products)
+                           user_products=user_products, create_review_form=create_review_form)
     
     return render_template("viewProduct.html", product=product, product_id=product_id,
                            vendor=vendor, images=images, color=color, spec=spec,
