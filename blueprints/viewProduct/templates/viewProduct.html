@@ -222,10 +222,10 @@
     <div class="carousel-container">
         <h3 class="mb-3">Customers Also Bought</h3>
         <div class="carousel-wrapper">
-            <button class="carousel-btn left" onclick="scrollLeft()">
+            <button class="carousel-btn left" onclick="scrollLeft('first')">
                 &#10094;
             </button>
-            <div id="carouselTrack" class="carousel-track">
+            <div id="carouselTrack1" class="carousel-track">
                 {% for p in also_bought %}
                 <div class="product-card">
                     <img src="{{ p.images[0].image_url if p.images else '/static/default.png' }}">
@@ -240,7 +240,7 @@
                 {% endfor %}
             </div>
 
-            <button class="carousel-btn right" onclick="scrollRight()">
+            <button class="carousel-btn right" onclick="scrollRight('first')">
                 &#10095;
             </button>
         </div>
@@ -251,10 +251,10 @@
     <div class="carousel-container">
         <h3 class="mb-3">Related Products</h3>
         <div class="carousel-wrapper">
-            <button class="carousel-btn left" onclick="scrollLeft()">
+            <button class="carousel-btn left" onclick="scrollLeft('second')">
                 &#10094;
             </button>
-            <div id="carouselTrack" class="carousel-track">
+            <div id="carouselTrack2" class="carousel-track">
                 {% for p in related_products %}
                 <div class="product-card">
                     <img src="{{ p.images[0].image_url if p.images else '/static/default.png' }}">
@@ -269,7 +269,36 @@
                 {% endfor %}
             </div>
 
-            <button class="carousel-btn right" onclick="scrollRight()">
+            <button class="carousel-btn right" onclick="scrollRight('second')">
+                &#10095;
+            </button>
+        </div>
+    </div>
+{% endif %}
+
+{% if user_products %}
+    <div class="carousel-container">
+        <h3 class="mb-3">Recommended For You</h3>
+        <div class="carousel-wrapper">
+            <button class="carousel-btn left" onclick="scrollLeft('third')">
+                &#10094;
+            </button>
+            <div id="carouselTrack3" class="carousel-track">
+                {% for p in user_products %}
+                <div class="product-card">
+                    <img src="{{ p.images[0].image_url if p.images else '/static/default.png' }}">
+                    <div class="info">
+                        <h6>{{ p.product_name }}</h6>
+                        <p>${{ p.price | priceFormat }}</p>
+                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                            View
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+
+            <button class="carousel-btn right" onclick="scrollRight('third')">
                 &#10095;
             </button>
         </div>
@@ -277,22 +306,79 @@
 {% endif %}
 
 <script>
-    function scrollLeft() {
-        document.getElementById("carouselTrack").scrollBy({
-            left: -300,
-            behavior: "smooth"
-        });
+    function scrollLeft(track) {
+        switch (track) {
+            case 'first':
+                document.getElementById("carouselTrack1").scrollBy({
+                    left: -300,
+                    behavior: "smooth"
+                });
+                break;
+            case 'second':
+                document.getElementById("carouselTrack2").scrollBy({
+                    left: -300,
+                    behavior: "smooth"
+                });
+                break;
+            case 'third':
+                document.getElementById("carouselTrack3").scrollBy({
+                    left: -300,
+                    behavior: "smooth"
+                });
+                break;
+        }
+        
     }
 
-    function scrollRight() {
-        document.getElementById("carouselTrack").scrollBy({
-            left: 300,
-            behavior: "smooth"
-        });
+    function scrollRight(track) {
+        switch (track) {
+            case 'first':
+                document.getElementById("carouselTrack1").scrollBy({
+                    left: 300,
+                    behavior: "smooth"
+                });
+                break;
+            case 'second':
+                document.getElementById("carouselTrack2").scrollBy({
+                    left: 300,
+                    behavior: "smooth"
+                });
+                break;
+            case 'third':
+                document.getElementById("carouselTrack3").scrollBy({
+                    left: 300,
+                    behavior: "smooth"
+                });
+                break;
+        }
     }
 
     document.addEventListener("DOMContentLoaded", () => {
-        const track = document.getElementById("carouselTrack");
+        const track = document.getElementById("carouselTrack1");
+
+        // Clone items for illusion of infinity
+        const items = Array.from(track.children);
+
+        items.forEach(item => {
+            const clone = item.cloneNode(true);
+            track.appendChild(clone);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const track = document.getElementById("carouselTrack2");
+
+        // Clone items for illusion of infinity
+        const items = Array.from(track.children);
+
+        items.forEach(item => {
+            const clone = item.cloneNode(true);
+            track.appendChild(clone);
+        });
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const track = document.getElementById("carouselTrack3");
 
         // Clone items for illusion of infinity
         const items = Array.from(track.children);
