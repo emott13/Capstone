@@ -2,4 +2,4 @@ venv
 .env
 __pycache__
 tempCodeRunnerFile.*
-saved_models/
+ml/saved_models/
