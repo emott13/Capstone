@@ -118,16 +118,27 @@ with app.app_context():
     # --- PRODUCTS --- #
     vendors_list = Vendors.query.all()
     products_list = []
-    for vendor in vendors_list:
-        for _ in range(randint(15, 20)):
+
+    total_products = 63
+    num_vendors = len(vendors_list)
+
+    base = total_products // num_vendors
+    remainder = total_products % num_vendors
+
+    for i, vendor in enumerate(vendors_list):
+        num_products = base + (1 if i < remainder else 0)
+
+        for _ in range(num_products):
             product = Products(
                 vendor_id=vendor.vendor_id,
                 product_name=fake.catch_phrase(),
                 description=fake.text(max_nb_chars=200),
                 price=round(fake.random_number(digits=5)/100, 2)
             )
+
             db.session.add(product)
             products_list.append(product)
+
     db.session.commit()
     print(f"Inserted {len(products_list)} products")
 
@@ -197,13 +208,13 @@ with app.app_context():
                     category_image='https://www.greengenius.com.au/cdn/shop/articles/6809d4a59bd9ce97f26c0270-1745475945147_3f99913f-dca2-487c-bcd4-300cd6b3de39.jpg?v=1755573292'))
     
     db.session.commit()
-    print("Inserted product colors and categories")
+    print("Inserted product specs, colors, and categories")
 
     # --- ASSIGN PRODUCTS TO CATEGORIES (Many-to-Many) --- #
     # can be adjusted later to hard code categories for specific products if needed
     categories_list = ProductCategories.query.all()
 
-    # hardcoded count: 47
+    # hardcoded count: 62
 
     # soils
     for product in products_list[:5]:
@@ -241,13 +252,18 @@ with app.app_context():
     for product in products_list[43:47]:
         product.categories.append(categories_list[8])
 
-    # randomly assignmed
-    for product in products_list[48:]:
-        # each product gets 1–3 random categories
-        assigned_categories = sample(categories_list, randint(1, 3))
+    # outdoor furniture
+    for product in products_list[48:52]:
+        product.categories.append(categories_list[9])
 
-        for category in assigned_categories:
-            product.categories.append(category)
+    # outdoor decor
+    for product in products_list[53:57]:
+        product.categories.append(categories_list[9])
+
+    # indoor gardening
+    for product in products_list[58:63]:
+        product.categories.append(categories_list[9])
+
 
     db.session.commit()
     print("Assigned categories to products")
@@ -310,7 +326,7 @@ with app.app_context():
         if len(products) >= 3:
             # create multiple bundles per category
             for _ in range(3):
-                bundle_size = randint(3, 5)
+                bundle_size = randint(3, min(5, len(products)))
                 bundle = sample(products, bundle_size)
                 product_bundles.append(bundle)
 
@@ -320,7 +336,7 @@ with app.app_context():
     cross_bundles = []
 
     for _ in range(20):
-        bundle = sample(products_list, randint(3, 5))
+        bundle = sample(products_list, randint(3, min(5, len(products_list))))
         cross_bundles.append(bundle)
 
     product_bundles.extend(cross_bundles)

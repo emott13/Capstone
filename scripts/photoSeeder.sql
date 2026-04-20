@@ -463,4 +463,10 @@ INSERT INTO product_images (product_id, image_url) VALUES
 (62, 'https://mobileimages.lowes.com/productimages/99d218aa-88bf-432f-ab2f-f3e4e07f25f7/11237010.jpg?size=pdhism'),
 (62, 'https://mobileimages.lowes.com/productimages/e847d5aa-392b-45ca-a683-f1be7f2d7b39/68255344.jpeg?size=pdhism'),
 (62, 'https://mobileimages.lowes.com/productimages/df5e6535-3a5b-48fb-90ed-8fb9e4741872/68247150.jpeg?size=pdhism'),
-(62, 'https://mobileimages.lowes.com/productimages/8df28ba9-b348-49bd-a0b0-b290f7e515a1/68247147.png?size=pdhism');
+(62, 'https://mobileimages.lowes.com/productimages/8df28ba9-b348-49bd-a0b0-b290f7e515a1/68247147.png?size=pdhism'),
+
+(63, 'https://mobileimages.lowes.com/productimages/fe01050a-683d-4f0c-9aa2-238e81cd2013/42644960.png?size=pdhz'),
+(63, 'https://mobileimages.lowes.com/productimages/69d80208-cf85-4c98-a631-a4c89f1598df/68255246.png?size=pdhism'),
+(63, 'https://mobileimages.lowes.com/productimages/b3f32072-7e42-49c1-aba5-9972dfa3eb5d/68255247.jpeg?size=pdhism'),
+(63, 'https://mobileimages.lowes.com/productimages/df5e6535-3a5b-48fb-90ed-8fb9e4741872/68247150.jpeg?size=pdhism'),
+(63, 'https://mobileimages.lowes.com/productimages/8df28ba9-b348-49bd-a0b0-b290f7e515a1/68247147.png?size=pdhism');
