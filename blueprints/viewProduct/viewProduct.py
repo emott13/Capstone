@@ -1,12 +1,10 @@
 from flask import Blueprint, render_template, request, url_for, redirect
 from extensions import conn, db
-from models import Products, Reviews
+from models import Products, ProductCategories
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
-from flask_wtf import FlaskForm
-from wtforms import (StringField, SubmitField, TextAreaField, RadioField)
-from wtforms.validators import InputRequired, Length
-from flask_login import current_user, login_required
+from ml.inference.also_bought import get_also_bought
+
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -84,63 +82,45 @@ def viewProduct(error=None):
                 
         except Exception as error:
             error = "Error loading product."
+
+
+    # --- Customers Also Bought These Products --- #
+
+    also_bought_ids = get_also_bought(product_id)
+
+    also_bought_products = (
+        db.session.query(Products)
+        .filter(Products.product_id.in_(also_bought_ids))
+        .all()
+    )
+
+    # --- Related Products --- #
     
-    return render_template("viewProduct.html", product=product, product_id=product_id, 
-                           vendor=vendor, images=images, color=color, spec=spec,
-                           error=error, reviews=reviews,
-                           reviews_filtered=reviews_filtered,
+    # Step 1: get the product
+    product = db.session.get(Products, product_id)
+
+    if not product:
+        return []
+
+    # Step 2: get category IDs for this product
+    category_ids = [c.category_id for c in product.categories]
+
+    if not category_ids:
+        return []
+
+    # Step 3: find other products with ANY of those categories
+    related_products = (
+        db.session.query(Products)
+        .join(Products.categories)  # join through relationship
+        .filter(ProductCategories.category_id.in_(category_ids))
+        .filter(Products.product_id != product_id)  # exclude itself
+        .distinct()
+        .all()
+    )
+
+    
+    return render_template("viewProduct.html", product=product, vendor=vendor, 
+                           images=images, color=color, spec=spec, error=error, 
+                           reviews=reviews, reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
-                           create_review_form=create_review_form,
-                           review_exists=review_exists)
-
-@login_required
-@view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
-def createReview(product_id):
-    rating = request.form['rating']
-    title = request.form['title']
-    desc = request.form['desc']
-
-    # error checks
-    error = ""
-    # unique check
-    duplicate = Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first()
-    if duplicate:
-        error = "Review already exists" 
-    
-    if not error:
-        # add review to database
-        review = Reviews(product_id=product_id, customer_id=current_user.get_id(),
-                         rating=rating, title=title, description=desc)
-        try:
-            db.session.add(review)         
-            db.session.commit()
-        except Exception as exc:
-            print(f"Error: {exc}")
-            error = "Unknown error"
-
-    print(error)
-    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
-
-@login_required
-@view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
-def deleteReview(product_id):
-    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
-
-    # error checks
-    error = ""
-    # unique check
-    duplicate = query.first()
-    if not duplicate:
-        error = "Review does not exist" 
-    
-    if not error:
-        # delete customer review
-        try:
-            query.delete()
-            db.session.commit()
-        except Exception as exc:
-            print(f"Error: {exc}")
-            error = "Unknown error"
-
-    print(error)
-    return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
+                           also_bought=also_bought_products, related_products=related_products)
