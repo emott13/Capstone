@@ -135,9 +135,6 @@
     margin-bottom: 10px;
     padding: 0 15px;
 }
-.product-quantity-input{
-    width: 100%;
-}
 .product-quantity-button{
     width: 100%;
 }
@@ -216,4 +213,40 @@
 
 .carousel-btn:hover {
     background: rgba(0,0,0,0.8);
+}
+.quantity {
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.quantity input {
+  width: 50px;
+  text-align: center;
+  font-size: 18px;
+  height: 40px;
+  border: 1px solid #C0CEC1;
+  outline: none;
+  -moz-appearance: textfield;
+}
+
+.quantity input::-webkit-outer-spin-button,
+.quantity input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity button {
+  width: 40px;
+  height: 40px;
+  background-color: var(--orange-2);
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  transition: background-color 0.2s;
+  color: var(--green-1);
+}
+
+.quantity button:hover {
+  background-color: var(--orange-1);
 }
