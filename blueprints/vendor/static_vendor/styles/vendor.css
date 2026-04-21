@@ -1,8 +1,25 @@
+.vendor-btn {
+    margin: .5rem 0;
+    color: white;
+    background-color: var(--green-2);
+    border: 1px solid var(--tan-1);
+}
+
+.vendor-btn:hover {
+    color: var(--green-1);
+    background-color: var(--tan-1);
+    border: 1px solid var(--green-2);
+}
+
 .vendor-table {
     margin: 0;
     padding: 2rem;
     background-color: var(--green-1);
     color: var(--tan-2);
+}
+
+.vendor-table hr {
+    color: var(--tan-1);
 }
 
 .vendor-table > .row {
@@ -28,4 +45,14 @@
 
 .vendor-table input::placeholder {
     color: var(--tan-2);
+}
+
+.vendor-category-input,
+.vendor-color-input {
+    margin-right: .25rem;
+}
+
+.vendor-category-input,
+.vendor-color-input {
+    margin-bottom: .25rem;
 }
