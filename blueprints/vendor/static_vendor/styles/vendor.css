@@ -43,8 +43,16 @@
     color: var(--tan-2);
 }
 
+.vendor-table input:focus,
+.vendor-table textarea:focus {
+    color: black;
+    background-color: var(--tan-2);
+}
+
+.vendor-table textarea::placeholder,
 .vendor-table input::placeholder {
     color: var(--tan-2);
+    opacity: .7;
 }
 
 .vendor-category-input,
