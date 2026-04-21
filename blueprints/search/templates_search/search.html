@@ -13,7 +13,6 @@
     }
     .filters-container{
         padding-right: 20px;
-        border-right: 1px solid #eee;
         position: sticky;
         top: 20px;
         height: fit-content;
@@ -26,6 +25,7 @@
     }
     .card-vendor{
         font-size: 14px;
+        color: #6d6d6d;
     }
     .image-container{
         position: relative;
@@ -58,11 +58,10 @@
         font-weight: 600;
         cursor: pointer;
         display: flex;
-        justify-content: space-between;
         margin-top: 10px;
     }
     .search-filter-options.open{
-        max-height: 500px;
+        max-height: 300px;
         overflow: scroll;
     }
     .filter-actions{
@@ -90,6 +89,7 @@
     .card-price{
         font-size: 20px;
         font-weight: 700;
+        color: var(--green-1);
     }
     .card-title{
         font-size: 22px;
@@ -109,23 +109,56 @@
     .color-orange{
         color: var(--orange-1);
     }
+    .search-filter-button{
+        background-color: var(--orange-2);
+        border: none;
+        padding: 5px 10px;
+        color: var(--green-1);
+    }
+    #sortby{
+        border: 1px solid #dddddd;
+        background-color: transparent;
+        padding: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+    }
+    .sort-by-form-wrapper{
+        display: flex;
+        justify-content: end;
+        margin-bottom: 15px;
+    }
+    .empty-search-results-text{
+        font-weight: 600;
+    }
+    #search-results-heading{
+        margin-bottom: 15px;
+    }
+    #search-results-heading::after{
+        content: "";
+        display: block;
+        width: auto;
+        height: 1px;
+        background: var(--green-2);
+        margin-top: 10px;
+    }
 </style>
 {{ super() }}
 {% endblock %}
 {% block page_content %}
-    <h1 class="mt-5">Search Results</h1>
+    <h1 class="mt-5" id="search-results-heading">Search Results</h1>
     {% if query %}
         <p class="lead">Showing results for "{{ query }}"</p>
     {% endif %}
-    <form action="{{ url_for('search.search') }}" method="GET">
+    <form action="{{ url_for('search.search') }}" method="GET" class="sort-by-form-wrapper">
         <select name="sortby" id="sortby" onchange="this.form.submit()">
+            <option value="relevance" selected>Order: Relevance</option>
             <option value="a-z" {% if sortby == 'a-z' %}selected{% endif %}>Order: A-Z</option>
             <option value="z-a" {% if sortby == 'z-a' %}selected{% endif %}>Order: Z-A</option>
             <option value="high-to-low" {% if sortby == 'high-to-low' %}selected{% endif %}>Price: High to Low</option>
             <option value="low-to-high" {% if sortby == 'low-to-high' %}selected{% endif %}>Price: Low to High</option>
         </select>
     </form>
-    <hr>
     <div class="row">
 
         <!-- Search Filters Column -->
@@ -136,45 +169,45 @@
                 <input type="hidden" name="search" value="{{ query }}">
 
                 <div>
-                    <input type="submit" value="Apply">
-                    <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
+                    <input class="search-filter-button" type="submit" value="Apply">
+                    <a href="{{ url_for('search.search', search=query) }}"><button type="button" class="search-filter-button">Clear Filters</button></a>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for cat in filter_categories %}
-                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
+                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" style="margin-right: 5px;" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for col in filter_colors %}
-                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
+                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" style="margin-right: 5px;" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for ven in filter_vendors %}
-                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
+                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" style="margin-right: 5px;" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
                             <label for="min_price" class="form-label">Minimum</label>
@@ -188,7 +221,7 @@
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
                             <label for="min_rating" class="form-label">Minimum (0-5)</label>
@@ -210,7 +243,7 @@
                 <div class="row mx-4">
                     {% for product in products %}
                         <div class="product list-group-item col-sm-3 d-flex">
-                            <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card">
+                            <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card" style="margin: 3px;">
 
                                 <div class="image-container card-img-top">
                                     {% set images = image_dict.get(product.product_id, []) %}
@@ -253,7 +286,7 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <p>No products found.</p>
+                <p class="empty-search-results-text">No products found.</p>
             {% endif %}
         </div>
 
