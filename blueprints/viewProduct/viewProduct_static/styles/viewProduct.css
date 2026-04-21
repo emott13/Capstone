@@ -11,6 +11,8 @@
 .product-img-main{
     max-height: 100%;
     max-width: 100%;
+    border: 2px solid var(--bs-border-color);
+    border-radius: 5px;
 }
 .ruler{
     margin-top: 30px;
@@ -128,7 +130,7 @@
 .product-info-col{
     padding: 15px;
     background-color: var(--tan-2);
-    border: 2px solid #C0CEC1;
+    border: 2px solid var(--bs-border-color);
     border-radius: 10px;
 }
 .review-stars-block{

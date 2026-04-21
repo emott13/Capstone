@@ -60,7 +60,7 @@
             </div>
 
             <!-- Pricing -->
-            <h3 style="margin-bottom: 30px;">${{ product.price | priceFormat }}</h3>
+            <h3 style="margin-bottom: 30px; font-weight: 600; color: var(--green-1);">${{ product.price | priceFormat }}</h3>
             
             <!-- Quantity adjustment and add to cart button -->
             <form action="{{ url_for('cart.add_to_cart') }}" method="post">
@@ -82,14 +82,14 @@
 
             <!-- Product description and specifications -->
             <div>
-                <h4>Description</h4>
+                <h4 style="font-weight: 600">Description</h4>
                 <div class="description-box">
                     <p>{{ product.description if product else "No description is available for this product." }}</p>
                 </div>
 
                 <br>
 
-                <h4>Product Details</h4>
+                <h4 style="font-weight: 600">Product Details</h4>
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;"></div>
