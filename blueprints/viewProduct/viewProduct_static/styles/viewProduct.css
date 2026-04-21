@@ -21,9 +21,9 @@
     height: 0;
 }
 .description-box{
-    border: 1px solid #C0CEC1;
     max-height: 300px;
     overflow-y: scroll;
+    color: #6d6d6d;
 }
 .open-image-zoom{
     position: fixed;
