@@ -2,7 +2,7 @@ from sqlalchemy import func
 from extensions import db
 from models import OrderItems, Orders
 
-def get_best_selling_products(limit=10):
+def get_best_selling_products(limit=20):
     results = (
         db.session.query(
             OrderItems.product_id,

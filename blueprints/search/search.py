@@ -1,6 +1,8 @@
 # search/routes.py
 from flask import Blueprint, render_template, request, redirect, url_for
-from services.SearchService import search_products, get_filter_data
+from services.SearchService import search_products, get_filter_data, get_first_two_product_images
+from repositories.SearchRepository import fetch_products_by_ids
+from ml.inference.best_selling import get_best_selling_products
 
 search_bp = Blueprint(
     'search',
@@ -31,6 +33,25 @@ def search():
     filters = request.args.to_dict(flat=False)
 
     products, image_dict = search_products(filters)
+    filter_data = get_filter_data()\
+    
+
+    return render_template(
+        "search.html",
+        products=products,
+        image_dict=image_dict,
+        **filter_data,
+        **filters
+    )
+
+@search_bp.route('/best-selling', methods=['GET', 'POST'])
+def best_selling():
+    
+    filters = request.args.to_dict(flat=False)
+
+    product_ids = get_best_selling_products()
+    products = fetch_products_by_ids(product_ids)
+    image_dict = get_first_two_product_images(products)
     filter_data = get_filter_data()\
     
 

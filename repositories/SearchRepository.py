@@ -84,6 +84,29 @@ def fetch_products(filters):
 
     return conn.execute(text(sql), params).fetchall()
 
+def fetch_products_by_ids(product_ids):
+    if not product_ids:
+        return []
+
+    placeholders = ','.join([f':id{i}' for i in range(len(product_ids))])
+    
+    sql = f"""
+        SELECT DISTINCT p.*, v.store_name,
+            (SELECT COALESCE(AVG(rating), 0)
+             FROM reviews WHERE product_id = p.product_id) as average_rating,
+            (SELECT COUNT(*)
+             FROM reviews WHERE product_id = p.product_id) as review_count
+        FROM products p
+        LEFT JOIN product_category_map pcm ON p.product_id = pcm.product_id
+        LEFT JOIN product_categories pc ON pcm.category_id = pc.category_id
+        LEFT JOIN vendors v ON p.vendor_id = v.vendor_id
+        WHERE p.product_id IN ({placeholders})
+    """
+
+    params = {f"id{i}": pid for i, pid in enumerate(product_ids)}
+
+    return conn.execute(text(sql), params).fetchall()
+
 def fetch_categories():
     return conn.execute(text("SELECT category_name FROM product_categories")).fetchall()
 
