@@ -142,6 +142,10 @@
     border: none;
     color: var(--green-1);
 }
+.product-quantity-button:hover{
+    transition: background-color 0.2s;
+    background-color: var(--orange-1);
+}
 #image-zoom{
     display: none;
 }
