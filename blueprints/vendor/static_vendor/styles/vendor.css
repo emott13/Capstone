@@ -1,0 +1,31 @@
+.vendor-table {
+    margin: 0;
+    padding: 2rem;
+    background-color: var(--green-1);
+    color: var(--tan-2);
+}
+
+.vendor-table > .row {
+
+}
+
+.vendor-table > .row > .col {
+    display: flex;
+    flex-direction: column;
+}
+
+.vendor-table label {
+    font-size: 20px;
+    align-self: center;
+}
+
+.vendor-table input,
+.vendor-table textarea {
+    border: 1px solid var(--tan-1);
+    background-color: var(--green-2);
+    color: var(--tan-2);
+}
+
+.vendor-table input::placeholder {
+    color: var(--tan-2);
+}
