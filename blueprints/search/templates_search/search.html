@@ -155,8 +155,10 @@
             <option value="relevance" selected>Order: Relevance</option>
             <option value="a-z" {% if sortby == 'a-z' %}selected{% endif %}>Order: A-Z</option>
             <option value="z-a" {% if sortby == 'z-a' %}selected{% endif %}>Order: Z-A</option>
-            <option value="high-to-low" {% if sortby == 'high-to-low' %}selected{% endif %}>Price: High to Low</option>
-            <option value="low-to-high" {% if sortby == 'low-to-high' %}selected{% endif %}>Price: Low to High</option>
+            <option value="price-high-low" {% if sortby == 'price-high-low' %}selected{% endif %}>Price: High to Low</option>
+            <option value="price-low-high" {% if sortby == 'price-low-high' %}selected{% endif %}>Price: Low to High</option>
+            <option value="rating-high-low" {% if sortby == 'rating-high-low' %}selected{% endif %}>Rating: High to Low</option>
+            <option value="rating-low-high" {% if sortby == 'rating-high-low' %}selected{% endif %}>Rating: Low to High</option>
         </select>
     </form>
     <div class="row">

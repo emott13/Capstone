@@ -73,8 +73,10 @@ def fetch_products(filters):
     sort_map = {
         "a-z": "p.product_name ASC",
         "z-a": "p.product_name DESC",
-        "low-to-high": "p.price ASC",
-        "high-to-low": "p.price DESC"
+        "price-low-high": "p.price ASC",
+        "price-high-low": "p.price DESC",
+        # "rating-low-high": "",
+        # "rating-high-low": ""
     }
 
     sortby = filters.get("sortby", [""])[0]
