@@ -122,3 +122,14 @@ body{
     background-color: var(--purple-1) !important;
     border: var(--purple-1) 1px solid !important;
 }
+
+/* -- footer -- */
+
+footer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    background-color: #0A400C;
+    color: white;
+}
