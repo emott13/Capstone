@@ -260,3 +260,9 @@
 .quantity button:hover {
   background-color: var(--orange-1);
 }
+.rating-average{
+    border: 1px solid #C0CEC1;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+}

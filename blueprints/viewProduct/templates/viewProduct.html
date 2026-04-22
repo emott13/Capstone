@@ -51,7 +51,8 @@
                         {% endfor %}
                     </h4>
                     <h4 class="p-1">
-                        {{ reviews.getAverageRating() }} <a href="#reviews">({{ reviews.getReviewCount() }} Reviews)</a>
+                        <span class="rating-average">{{ reviews.getAverageRating() }}</span>
+                        <a href="#reviews">({{ reviews.getReviewCount() }} Reviews)</a>
                     </h4>
                     <h4 class="p-1">
                         <a href="#reviews"><h4>Write a Review...</h4></a>
@@ -92,7 +93,7 @@
                 <h4 style="font-weight: 600">Product Details</h4>
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;"></div>
+                        <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
                     </div>
                     <p>Specifications: {{ spec.specification }}</p>
                 </div>
