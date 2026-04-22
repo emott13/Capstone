@@ -66,7 +66,8 @@ def best_selling():
 @search_bp.route('/sale', methods=['GET', 'POST'])
 def sale():
 
-    products = get_sale_products()
+    product_ids = get_sale_products()
+    products = fetch_products_by_ids(product_ids)
     print('SALE products: ', products)
     image_dict = get_first_two_product_images(products)
     filter_data = get_filter_data()

@@ -20,4 +20,4 @@ def get_sale_products():
         .all()
     )
 
-    return products_on_sale
+    return [p.product_id for p in products_on_sale]
