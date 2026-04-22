@@ -618,8 +618,9 @@ with app.app_context():
 
             db.session.add(promo)
             promotions.append(promo)
-
         db.session.commit()
+        print('PROMOTION: ', promotions)
+
 
         # -- promotion targets -- #
         for promo in promotions:
