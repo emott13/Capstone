@@ -11,8 +11,8 @@ def search_products(filters):
     min_price = filters.get("min_price", [""])[0]
     max_price = filters.get("max_price", [""])[0]
 
-    min_price = float(min_price) if min_price else 0
-    max_price = float(max_price) if max_price else 1000
+    min_price = int(float(min_price) * 100) if min_price else 0
+    max_price = int(float(max_price) * 100) if max_price else 100000
 
     filters["min_price"] = [min_price]
     filters["max_price"] = [max_price]
