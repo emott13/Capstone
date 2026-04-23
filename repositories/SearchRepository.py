@@ -75,8 +75,8 @@ def fetch_products(filters):
         "z-a": "p.product_name DESC",
         "price-low-high": "p.price ASC",
         "price-high-low": "p.price DESC",
-        # "rating-low-high": "",
-        # "rating-high-low": ""
+        "rating-low-high": "average_rating ASC, review_count ASC",
+        "rating-high-low": "average_rating DESC, review_count DESC"
     }
 
     sortby = filters.get("sortby", [""])[0]
