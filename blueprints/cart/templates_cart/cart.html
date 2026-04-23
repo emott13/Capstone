@@ -9,10 +9,15 @@
         .checkoutBtn{
             background-color: var(--purple-2) !important;
             color: black;
+            margin-bottom: 20px;
         }
         .checkoutBtn:hover{
             background-color: var(--purple-1) !important;
             color: white !important;
+        }
+        .product{
+            text-decoration: none;
+            color: black;
         }
     </style>
     {{ super() }}
@@ -30,7 +35,7 @@
         </tr>
         {% for cartItem in cartItems %}
         <tr>
-            <td><a href="/view/product?id={{ cartItem.product_id }}" style="text-decoration: none;">{{ cartItem.product_name }}</a></td>
+            <td><a href="/view/product?id={{ cartItem.product_id }}" class="product">{{ cartItem.product_name }}</a></td>
 
             <td>
                 <input 
