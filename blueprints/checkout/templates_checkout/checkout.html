@@ -1,8 +1,10 @@
 {% extends "base.html" %}
+<style>
 
+</style>
 {% block content %}
 {% if cartItems %}
-    <div class="container">
+    <div class="container my-4">
         <h2>Checkout</h2>
         <p>Review your order and proceed to payment.</p>
     </div>
@@ -44,7 +46,7 @@
         </table>
     </div>
 
-      <div class="paymentInformation container">
+    <div class="paymentInformation container my-4">
         <h3>Payment Information</h3>
         <p>Enter your payment details to complete the purchase.</p>
         <form action="{{ url_for('checkout.payment') }}" method="post">
@@ -68,7 +70,7 @@
                 <label for="cvv">CVV</label>
                 <input type="text" class="form-control" id="cvv" name="cvv" pattern="^[0-9]{3,4}$" required>
             </div>
-            <button type="submit" class="btn btn-primary">Complete Purchase</button>
+            <button type="submit" class="btn btn-primary my-4">Complete Purchase</button>
         </form>
     </div>
 {% endif %}
