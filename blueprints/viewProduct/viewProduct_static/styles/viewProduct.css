@@ -266,3 +266,14 @@
     border-radius: 5px;
     background-color: white;
 }
+#review-submit{
+    cursor: pointer;
+    border: none;
+    background-color: var(--orange-2);
+    padding: 5px;
+    transition: background-color 0.2s;
+    color: var(--green-1);
+}
+#review-submit:hover{
+    background-color: var(--orange-1);
+}
