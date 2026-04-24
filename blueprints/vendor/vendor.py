@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, redirect, render_template, url_for
 from extensions import conn
 from sqlalchemy import text
 from extensions import db
@@ -30,7 +30,7 @@ class CreateProductForm(FlaskForm):
     price = DecimalField('Price',
         validators=[
             InputRequired(), 
-            Regexp(regex="\d{1,3}(?:[.,]\d{3})*(?:[.,]\d{2})")
+            Regexp(regex="^[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$")
         ])
     categories = QuerySelectMultipleField('Categories',
         query_factory=enabled_categories,
@@ -40,15 +40,15 @@ class CreateProductForm(FlaskForm):
         ])
     specs = StringField('Specifications',
         validators=[
-
+            Length(max=255),
         ])
     colors = StringField('Colors',
         validators=[
-
+            Length(min=6, max=7),
         ])
     images = StringField('Images',
         validators=[
-
+            Length(max=255),
         ])
     submit = SubmitField('Sign Up')
 
@@ -63,13 +63,15 @@ product_colors:        color_id     product_id     hex_code
 product_images:        image_id     product_id     image_url
 """
 
-@vendor_bp.route("/", methods=["GET"])
+@vendor_bp.route("/", methods=["GET", "POST"])
 def vendor():
     create_form = CreateProductForm()
+
+    if create_form.validate_on_submit():
+        error = create_post(create_form)
 
     return render_template("vendor.html", create_form=create_form,
     )
 
-@vendor_bp.route("/product/create", methods=["POST"])
-def createProduct():
-    pass
+def create_post(create_form: CreateProductForm) -> str:
+    return redirect(url_for("vendor.vendor"))

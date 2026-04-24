@@ -1,6 +1,16 @@
-<form id="create-product" class="vendor-table container">
+<form id="create-product" method="POST" class="vendor-table container">
     <h2>Create Product</h2>
     <!-- Name, Desc, Price -->
+    {% if create_form.errors %}
+        <div class="alert alert-danger">
+            <ul class="list-unstyled">
+            {% for er in create_form.errors.values() %}
+                <li class="">{{ er[0] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="col">
             <!-- <label for="name">Product Name</label>
@@ -60,6 +70,7 @@
             {{ create_form.colors.label }}
             <div id="vendor-colors">
                 {{ create_form.colors(placeholder="Input color like #FFB0FF") }}
+            </div>
         </div>
     </div>
     <hr>
@@ -80,6 +91,8 @@
     <hr>
     <!-- Submit -->
     <div class="row">
-        <input type="submit" class="btn vendor-btn" value="Submit">
+        <div class="col-12 flex">
+            <input type="submit" class="btn vendor-btn w-100" value="Submit">
+        </div>
     </div>
 </form>
