@@ -213,11 +213,11 @@
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
                             <label for="min_price" class="form-label">Minimum: $<span id="val-min-price" style="margin-left: 5px;">0</span></label>
-                            <input type="range" name="min_price" id="min_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="0">
+                            <input type="range" name="min_price" id="min_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_min_price or 0 }}">
                         </div>
                         <div class="mb-2">
                             <label for="max_price" class="form-label">Maximum: $<span id="val-max-price" style="margin-left: 5px;">0</span></label>
-                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="0">
+                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_min_price or 0 }}">                        
                         </div>
                     </div>
                 </div>
@@ -294,6 +294,23 @@
 
     </div>
 <script>
+    if(min.value == "" || min.value == 0){
+        min.removeAttribute("name");
+    }
+    if(max.value == "" || max.value == 0){
+        max.removeAttribute("name");
+    }
+
+    document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function () {
+            this.querySelectorAll("input, select").forEach(el => {
+                if (el.value === "" || el.value === null || el.value === undefined) {
+                    el.removeAttribute("name");  // 🔥 key fix
+                }
+            });
+        });
+    });
+
     function toggleOptions(event){
         let options = event.target.nextElementSibling;
         options.classList.toggle("open");

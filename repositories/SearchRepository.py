@@ -34,7 +34,15 @@ def fetch_products(filters):
     categories = filters.get("categories", [])
     if categories:
         placeholders = ','.join([f':cat{i}' for i in range(len(categories))])
-        sql += f" AND pc.category_name IN ({placeholders})"
+        sql += f"""
+            AND EXISTS (
+                SELECT 1
+                FROM product_category_map pcm2
+                JOIN product_categories pc2 ON pcm2.category_id = pc2.category_id
+                WHERE pcm2.product_id = p.product_id
+                AND pc2.category_name IN ({placeholders})
+            )
+        """
         for i, cat in enumerate(categories):
             params[f"cat{i}"] = cat
 
@@ -68,6 +76,39 @@ def fetch_products(filters):
     if filters.get("max_price"):
         sql += " AND p.price <= :max_price"
         params["max_price"] = filters["max_price"][0]
+
+    # Ratings
+    min_rating = filters.get("min_rating", [""])[0]
+
+    if min_rating and min_rating.strip() != "":
+        try:
+            min_rating_val = float(min_rating)
+            sql += """
+                AND (
+                    SELECT COALESCE(AVG(rating), 0)
+                    FROM reviews
+                    WHERE product_id = p.product_id
+                ) >= :min_rating
+            """
+            params["min_rating"] = min_rating_val
+        except ValueError:
+            pass
+
+    max_rating = filters.get("max_rating", [""])[0]
+
+    if max_rating and max_rating.strip() != "":
+        try:
+            max_rating_val = float(max_rating)
+            sql += """
+                AND (
+                    SELECT COALESCE(AVG(rating), 0)
+                    FROM reviews
+                    WHERE product_id = p.product_id
+                ) >= :max_rating
+            """
+            params["max_rating"] = max_rating_val
+        except ValueError:
+            pass
 
     # Sorting
     sort_map = {
