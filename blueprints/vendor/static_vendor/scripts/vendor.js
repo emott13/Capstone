@@ -1,11 +1,9 @@
 const parser = new DOMParser();
 
-const categoryElem = document.getElementById("vendor-categories");
 const specElem = document.getElementById("vendor-specs");
 const colorElem = document.getElementById("vendor-colors");
 const imageElem = document.getElementById("vendor-images");
 
-const categoryHTML = categoryElem.children[0].outerHTML;
 const specHTML = specElem.children[1].outerHTML;
 const colorHTML = colorElem.children[0].outerHTML;
 const imageHTML = imageElem.children[1].outerHTML;
