@@ -106,7 +106,7 @@
             parameter instead of a different URL -->
         <input name="id" value="{{ product.product_id }}" hidden>
         <label for="review-sort">Sort by </label>
-        <select id="review-sort" name="review-sort" style="cursor: pointer; border: 1px solid #dddddd; background-color: white; padding: 5px;">
+        <select id="review-sort" name="review-sort">
             <!-- selected jinja block is to retain what was previously selected -->
             <option value="positive" {{ 'selected' if review_sort == 'positive' }}>Positive</option>
             <option value="negative" {{ 'selected' if review_sort == 'negative' }}>Negative</option>
@@ -115,7 +115,7 @@
         </select>
 
         <label for="review-filter">Filter by </label>
-        <select id="review-filter" name="review-filter" style="cursor: pointer; border: 1px solid #dddddd; background-color: white; padding: 5px;">
+        <select id="review-filter" name="review-filter">
             <option value="all" {{ 'selected' if review_filter == 'all' }}>All</option>
             <option value="5" {{ 'selected' if review_filter == '5' }}>5 star</option>
             <option value="4" {{ 'selected' if review_filter == '4' }}>4 star</option>

@@ -266,6 +266,13 @@
     border-radius: 5px;
     background-color: white;
 }
+#review-sort,
+#review-filter{
+    cursor: pointer;
+    border: 1px solid #dddddd;
+    background-color: white;
+    padding: 5px;
+}
 #review-submit{
     cursor: pointer;
     border: none;
