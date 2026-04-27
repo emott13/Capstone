@@ -217,7 +217,7 @@
                         </div>
                         <div class="mb-2">
                             <label for="max_price" class="form-label">Maximum: $<span id="val-max-price" style="margin-left: 5px;">0</span></label>
-                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_min_price or 0 }}">                        
+                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_max_price or 0 }}">                        
                         </div>
                     </div>
                 </div>
@@ -294,18 +294,11 @@
 
     </div>
 <script>
-    if(min.value == "" || min.value == 0){
-        min.removeAttribute("name");
-    }
-    if(max.value == "" || max.value == 0){
-        max.removeAttribute("name");
-    }
-
     document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", function () {
             this.querySelectorAll("input, select").forEach(el => {
                 if (el.value === "" || el.value === null || el.value === undefined) {
-                    el.removeAttribute("name");  // 🔥 key fix
+                    el.removeAttribute("name");
                 }
             });
         });
@@ -320,13 +313,18 @@
     let slider = document.getElementById("min_price");
     let output = document.getElementById("val-min-price");
     slider.oninput = function(){
-        output.innerHTML = parseFloat(this.value).toFixed(2);;
+        output.innerHTML = parseFloat(this.value).toFixed(2);
     }
 
     let slide = document.getElementById("max_price");
     let out = document.getElementById("val-max-price");
     slide.oninput = function(){
-        out.innerHTML = parseFloat(this.value).toFixed(2);;
+        out.innerHTML = parseFloat(this.value).toFixed(2);
     }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        output.innerHTML = parseFloat(slider.value).toFixed(2);
+        out.innerHTML = parseFloat(slide.value).toFixed(2);
+    });
 </script>
 {% endblock %}
