@@ -1,39 +1,45 @@
-<form id="create-product" class="vendor-table container">
+<form id="create-product" method="POST" class="vendor-table container">
     <h2>Create Product</h2>
     <!-- Name, Desc, Price -->
+    {% if create_form.errors %}
+        <div class="alert alert-danger">
+            <ul class="list-unstyled">
+            {% for er in create_form.errors.values() %}
+                <li class="">{{ er[0] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
     <div class="row">
         <div class="col">
-            <label for="name">Product Name</label>
-            <input type="text" name="name" placeholder="Input here">
+            <!-- <label for="name">Product Name</label>
+            <input type="text" name="name" placeholder="Input here"> -->
+            {{ create_form.name.label }}
+            {{ create_form.name(placeholder="Input here") }}
         </div>
         <div class="col">
-            <label for="desc">Description</label>
+            {{ create_form.desc.label }}
+            {{ create_form.desc(cols=64, rows=8, placeholder="Input here") }}
+            <!-- <label for="desc">Description</label>
             <textarea class="form-control" cols="64" id="desc" 
                 maxlength="1224" name="desc" placeholder="Description" 
-                rows="8">
-            </textarea>
+                rows="8"></textarea> -->
         </div>
         <div class="col">
-            <label for="price">Price</label>
-            <input type="text" name="price" placeholder="Input here">
+            <!-- <label for="price">Price</label>
+            <input type="text" name="price" placeholder="Input here" value="$10.99"> -->
+            {{ create_form.price.label }}
+            <div class="flex vendor-price">{{ create_form.price(placeholder="Input here") }}</div>
         </div>
     </div>
     <hr>
     <!-- Categories -->
     <div class="row">
-        <div class="col-12 flex">
-            <button onclick="addElem(categoryElem, categoryHTML)" class="btn vendor-btn" type="button">Add category</button>
-        </div>
         <div class="flex flex-wrap col">
-            <label for="category" class="">Categories</label>
-            <div id="vendor-categories">
-                <select class="vendor-category-input" 
-                    name="category" placeholder="Input category">
-                    <option for="category" value="">Soil</option>
-                    <option for="category" value="">Fertilizer</option>
-                </select>
-            </div>
-            <!-- div (the above div needs to be there or else there will be a whitespace) -->
+            {{ create_form.categories.label }}
+            <span class="mb-3">Tip: Hold ctrl / command to select multiple</span>
+            {{ create_form.categories(class="vendor-categories") }}
         </div>
     </div>
     <hr>
@@ -47,8 +53,8 @@
             <span>Note: Empty specifications will be ignored</span>
         </div>
         <div id="vendor-specs" class="col">
-            <label for="spec">Specifications</label>
-            <input type="text" name="spec" placeholder="Input here">
+            {{ create_form.specs.label }}
+            {{ create_form.specs(placeholder="Input here") }}
         </div>
     </div>
     <hr>
@@ -61,10 +67,10 @@
             <span>Note: Empty colors will be ignored</span>
         </div>
         <div class="flex flex-wrap col">
-            <label for="color" class="">Colors</label>
+            {{ create_form.colors.label }}
             <div id="vendor-colors">
-                <input type="text" class="vendor-color-input" name="color" placeholder="Input color like #FFB0FF"></div>
-            <!-- div (the above div needs to be there or else there will be a whitespace) -->
+                {{ create_form.colors(placeholder="Input color like #FFB0FF") }}
+            </div>
         </div>
     </div>
     <hr>
@@ -78,13 +84,15 @@
             <span>Note: Empty images will be ignored</span>
         </div>
         <div id="vendor-images" class="col">
-            <label for="image">Images</label>
-            <input type="text" name="image" placeholder="Input image URL here">
+            {{ create_form.images.label }}
+            {{ create_form.images(placeholder="Input image URL here") }}
         </div>
     </div>
     <hr>
     <!-- Submit -->
     <div class="row">
-        <input type="submit" class="btn vendor-btn" value="Submit">
+        <div class="col-12 flex">
+            <input type="submit" class="btn vendor-btn w-100" value="Submit">
+        </div>
     </div>
 </form>

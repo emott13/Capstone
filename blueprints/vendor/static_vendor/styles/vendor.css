@@ -20,6 +20,7 @@
 
 .vendor-table hr {
     color: var(--tan-1);
+    margin: 1.2rem 0;
 }
 
 .vendor-table > .row {
@@ -43,16 +44,38 @@
     color: var(--tan-2);
 }
 
-.vendor-table input::placeholder {
-    color: var(--tan-2);
+.vendor-table input:focus,
+.vendor-table textarea:focus {
+    color: black;
+    background-color: var(--tan-2);
 }
 
-.vendor-category-input,
+.vendor-table textarea::placeholder,
+.vendor-table input::placeholder {
+    color: var(--tan-2);
+    opacity: .7;
+}
+
+.vendor-price::before {
+    position: absolute;
+    content: "$";
+    font-size: 1.2rem;
+    color: var(--green-1);
+}
+
+.vendor-price > input {
+    width: 100%;
+    padding-left: .75rem;
+}
+
+.vendor-categories {
+    height: 15rem;
+}
+
 .vendor-color-input {
     margin-right: .25rem;
 }
 
-.vendor-category-input,
 .vendor-color-input {
     margin-bottom: .25rem;
 }
