@@ -294,6 +294,7 @@
 
     </div>
 <script>
+    // Price min and max search filter js
     document.querySelectorAll("form").forEach(form => {
         form.addEventListener("submit", function () {
             this.querySelectorAll("input, select").forEach(el => {
@@ -316,6 +317,7 @@
         output.innerHTML = parseFloat(this.value).toFixed(2);
     }
 
+    // Reviews search filter (maximum slider)
     let slide = document.getElementById("max_price");
     let out = document.getElementById("val-max-price");
     slide.oninput = function(){
