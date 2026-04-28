@@ -7,142 +7,90 @@
     {% endif %}
 {% endblock %}
 {% block styles %}
-    <style>
-        .image-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-        }
-        .image-container img {
-            width: 100%;
-            display: block;
-            transform: scale(1.05);
-            transition: opacity 0.4s ease, transform 0.4s ease;
-        }
-        .img-hover {
-            position: absolute;
-            top: 0;
-            left: 0;
-            opacity: 0;
-        }
-        .image-container:hover .img-hover {
-            opacity: 1;
-        }
-        .image-container:hover .img-primary {
-            opacity: 0;
-        }
-
-        .search-filter-options {
-            display: none;
-        }
-        a.card{
-            text-decoration: none;
-            color: inherit;
-        }
-        a.card:hover{
-            text-decoration: underline;
-        }
-        .card-title{
-            font-size: 22px;
-            font-weight: 600;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .card-text{
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .card-price{
-            font-size: 22px;
-            font-weight: 700;
-        }
-        .color-orange{
-            color: var(--orange-1);
-        }
-    </style>
-    {{ super() }}
+<link rel="stylesheet" href="{{ url_for('search.static', filename='styles/search.css') }}">
+{{ super() }}
 {% endblock %}
 {% block page_content %}
-    <h1 class="mt-5">Search Results</h1>
+    <h1 class="mt-5" id="search-results-heading">Search Results</h1>
     {% if query %}
         <p class="lead">Showing results for "{{ query }}"</p>
     {% endif %}
-    <form action="{{ url_for('search.search') }}" method="GET">
-        <select name="sortby" id="sortby" onchange="this.form.submit()">
-            <option value="a-z" {% if sortby == 'a-z' %}selected{% endif %}>Order: A-Z</option>
-            <option value="z-a" {% if sortby == 'z-a' %}selected{% endif %}>Order: Z-A</option>
-            <option value="high-to-low" {% if sortby == 'high-to-low' %}selected{% endif %}>Price: High to Low</option>
-            <option value="low-to-high" {% if sortby == 'low-to-high' %}selected{% endif %}>Price: Low to High</option>
-        </select>
-    </form>
-    <hr>
     <div class="row">
 
         <!-- Search Filters Column -->
         <div class="filters-container col-2">
+            {% if products %}
             <h2>Filters</h2>
 
             <form action="{{ url_for('search.search') }}" method="GET">
                 <input type="hidden" name="search" value="{{ query }}">
 
+                <div class="sort-by-wrapper">
+                    <select name="sortby" id="sortby" onchange="this.form.submit()">
+                        <option value="relevance" selected>Order: Relevance</option>
+                        <option value="a-z" {% if sortby == 'a-z' %}selected{% endif %}>Order: A-Z</option>
+                        <option value="z-a" {% if sortby == 'z-a' %}selected{% endif %}>Order: Z-A</option>
+                        <option value="price-high-low" {% if sortby == 'price-high-low' %}selected{% endif %}>Price: High to Low</option>
+                        <option value="price-low-high" {% if sortby == 'price-low-high' %}selected{% endif %}>Price: Low to High</option>
+                        <option value="rating-high-low" {% if sortby == 'rating-high-low' %}selected{% endif %}>Rating: High to Low</option>
+                        <option value="rating-low-high" {% if sortby == 'rating-high-low' %}selected{% endif %}>Rating: Low to High</option>
+                    </select>
+                </div>
+
                 <div>
-                    <input type="submit" value="Apply">
-                    <a href="{{ url_for('search.search', search=query) }}"><button type="button">Clear Filters</button></a>
+                    <input class="search-filter-button" type="submit" value="Apply">
+                    <a href="{{ url_for('search.search', search=query) }}"><button type="button" class="search-filter-button">Clear Filters</button></a>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for cat in filter_categories %}
-                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
+                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" style="margin-right: 5px;" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for col in filter_colors %}
-                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
+                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" style="margin-right: 5px;" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
                         {% for ven in filter_vendors %}
-                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
+                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" style="margin-right: 5px;" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
-                            <label for="min_price" class="form-label">Minimum</label>
-                            <input type="number" id="min_price" name="min_price" placeholder="0" value="{{ selected_min_price }}" min="0" step="0.01" class="form-control">
+                            <label for="min_price" class="form-label">Minimum: $<span id="val-min-price" style="margin-left: 5px;">0</span></label>
+                            <input type="range" name="min_price" id="min_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_min_price or 0 }}">
                         </div>
                         <div class="mb-2">
-                            <label for="max_price" class="form-label">Maximum</label>
-                            <input type="number" id="max_price" name="max_price" placeholder="No limit" value="{{ selected_max_price }}" min="0" step="0.01" class="form-control">
+                            <label for="max_price" class="form-label">Maximum: $<span id="val-max-price" style="margin-left: 5px;">0</span></label>
+                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_max_price or 0 }}">                        
                         </div>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down"></i></label>
+                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
                     <div class="search-filter-options" style="padding-left: 10px;">
                         <div class="mb-2">
                             <label for="min_rating" class="form-label">Minimum (0-5)</label>
@@ -160,66 +108,90 @@
 
         <!-- Search Results Column -->
         <div class="container col-10">
-            {% if products %}
-                <div class="row mx-4">
-                    {% for product in products %}
-                        <div class="product list-group-item col-sm-3 d-flex">
-                            <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card">
+            <div class="row mx-4">
+                {% for product in products %}
+                    <div class="product list-group-item col-sm-3 d-flex">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card" style="margin: 3px;">
 
-                                <div class="image-container card-img-top">
-                                    {% set images = image_dict.get(product.product_id, []) %}
+                            <div class="image-container card-img-top">
+                                {% set images = image_dict.get(product.product_id, []) %}
 
-                                    {% if images|length > 0 %}
-                                        <img src="{{ images[0].image_url }}" class="img-primary">
+                                {% if images|length > 0 %}
+                                    <img src="{{ images[0].image_url }}" class="img-primary">
+                                {% endif %}
+
+                                {% if images|length > 1 %}
+                                    <img src="{{ images[1].image_url }}" class="img-hover">
+                                {% endif %}
+                            </div>
+
+                            <div class="card-body">
+                                <h4 class="card-title">{{ product.product_name }}</h4>
+                                <p class="card-vendor" style="margin-bottom: 0;"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
+                                <div class="d-flex align-items-center" style="margin-bottom: 15px; margin-top: 0;">
+                                    {% set avg = product.average_rating %}
+                                    {% set full = avg | int %}
+                                    {% set half = 1 if (avg - full) >= 0.5 else 0 %}
+                                    {% set empty = 5 - full - half %}
+                                    {% for i in range(full) %}
+                                        <i class="color-orange bi bi-star-fill"></i>
+                                    {% endfor %}
+                                    {% if half %}
+                                        <i class="color-orange bi bi-star-half"></i>
                                     {% endif %}
-
-                                    {% if images|length > 1 %}
-                                        <img src="{{ images[1].image_url }}" class="img-hover">
-                                    {% endif %}
+                                    {% for i in range(empty) %}
+                                        <i class="color-orange bi bi-star"></i>
+                                    {% endfor %}
+                                    <span class="ms-2">{{ "%.1f"|format(avg) }} ({{ product.review_count }} reviews)</span>
                                 </div>
-
-                                <div class="card-body">
-                                    <h4 class="card-title">{{ product.product_name }}</h4>
-                                    <p class="card-vendor" style="margin-bottom: 0;"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
-                                    <div class="d-flex align-items-center" style="margin-bottom: 15px; margin-top: 0;">
-                                        {% set avg = product.average_rating %}
-                                        {% set full = avg | int %}
-                                        {% set half = 1 if (avg - full) >= 0.5 else 0 %}
-                                        {% set empty = 5 - full - half %}
-                                        {% for i in range(full) %}
-                                            <i class="color-orange bi bi-star-fill"></i>
-                                        {% endfor %}
-                                        {% if half %}
-                                            <i class="color-orange bi bi-star-half"></i>
-                                        {% endif %}
-                                        {% for i in range(empty) %}
-                                            <i class="color-orange bi bi-star"></i>
-                                        {% endfor %}
-                                        <span class="ms-2">{{ "%.1f"|format(avg) }} ({{ product.review_count }} reviews)</span>
-                                    </div>
-                                    <big class="card-price">${{ product.price | priceFormat }}</big>
-                                    <p class="card-text">{{ product.description }}</p>
-                                </div>
-                                
-                            </a>
-                        </div>
-                        
-                    {% endfor %}
-                </div>
-            {% else %}
-                <p>No products found.</p>
-            {% endif %}
+                                <big class="card-price">${{ product.price | priceFormat }}</big>
+                                <p class="card-text">{{ product.description }}</p>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
 
+        {% else %}
+            <p class="empty-search-results-text">No products found.</p>
+        {% endif %}
+
     </div>
-    <script>
-        function toggleOptions(event) {
-            let options = event.target.nextElementSibling;
-            if (options.style.display === 'none' || options.style.display === '') {
-                options.style.display = 'block';
-            } else {
-                options.style.display = 'none';
-            }
-        }
-    </script>
+<script>
+    // Price min and max search filter js
+    document.querySelectorAll("form").forEach(form => {
+        form.addEventListener("submit", function () {
+            this.querySelectorAll("input, select").forEach(el => {
+                if (el.value === "" || el.value === null || el.value === undefined) {
+                    el.removeAttribute("name");
+                }
+            });
+        });
+    });
+
+    function toggleOptions(event){
+        let options = event.target.nextElementSibling;
+        options.classList.toggle("open");
+    }
+
+    // Reviews search filter (minimum slider)
+    let slider = document.getElementById("min_price");
+    let output = document.getElementById("val-min-price");
+    slider.oninput = function(){
+        output.innerHTML = parseFloat(this.value).toFixed(2);
+    }
+
+    // Reviews search filter (maximum slider)
+    let slide = document.getElementById("max_price");
+    let out = document.getElementById("val-max-price");
+    slide.oninput = function(){
+        out.innerHTML = parseFloat(this.value).toFixed(2);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        output.innerHTML = parseFloat(slider.value).toFixed(2);
+        out.innerHTML = parseFloat(slide.value).toFixed(2);
+    });
+</script>
 {% endblock %}

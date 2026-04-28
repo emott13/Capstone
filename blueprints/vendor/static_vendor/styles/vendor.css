@@ -1,0 +1,81 @@
+.vendor-btn {
+    margin: .5rem 0;
+    color: white;
+    background-color: var(--green-2);
+    border: 1px solid var(--tan-1);
+}
+
+.vendor-btn:hover {
+    color: var(--green-1);
+    background-color: var(--tan-1);
+    border: 1px solid var(--green-2);
+}
+
+.vendor-table {
+    margin: 0;
+    padding: 2rem;
+    background-color: var(--green-1);
+    color: var(--tan-2);
+}
+
+.vendor-table hr {
+    color: var(--tan-1);
+    margin: 1.2rem 0;
+}
+
+.vendor-table > .row {
+
+}
+
+.vendor-table > .row > .col {
+    display: flex;
+    flex-direction: column;
+}
+
+.vendor-table label {
+    font-size: 20px;
+    align-self: center;
+}
+
+.vendor-table input,
+.vendor-table textarea {
+    border: 1px solid var(--tan-1);
+    background-color: var(--green-2);
+    color: var(--tan-2);
+}
+
+.vendor-table input:focus,
+.vendor-table textarea:focus {
+    color: black;
+    background-color: var(--tan-2);
+}
+
+.vendor-table textarea::placeholder,
+.vendor-table input::placeholder {
+    color: var(--tan-2);
+    opacity: .7;
+}
+
+.vendor-price::before {
+    position: absolute;
+    content: "$";
+    font-size: 1.2rem;
+    color: var(--green-1);
+}
+
+.vendor-price > input {
+    width: 100%;
+    padding-left: .75rem;
+}
+
+.vendor-categories {
+    height: 15rem;
+}
+
+.vendor-color-input {
+    margin-right: .25rem;
+}
+
+.vendor-color-input {
+    margin-bottom: .25rem;
+}

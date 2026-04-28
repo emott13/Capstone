@@ -7,15 +7,21 @@ from repositories.SearchRepository import (
 )
 
 def search_products(filters):
-    # normalize price filters
     min_price = filters.get("min_price", [""])[0]
     max_price = filters.get("max_price", [""])[0]
 
-    min_price = float(min_price) if min_price else 0
-    max_price = float(max_price) if max_price else 1000
+    min_price = filters.get("min_price", [""])[0]
+    max_price = filters.get("max_price", [""])[0]
 
-    filters["min_price"] = [min_price]
-    filters["max_price"] = [max_price]
+    if min_price and float(min_price) > 0:
+        filters["min_price"] = [int(float(min_price) * 100)]
+    else:
+        filters.pop("min_price", None)
+
+    if max_price and float(max_price) > 0:
+        filters["max_price"] = [int(float(max_price) * 100)]
+    else:
+        filters.pop("max_price", None)
 
     products = fetch_products(filters)
     image_dict = get_first_two_product_images(products)

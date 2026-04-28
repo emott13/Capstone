@@ -148,7 +148,7 @@
                     <div class="ratio ratio-1x1 rounded-circle">
                     </div>
                     <div class="card-body">
-                        <a href="{{ url_for('search.search', category='c.category_name') }}" class="btn btn-primary">View {{ c.category_name }}</a>
+                        <a href="{{ url_for('search.search', categories=c.category_name) }}" class="btn btn-primary">View {{ c.category_name }}</a>
                     </div>
                 </div>
             </div>
