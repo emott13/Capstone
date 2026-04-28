@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
-from flask_login import login_required, current_user
+from flask_login import current_user
 from repositories.CartRepository import CartRepository
 from services.OrderPricingService import OrderPricingService
 from services.OrderService import OrderService
@@ -11,9 +11,7 @@ checkout_bp = Blueprint("checkout", __name__, template_folder="templates_checkou
 
 @checkout_bp.route("/checkout", methods=["GET", "POST"])
 def checkout():
-    if not current_user.is_authenticated:
-        return redirect(url_for("login.login"))
-    if not current_user.has_role("customer"):
+    if not current_user.is_authenticated or not current_user.has_role("customer"):
         return redirect(url_for("login.login"))
     
     if request.method == "POST":
@@ -39,7 +37,37 @@ def checkout():
             promotions=cart["applied_promotions"]
         )
     
-@checkout_bp.route("/payment", methods=["POST"])
+# handles order address
+@checkout_bp.route("/address", methods=["GET", "POST"])
+def address():
+    if not current_user.is_authenticated or not current_user.has_role("customer"):
+        return redirect(url_for("login.login"))
+    
+    user_id = current_user.get_id()
+
+    if request.method == "POST":
+        selected_address_id = request.form.get("address_id")
+
+        if selected_address_id:
+            CartService.set_cart_address(user_id, selected_address_id)
+        else:
+            address_data = {
+                "add1": request.form.get("add1"),
+                "add2": request.form.get("add2"),
+                "city": request.form.get("city"),
+                "state": request.form.get("state"),
+                "zip": request.form.get("zip"),
+                "country": request.form.get("country"),
+            }
+            CartService.set_cart_address(user_id, address_data=address_data)
+
+        return redirect(url_for("checkout.payment"))
+        
+    addresses = CartService.get_user_addresses(user_id)
+    return render_template("address.html", addresses=addresses)
+
+# handles order payment
+@checkout_bp.route("/payment", methods=["POST", "GET"])
 def payment():
     if not current_user.is_authenticated:
         return redirect(url_for("login.login"))
@@ -62,36 +90,58 @@ def payment():
             promo_code=promo_code
         )   
 
+        session["order_amount"] = amount
+
+        # result = OrderService.checkout_cart(
+        #     customer_id=customer_id,
+        #     promo_code=promo_code
+        # )
+        # print("Checkout result:", result)
+
+        # PaymentService.process_payment(
+        #     customer_id=customer_id,
+        #     amount=amount,
+        #     order_id=result
+        # )
+
+        return redirect(url_for("checkout.confirmation"))
+    
+    return render_template("payment.html")
+    
+# handles order confirmation
+@checkout_bp.route("/confirmation", methods=["GET", "POST"])
+def confirmation():
+    if not current_user.is_authenticated:
+        return redirect(url_for("login.login"))
+    
+    user_id = current_user.get_id()
+    promo_code = session.get("manual_promo_code")
+    cartDict = CartService.get_cart(user_id, promo_code)
+    cart = CartService.get_cart_by_user_id(user_id)
+
+    if request.method == "POST":
+        cart_id = cart.cart_id
+
         result = OrderService.checkout_cart(
-            customer_id=customer_id,
+            customer_id=user_id,
             promo_code=promo_code
         )
         print("Checkout result:", result)
 
+        amount = session.get("order_amount")
         PaymentService.process_payment(
-            customer_id=customer_id,
+            customer_id=user_id,
             amount=amount,
             order_id=result
         )
-
-        return redirect(url_for("checkout.address"))
-    
-@checkout_bp.route("/address", methods=["GET", "POST"])
-def address():
-    if not current_user.is_authenticated:
-        return redirect(url_for("login.login"))
-    if not current_user.has_role("customer"):
-        return redirect(url_for("login.login"))
-    if request.method == "POST":
-        user_id = current_user.get_id()
-        add1 = request.form.get("add1")
-        add2 = request.form.get("add2")
-        city = request.form.get("city")
-        state = request.form.get("state")
-        zip_code = request.form.get("zip")
-        country = request.form.get("country")
-        # add1, add2, city, state, zip_code
-        CartService.set_cart_address(user_id, add1, add2, city, state, zip_code, country)
         return redirect(url_for("order.order"))
-    
-    return render_template("address.html")
+
+    # print("CART", cart)
+    return render_template("confirmation.html", 
+        subtotal=cartDict["subtotal"],
+        discounts=cartDict["discounts"],
+        tax=cartDict["tax"],
+        total=cartDict["total"],
+        promotions=cartDict["applied_promotions"],
+        cart=cart
+    )
