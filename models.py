@@ -164,6 +164,17 @@ class Products(db.Model):
         backref=db.backref("products", lazy="dynamic")
     )
     wishlist_items = db.relationship("WishlistItems", back_populates="product")
+
+    specs = db.relationship(
+        "ProductSpecs",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    colors = db.relationship(
+        "ProductColors",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
     images = db.relationship(
         "ProductImages",
         back_populates="product",
@@ -179,6 +190,11 @@ class ProductSpecs(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
+    product = db.relationship(
+        "Products",
+        back_populates="specs"
+    )
+
 # product colors
 class ProductColors(db.Model):
     __tablename__ = "product_colors"
@@ -187,6 +203,11 @@ class ProductColors(db.Model):
     hex_code = db.Column(db.String(7), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    product = db.relationship(
+        "Products",
+        back_populates="colors"
+    )
 
 # product categories
 class ProductCategories(db.Model):
