@@ -4,45 +4,11 @@
     {{ super() }}
     <link rel="stylesheet" href="{{ url_for('vendor.static', filename='styles/vendor.css') }}">
 {% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('vendor.static', filename='scripts/vendor.js') }}"></script>
+{% endblock %}
 {% block page_content %}
     <h1 class="text-center mt-3">Vendor Home</h1>
-
-    <h2>Create Product</h2>
-    <div>
-        <table>
-            <tr>
-                <td>Product Name</th>
-                <td>Description</th>
-                <td>Price</th>
-            </tr>
-            <tr>
-                <td>Category 1</td>
-                <td>Category 2</td>
-                <td>Category 3</td>
-                <td>Category 4</td>
-                <td>Category 5</td>
-            </tr>
-            <tr>
-                <td>Specification 1</td>
-                <td>Specification 2</td>
-                <td>Specification 3</td>
-                <td>Specification 4</td>
-                <td>Specification 5</td>
-            </tr>
-            <tr>
-                <td>Color 1</td>
-                <td>Color 2</td>
-                <td>Color 3</td>
-                <td>Color 4</td>
-                <td>Color 5</td>
-            </tr>
-            <tr>
-                <td>Image 1</td>
-                <td>Image 2</td>
-                <td>Image 3</td>
-                <td>Image 4</td>
-                <td>Image 5</td>
-            </tr>
-        </table>
-    </div>
+    {% include "createProduct.html" %}
 {% endblock %}

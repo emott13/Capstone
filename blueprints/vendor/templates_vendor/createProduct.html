@@ -1,0 +1,98 @@
+<form id="create-product" method="POST" class="vendor-table container">
+    <h2>Create Product</h2>
+    <!-- Name, Desc, Price -->
+    {% if create_form.errors %}
+        <div class="alert alert-danger">
+            <ul class="list-unstyled">
+            {% for er in create_form.errors.values() %}
+                <li class="">{{ er[0] }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col">
+            <!-- <label for="name">Product Name</label>
+            <input type="text" name="name" placeholder="Input here"> -->
+            {{ create_form.name.label }}
+            {{ create_form.name(placeholder="Input here") }}
+        </div>
+        <div class="col">
+            {{ create_form.desc.label }}
+            {{ create_form.desc(cols=64, rows=8, placeholder="Input here") }}
+            <!-- <label for="desc">Description</label>
+            <textarea class="form-control" cols="64" id="desc" 
+                maxlength="1224" name="desc" placeholder="Description" 
+                rows="8"></textarea> -->
+        </div>
+        <div class="col">
+            <!-- <label for="price">Price</label>
+            <input type="text" name="price" placeholder="Input here" value="$10.99"> -->
+            {{ create_form.price.label }}
+            <div class="flex vendor-price">{{ create_form.price(placeholder="Input here") }}</div>
+        </div>
+    </div>
+    <hr>
+    <!-- Categories -->
+    <div class="row">
+        <div class="flex flex-wrap col">
+            {{ create_form.categories.label }}
+            <span class="mb-3">Tip: Hold ctrl / command to select multiple</span>
+            {{ create_form.categories(class="vendor-categories") }}
+        </div>
+    </div>
+    <hr>
+    <!-- Specifications -->
+    <div class="row">
+        <div class="col-12 flex">
+            <button onclick="addElem(specElem, specHTML)" class="btn vendor-btn" type="button">
+                Add Specification</button>
+        </div>
+        <div class="col-12">
+            <span>Note: Empty specifications will be ignored</span>
+        </div>
+        <div id="vendor-specs" class="col">
+            {{ create_form.specs.label }}
+            {{ create_form.specs(placeholder="Input here") }}
+        </div>
+    </div>
+    <hr>
+    <!-- Colors -->
+    <div class="row">
+        <div class="col-12 flex">
+            <button onclick="addElem(colorElem, colorHTML)" class="btn vendor-btn" type="button">Add Color</button>
+        </div>
+        <div class="col-12">
+            <span>Note: Empty colors will be ignored</span>
+        </div>
+        <div class="flex flex-wrap col">
+            {{ create_form.colors.label }}
+            <div id="vendor-colors">
+                {{ create_form.colors(placeholder="Input color like #FFB0FF") }}
+            </div>
+        </div>
+    </div>
+    <hr>
+    <!-- Images -->
+    <div class="row">
+        <div class="col-12 flex">
+            <button onclick="addElem(imageElem, imageHTML)" class="btn vendor-btn" type="button">
+                Add Image</button>
+        </div>
+        <div class="col-12">
+            <span>Note: Empty images will be ignored</span>
+        </div>
+        <div id="vendor-images" class="col">
+            {{ create_form.images.label }}
+            {{ create_form.images(placeholder="Input image URL here") }}
+        </div>
+    </div>
+    <hr>
+    <!-- Submit -->
+    <div class="row">
+        <div class="col-12 flex">
+            <input type="submit" class="btn vendor-btn w-100" value="Submit">
+        </div>
+    </div>
+</form>

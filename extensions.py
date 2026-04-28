@@ -43,7 +43,7 @@ login_manager.login_view = "login.login"
 
 # Initialize DB the way we did the other times
 engine = create_engine(conn_str, echo=True)                                             
-conn = engine.connect()                                                                 
+conn = engine.connect()
 
 
 # -------------------------- #
