@@ -133,3 +133,10 @@ footer{
     background-color: #0A400C;
     color: white;
 }
+
+/* .stickyFooter{
+    position: absolute;
+    bottom: 0 !important;
+    left: 0;
+    width: 100%;
+} */
