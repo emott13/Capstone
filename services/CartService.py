@@ -35,6 +35,11 @@ class CartService:
         cart.update(pricing)
         print('CartService.get_cart - Final cart data:', cart)  # Debug log
         return cart
+    
+    @staticmethod
+    def get_cart_by_user_id(user_id):
+        cart = CartRepository.get_cart_by_user_id(user_id=user_id)
+        return cart
 
     @staticmethod
     def add_item(customer_id, product_id, quantity):
@@ -63,24 +68,23 @@ class CartService:
 
         db.session.commit()
 
-    def set_cart_address(user_id, add1, add2, city, state, zip_code, country):
+    @staticmethod
+    def set_cart_address(user_id, address_id=None, address_data=None):
+        """
+        Unified method:
+        - If address_id is provided -> use existing address
+        - If address_data is provided -> create new address
+        """
 
-        # create cart address
-        CartRepository.create_cart_address(
-            user_id,
-            add1,
-            add2,
-            city,
-            state,
-            zip_code,
-            country
-        )
+        if address_id:
+            address = CartRepository.get_existing_address(address_id, user_id)
+        elif address_data:
+            address = CartRepository.create_address(user_id, address_data)
+        else:
+            raise ValueError("Must provide address_id or address_data")
 
-        db.session.commit()
+        CartRepository.assign_address_to_cart(user_id, address)
 
     @staticmethod
-    def add_item(customer_id, product_id, quantity):
-        cart_id = CartRepository.get_or_create_cart(customer_id)
-        CartRepository.add_item(cart_id, product_id, quantity)
-
-       
+    def get_user_addresses(user_id):
+        return CartRepository.get_user_addresses(user_id)
