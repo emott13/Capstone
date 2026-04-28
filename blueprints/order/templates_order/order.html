@@ -1,9 +1,8 @@
 {% extends "base.html" %}
 {% block page_content %}
-
 {% if orders %}
     {% for order in orders %}
-        <div class="order">
+        <div class="order my-4">
             <h3>
                 Order #{{ order.order_id }}: 
                 {{ order.order_date.strftime('%m-%d-%Y %H:%M:%S') }}

@@ -9,17 +9,23 @@
         .checkoutBtn{
             background-color: var(--purple-2) !important;
             color: black;
+            margin-bottom: 20px;
         }
         .checkoutBtn:hover{
             background-color: var(--purple-1) !important;
             color: white !important;
         }
+        .product{
+            text-decoration: none;
+            color: black;
+        }
     </style>
     {{ super() }}
 {% endblock %}
-{% block page_content %}
+{% block content %}
 
-<form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
+<div class="container my-4">
+    <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
 <table class="table">
     {% if cartItems %}
         <tr>
@@ -30,7 +36,7 @@
         </tr>
         {% for cartItem in cartItems %}
         <tr>
-            <td><a href="/view/product?id={{ cartItem.product_id }}" style="text-decoration: none;">{{ cartItem.product_name }}</a></td>
+            <td><a href="/view/product?id={{ cartItem.product_id }}" class="product">{{ cartItem.product_name }}</a></td>
 
             <td>
                 <input 
@@ -105,6 +111,8 @@
     {% else %}
         <p>Your cart is empty.</p>
     {% endif %}
+</div>
+
 {% endblock %}
 {% block scripts %}
     <script>

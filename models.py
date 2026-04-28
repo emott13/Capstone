@@ -146,6 +146,11 @@ class Addresses(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
+    carts = db.relationship(
+        "Carts",
+        back_populates="address"
+    )
+
 # products
 class Products(db.Model):
     __tablename__ = "products"
@@ -236,9 +241,21 @@ class ProductImages(db.Model):
 class Carts(db.Model):
     __tablename__ = "carts"
     cart_id = db.Column(db.Integer, primary_key=True)
+    address_id = db.Column(db.Integer, db.ForeignKey("addresses.address_id"))
     customer_id = db.Column(db.BigInteger, db.ForeignKey("customers.customer_id"), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    cart_items = db.relationship(
+        "CartItems",
+        back_populates="cart",
+        cascade="all, delete-orphan"
+    )
+
+    address = db.relationship(
+        "Addresses",
+        back_populates="carts"
+    )
 
 # cart items
 class CartItems(db.Model):
@@ -250,7 +267,7 @@ class CartItems(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
-    cart = db.relationship("Carts", backref="cart_items")
+    cart = db.relationship("Carts", back_populates="cart_items")
 
 # wishlists
 class Wishlists(db.Model):

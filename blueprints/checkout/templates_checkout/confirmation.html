@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% block title %}Confirmation {{ super() }}{% endblock %}
+
+
+{% block content %}
+    <style>
+        .address{
+            background-color: var(--purple-2) !important;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .sbmt-btn{
+            background-color: var(--purple-2);
+            border-radius: 5px;
+            border: 1px solid var(--purple-2);
+        }
+        .sbmt-btn:hover{
+            background-color: var(--purple-1);
+            color: white;
+        }
+    </style>
+
+    <div class="container my-4">
+        <h2>Checkout</h2>
+        <p>Review your order and proceed.</p>
+    </div>
+
+    <div class="container my-4 d-flex justify-content-between">
+        <table class="table my-4" style="width: 60%;">
+            {% if subtotal %}
+            <tr>
+                <td>Subtotal:</td>
+                <td>${{ subtotal | priceFormat }}</td> 
+            </tr>
+            {% endif %}
+            {% if discounts %}
+            <tr>
+                <td>Discounts:</td>
+                <td>-${{ discounts | priceFormat }}</td>
+            {% endif %}
+            </tr>
+            {% if tax %}
+            <tr>
+                <td>Tax:</td>
+                <td>${{ tax | priceFormat }}</td> 
+            </tr>
+            {% endif %}
+            {% if total %}
+            <tr>
+                <td>Total:</td>
+                <td>${{ total | priceFormat }}</td>
+            {% endif %}
+        </table>
+
+        <div class="address my-4">
+            <h4>Delivery Address:</h4><br>
+            {% if cart %}
+                <p class="">{{ cart.address.address1 }} {{ cart.address.address2 if cart.address.address2 else "" }}</p>
+                <p>{{ cart.address.city }}, {{ cart.address.state }} {{ cart.address.zip_code }}</p>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container">
+        <form action="{{ url_for('checkout.confirmation') }}" method="post">
+            <button type="submit" class="btn sbmt-btn">Submit Order</button>
+        </form>
+    </div>
+    
+{% endblock %}

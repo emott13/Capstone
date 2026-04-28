@@ -1,36 +1,119 @@
 {% extends "base.html" %}
+{% block title %}Address {{ super() }}{% endblock %}
 
-
+<style>
+    .address-input:disabled {
+        background-color: #f5f5f5;
+        cursor: not-allowed;
+    }
+</style>
 
 {% block content %}
-<div class="container" style="margin-top: 20px;">
-    <h2>Enter Delivery Address</h2>
+<div class="container my-4">
     <form method="POST" action="{{ url_for('checkout.address') }}">
-        <div class="form-group">
-            <label for="add1">Street 1</label>
-            <input type="text" class="form-control" id="add1" name="add1" required>
-        </div>
-        <div class="form-group">
-            <label for="add2">Street 2</label>
-            <input type="text" class="form-control" id="add2" name="add2">
-        </div>
-        <div class="form-group">
-            <label for="city">City</label>
-            <input type="text" class="form-control" id="city" name="city" required>
-        </div>
-        <div class="form-group">
-            <label for="state">State</label>
-            <input type="text" class="form-control" id="state" name="state" required>
-        </div>
-        <div class="form-group">
-            <label for="zip">Zip Code</label>
-            <input type="text" class="form-control" id="zip" name="zip" required>
-        </div>
-        <div class="form-group">
-            <label for="country">Country</label>
-            <input type="text" class="form-control" id="country" name="country" required>
-        </div>
-        <button type="submit" class="btn btn-primary" style="margin-top: 10px;">Save Address</button>
+    
+        {% if addresses %}
+            <h2>Select an address for delivery</h2>
+            {% for address in addresses %}
+                <input type="radio" 
+                    name="address_id" 
+                    value="{{ address.address_id }}"
+                    class="address-radio">
+                <label>
+                    {{ address.address1 }} 
+                    {{ address.address2 if address.address2 else ""}} <br>
+                    {{ address.city }}, {{ address.state }} {{ address.zip }}
+                </label><br>
+            {% endfor %}
+        {% endif %}
+
+        <hr>
+
+        <h2>Or Enter Delivery Address</h2>
+
+        <input type="text" name="add1" class="address-input" placeholder="Street 1">
+        <input type="text" name="add2" class="address-input" placeholder="Street 2">
+        <input type="text" name="city" class="address-input" placeholder="City">
+        <input type="text" name="state" class="address-input" placeholder="State">
+        <input type="text" name="zip" class="address-input" placeholder="Zip">
+        <input type="text" name="country" class="address-input" placeholder="Country">
+
+        <hr>
+
+        <button type="submit">Continue</button>
     </form>
 </div>
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const radios = document.querySelectorAll(".address-radio");
+    const inputs = document.querySelectorAll(".address-input");
+
+    // When a radio button is selected -> disable text inputs
+    radios.forEach(radio => {
+        radio.addEventListener("change", () => {
+            inputs.forEach(input => {
+                input.disabled = true;
+                input.value = ""; // clear inputs
+            });
+        });
+    });
+
+    // When user starts typing -> uncheck radios + enable inputs
+    inputs.forEach(input => {
+        input.addEventListener("input", () => {
+            radios.forEach(radio => {
+                radio.checked = false;
+            });
+
+            inputs.forEach(i => {
+                i.disabled = false;
+            });
+        });
+    });
+});
+
+// handles deselecting radio button
+document.addEventListener("DOMContentLoaded", function () {
+    const radios = document.querySelectorAll(".address-radio");
+    const inputs = document.querySelectorAll(".address-input");
+
+    let selectedRadio = null;
+
+    radios.forEach(radio => {
+        radio.addEventListener("click", () => {
+            // If clicking the same radio again → deselect it
+            if (selectedRadio === radio) {
+                radio.checked = false;
+                selectedRadio = null;
+
+                // Re-enable inputs
+                inputs.forEach(input => {
+                    input.disabled = false;
+                });
+            } else {
+                selectedRadio = radio;
+
+                // Disable inputs
+                inputs.forEach(input => {
+                    input.disabled = true;
+                    input.value = ""; // optional
+                });
+            }
+        });
+    });
+
+    inputs.forEach(input => {
+        input.addEventListener("input", () => {
+            // Uncheck all radios if user starts typing
+            radios.forEach(radio => radio.checked = false);
+            selectedRadio = null;
+
+            // Ensure inputs are enabled
+            inputs.forEach(i => i.disabled = false);
+        });
+    });
+});
+</script>
 {% endblock %}

@@ -1,6 +1,7 @@
 # services/CartRepository.py
 from sqlalchemy import text
 from extensions import db
+from models import Addresses, Carts
 import json
 
 class CartRepository:
@@ -92,6 +93,11 @@ class CartRepository:
             "customer_id": result["customer_id"],
             "items": items,
         }
+    
+    @staticmethod
+    def get_cart_by_user_id(user_id):
+        cart = Carts.query.filter_by(customer_id=user_id).first()
+        return cart
 
     @staticmethod
     def get_or_create_cart(customer_id):
@@ -172,29 +178,49 @@ class CartRepository:
         db.session.execute(text(sql), {"cart_id": cart_id})
 
     @staticmethod
-    def create_cart_address(user_id, add1, add2, city, state, zip_code, country):
+    def get_existing_address(address_id, user_id):
+        address = Addresses.query.filter_by(
+            address_id=address_id,
+            user_id=user_id
+        ).first()
 
-        sql = """
-        INSERT INTO addresses (user_id, address1, address2, city, state, zip_code, country)
-        VALUES (:user_id, :add1, :add2, :city, :state, :zip_code, :country)
-        RETURNING address_id
-        """
-
-        result = db.session.execute(
-            text(sql),
-            {
-                "user_id": user_id,
-                "add1": add1,
-                "add2": add2,
-                "city": city,
-                "state": state,
-                "zip_code": zip_code,
-                "country": country
-            }
+        if not address:
+            raise ValueError("Address not found or unauthorized")
+        
+        return address
+    
+    @staticmethod
+    def create_address(user_id, data):
+        address = Addresses(
+            user_id=user_id,
+            address1=data.get("add1"),
+            address2=data.get("add2"),
+            city=data.get("city"),
+            state=data.get("state"),
+            zip=data.get("zip"),
+            country=data.get("country"),
         )
 
-        address_id = result.scalar()
-
+        db.session.add(address)
         db.session.commit()
 
-        return address_id
+        return address
+    
+    @staticmethod
+    def assign_address_to_cart(user_id, address):
+        cart = Carts.query.filter_by(customer_id=user_id).first()
+
+        if not cart:
+            raise ValueError("Cart not found")
+        
+        cart.address_id = address.address_id
+        db.session.commit()
+
+    @staticmethod
+    def get_user_addresses(user_id):
+        addresses = Addresses.query.filter_by(user_id=user_id).all()
+
+        if not addresses:
+            raise ValueError("Addresses not found")
+        
+        return addresses

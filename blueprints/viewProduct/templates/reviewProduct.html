@@ -124,7 +124,7 @@
             <option value="1" {{ 'selected' if review_filter == '1' }}>1 star</option>
         </select>
 
-        <input type="submit" value="Submit">
+        <input type="submit" value="Submit" id="review-submit">
     </form>
     <div id="reviews" class="reviews-individual flex width-100 flex-wrap">
         {% for i in range([100, reviews_filtered.getReviewCount()]|min) %}

@@ -22,10 +22,9 @@
             <a class="navbar-brand" href="/home" style="color: var(--orange-1);">Hibiscus</a>
         </div>
         <ul class="nav navbar-nav flex-row">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Best Sellers</a></li>
-            <li><a href="#">Featured Items</a></li>
-            <li><a href="#">SALE</a></li>
+            <li class="active"><a href="/home">Home</a></li>
+            <li><a href="/best-selling">Best Sellers</a></li>
+            <li><a href="/sale">SALE</a></li>
         </ul>
         <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-rownavbar-form navbar-left">
             <div class="form-group">
@@ -76,14 +75,15 @@
     </div>
 
     {% block footer %}
-        <!-- <footer class="container-fluid">
-            <ul class="nav navbar-nav">
+        <footer class="stickyFooter container-fluid py-3">
+            <ul class="nav navbar-nav d-flex flex-row justify-content-center align-items-center">
                 <li><a href="#">About Us</a></li>
                 <li><a href="#">Contact</a></li>
                 <li><a href="#">Privacy Policy</a></li>
                 <li><a href="#">Terms of Service</a></li>
             </ul>
-        </footer> -->
+            <p>© 2026 Hibiscus Inc. All rights reserved.</p>
+        </footer>
     {% endblock %}
 {% endblock %}
 {% block scripts %}
