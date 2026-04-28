@@ -22,9 +22,10 @@
     </style>
     {{ super() }}
 {% endblock %}
-{% block page_content %}
+{% block content %}
 
-<form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
+<div class="container my-4">
+    <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
 <table class="table">
     {% if cartItems %}
         <tr>
@@ -110,6 +111,8 @@
     {% else %}
         <p>Your cart is empty.</p>
     {% endif %}
+</div>
+
 {% endblock %}
 {% block scripts %}
     <script>

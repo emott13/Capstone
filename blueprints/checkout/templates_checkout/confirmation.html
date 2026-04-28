@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Confirmation {{ super() }}{% endblock %}
 
 
 {% block content %}
@@ -7,6 +8,15 @@
             background-color: var(--purple-2) !important;
             border-radius: 5px;
             padding: 20px;
+        }
+        .sbmt-btn{
+            background-color: var(--purple-2);
+            border-radius: 5px;
+            border: 1px solid var(--purple-2);
+        }
+        .sbmt-btn:hover{
+            background-color: var(--purple-1);
+            color: white;
         }
     </style>
 
@@ -52,7 +62,7 @@
     </div>
     <div class="container">
         <form action="{{ url_for('checkout.confirmation') }}" method="post">
-            <button type="submit">Submit Order</button>
+            <button type="submit" class="btn sbmt-btn">Submit Order</button>
         </form>
     </div>
     
