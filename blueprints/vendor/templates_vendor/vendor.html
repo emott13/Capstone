@@ -9,6 +9,12 @@
     <script src="{{ url_for('vendor.static', filename='scripts/vendor.js') }}"></script>
 {% endblock %}
 {% block page_content %}
-    <h1 class="text-center mt-3">Vendor Home</h1>
-    {% include "createProduct.html" %}
+    <div id="vendor-home" class="flex flex-column">
+        <h1 class="text-center mt-3">Vendor Home</h1>
+
+        <a href="{{ url_for('vendor.create_product') }}" class="btn vendor-btn fs-2">Create Product</a>
+
+        <a href="{{ url_for('vendor.create_product') }}" class="btn vendor-btn fs-2">Edit Product</a>
+    </div>
+
 {% endblock %}

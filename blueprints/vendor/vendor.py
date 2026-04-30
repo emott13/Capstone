@@ -74,6 +74,11 @@ product_colors:        color_id     product_id     hex_code
 product_images:        image_id     product_id     image_url
 """
 
+@vendor_bp.route("/", methods=["GET"])
+@login_required
+def home():
+    return render_template("vendor.html")
+
 @vendor_bp.route("/create-product", methods=["GET", "POST"])
 @login_required
 def create_product():

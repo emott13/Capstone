@@ -1,3 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+#vendor-home,
+.vendor-home {
+    padding: 2rem;
+    color: var(--tan-2);
+    background-color: var(--green-1);
+    flex-grow: 1;
+}
+
 .vendor-btn {
     margin: .5rem 0;
     color: white;
