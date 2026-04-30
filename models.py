@@ -54,6 +54,10 @@ class Users(UserMixin, db.Model):
     
     def has_role(self, role_name):
         return any(role.role_name == role_name for role in self.roles)
+    
+    def get_vendor(self):
+        # returns None or the Vendor
+        return Vendors.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
 
 # Roles
 class Roles(db.Model):
@@ -87,6 +91,8 @@ class Vendors(db.Model):
     store_name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    products = db.relationship("Products")
 
 # Customers
 class Customers(db.Model):

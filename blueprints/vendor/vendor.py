@@ -1,9 +1,8 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
-from extensions import conn
+from extensions import conn, db
 from sqlalchemy import text
-from extensions import db
-from models import ProductCategories, ProductColors, ProductImages, ProductSpecs, Products
+from models import ProductCategories, ProductColors, ProductImages, ProductSpecs, Products, Vendors
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, URLField
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
@@ -77,7 +76,11 @@ product_images:        image_id     product_id     image_url
 @vendor_bp.route("/", methods=["GET"])
 @login_required
 def home():
-    return render_template("vendor.html")
+    vendor: Vendors = current_user.get_vendor()
+    products: list[Products] = vendor.products
+
+    return render_template("vendor.html", 
+                           products=products)
 
 @vendor_bp.route("/create-product", methods=["GET", "POST"])
 @login_required
@@ -98,6 +101,36 @@ def create_product():
     return render_template("createProduct.html", 
         form=form, success=success, error=error
     )
+
+@vendor_bp.route("/edit-product/<int:product_id>", methods=["GET", "POST"])
+@login_required
+def edit_product(product_id: int = None):
+    if required_roles(required_roles_list) == False:
+        return redirect(url_for("login.login"))
+
+    return render_template("editProduct.html",
+                           product_id=product_id)
+
+@vendor_bp.route("/delete-product/<int:product_id>", methods=["GET", "POST"])
+@login_required
+def delete_product(product_id: int = None):
+    if required_roles(required_roles_list) == False:
+        return redirect(url_for("login.login"))
+
+    product: Products = Products.query.where(text(f"product_id = {product_id}")).one_or_none()
+
+    if not product:
+        return redirect(url_for('vendor.home', success="Product deleted successfully"))
+
+    if request.method == "POST":
+        db.session.delete(product)
+        db.session.commit()
+
+        return redirect(url_for('vendor.home', success="Product deleted successfully"))
+
+
+    return render_template("deleteProduct.html",
+                           product_id=product_id, product=product)
 
 def create_post(form: CreateProductForm) -> str:
     # create_form attributes

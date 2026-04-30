@@ -34,22 +34,14 @@
         <!-- Name, Desc, Price -->
         <div class="row">
             <div class="col">
-                <!-- <label for="name">Product Name</label>
-                <input type="text" name="name" placeholder="Input here"> -->
                 {{ form.name.label }}
                 {{ form.name(placeholder="Input here") }}
             </div>
             <div class="col">
                 {{ form.desc.label }}
                 {{ form.desc(cols=64, rows=8, placeholder="Input here") }}
-                <!-- <label for="desc">Description</label>
-                <textarea class="form-control" cols="64" id="desc" 
-                    maxlength="1224" name="desc" placeholder="Description" 
-                    rows="8"></textarea> -->
             </div>
             <div class="col">
-                <!-- <label for="price">Price</label>
-                <input type="text" name="price" placeholder="Input here" value="$10.99"> -->
                 {{ form.price.label }}
                 <div class="flex vendor-price">{{ form.price(placeholder="Input here") }}</div>
             </div>

@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Edit Product {{ super() }}{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" href="{{ url_for('vendor.static', filename='styles/vendor.css') }}">
+{% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('vendor.static', filename='scripts/vendor.js') }}"></script>
+{% endblock %}
+{% block page_content %}
+    <h1 class="text-center mt-3">Edit Product</h1>
+{% endblock %}
