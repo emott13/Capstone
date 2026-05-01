@@ -38,8 +38,13 @@ class CreateReviewForm(FlaskForm):
 def viewProduct(error=None):
     if error == None:
         error = request.args.get("error", None)
-
     product_id = request.args.get("id")
+
+    # check if product exists
+    if not Products.query.filter(
+        Products.product_id == product_id).first():
+        return redirect(url_for("home.home"))
+
     # second arg is default value
     review_sort = request.args.get("review-sort", "positive") 
     review_filter = request.args.get("review-filter", "all")
@@ -54,7 +59,8 @@ def viewProduct(error=None):
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
     create_review_form = CreateReviewForm()
     review_exists = bool(
-        Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first())
+        Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+            .filter(Reviews.product_id == product_id).first())
 
     if product_id:
         try:
@@ -107,14 +113,8 @@ def viewProduct(error=None):
     # Step 1: get the product
     product = db.session.get(Products, product_id)
 
-    if not product:
-        return []
-
     # Step 2: get category IDs for this product
     category_ids = [c.category_id for c in product.categories]
-
-    if not category_ids:
-        return []
 
     # Step 3: find other products with ANY of those categories
     related_products = (
@@ -127,8 +127,9 @@ def viewProduct(error=None):
     )
 
     create_review_form = CreateReviewForm()
+    user_products = None
 
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and category_ids:
         user_id = current_user.get_id()
         user_products_ids = recommend_for_user(user_id, 8)
         user_products = (
@@ -137,22 +138,17 @@ def viewProduct(error=None):
             .all()
         )
 
-        return render_template("viewProduct.html", product=product, vendor=vendor, 
-                           images=images, colors=colors, spec=spec, error=error, 
-                           reviews=reviews, reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter,
-                           also_bought=also_bought_products, related_products=related_products,
-                           user_products=user_products, create_review_form=create_review_form)
-    
-    return render_template("viewProduct.html", product=product, product_id=product_id,
-                           vendor=vendor, images=images, colors=colors, spec=spec,
-                           error=error, reviews=reviews,
-                           reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter,
-                           create_review_form=create_review_form,
-                           review_exists=review_exists,
-                           also_bought=also_bought_products,
-                           related_products=related_products,)
+    return render_template("viewProduct.html", product=product,
+        product_id=product_id, vendor=vendor, images=images, colors=colors,
+        spec=spec, error=error, reviews=reviews,
+        reviews_filtered=reviews_filtered, review_sort=review_sort,
+        review_filter=review_filter, 
+        also_bought=also_bought_products, 
+        related_products=related_products,
+        create_review_form=create_review_form,
+        review_exists=review_exists, 
+        user_products=user_products,
+    )
 
 @login_required
 @view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
@@ -164,7 +160,9 @@ def createReview(product_id):
     # error checks
     error = ""
     # unique check
-    duplicate = Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first()
+    duplicate = (Reviews.query
+        .filter(Reviews.customer_id == current_user.get_id())
+        .filter(Reviews.product_id == product_id).first())
     if duplicate:
         error = "Review already exists" 
     
@@ -185,7 +183,9 @@ def createReview(product_id):
 @login_required
 @view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
 def deleteReview(product_id):
-    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+    query = (Reviews.query
+        .filter(Reviews.customer_id == current_user.get_id())
+        .filter(Reviews.product_id == product_id).first())
 
     # error checks
     error = ""

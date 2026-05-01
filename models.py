@@ -191,6 +191,26 @@ class Products(db.Model):
         back_populates="product",
         cascade="all, delete-orphan"
     )
+    cart_items = db.relationship(
+        "CartItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    order_items = db.relationship(
+        "OrderItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    wishlist_items = db.relationship(
+        "WishlistItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    user_interactions = db.relationship(
+        "UserInteractions",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
     
 # product specs
 class ProductSpecs(db.Model):
@@ -274,6 +294,7 @@ class CartItems(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
     cart = db.relationship("Carts", back_populates="cart_items")
+    product = db.relationship("Products", back_populates="cart_items")
 
 # wishlists
 class Wishlists(db.Model):
@@ -295,6 +316,7 @@ class WishlistItems(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
     product = db.relationship("Products", back_populates="wishlist_items")
 
 # orders
@@ -333,7 +355,7 @@ class OrderItems(db.Model):
     # RELATIONSHIPS 
     product = db.relationship(
         "Products",
-        backref="order_items"
+        back_populates="order_items",
     )
 
 # order addresses
@@ -576,6 +598,12 @@ class UserInteractions(db.Model):
         )
         db.session.add(interaction)
         db.session.commit()
+    
+    # Relationships
+    product = db.relationship(
+        "Products",
+        back_populates="user_interactions",
+    )
 
 class Recommendations(db.Model):
     __tablename__ = "recommendations"
