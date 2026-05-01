@@ -51,7 +51,7 @@ def viewProduct(error=None):
     product = None
     vendor = None
     images = []
-    color = None
+    colors = []
     spec = None
     # contains an array of Reviews objects with the correct product_id
     # and other data
@@ -82,11 +82,11 @@ def viewProduct(error=None):
                     ORDER BY image_id
                 """), {"product_id": product_id}).fetchall()
 
-                color = conn.execute(text("""
+                colors = conn.execute(text("""
                     SELECT hex_code FROM product_colors
                     WHERE product_id = :product_id
                     ORDER BY color_id
-                """), {"product_id": product_id}).fetchone()
+                """), {"product_id": product_id}).fetchall()
 
                 spec = conn.execute(text("""
                     SELECT specification FROM product_specs
@@ -139,7 +139,7 @@ def viewProduct(error=None):
         )
 
     return render_template("viewProduct.html", product=product,
-        product_id=product_id, vendor=vendor, images=images, color=color,
+        product_id=product_id, vendor=vendor, images=images, colors=colors,
         spec=spec, error=error, reviews=reviews,
         reviews_filtered=reviews_filtered, review_sort=review_sort,
         review_filter=review_filter, 

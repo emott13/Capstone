@@ -92,8 +92,18 @@
 
                 <h4 style="font-weight: 600">Product Details</h4>
                 <div class="description-box">
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                        <p style="margin: 0;">Color:</p>
+                            {% if colors %}
+                                {% for color in colors %}
+                                <div class="color-chip" title="{{ color.hex_code }}">
+                                    <span class="color-swatch" style="background-color: {{ color.hex_code }};"></span>
+                                    <span>{{ color.hex_code }}</span>
+                                </div>
+                                {% endfor %}
+                            {% else %}
+                                <span>No color information available.</span>
+                            {% endif %}
                     </div>
                     <p>Specifications: {{ spec.specification }}</p>
                 </div>
