@@ -59,7 +59,8 @@ def viewProduct(error=None):
     reviews_filtered = ReviewRepository(product_id, sort=review_sort, filter=review_filter)
     create_review_form = CreateReviewForm()
     review_exists = bool(
-        Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first())
+        Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+            .filter(Reviews.product_id == product_id).first())
 
     if product_id:
         try:
@@ -159,7 +160,9 @@ def createReview(product_id):
     # error checks
     error = ""
     # unique check
-    duplicate = Reviews.query.filter(Reviews.customer_id == current_user.get_id()).first()
+    duplicate = (Reviews.query
+        .filter(Reviews.customer_id == current_user.get_id())
+        .filter(Reviews.product_id == product_id).first())
     if duplicate:
         error = "Review already exists" 
     
@@ -180,7 +183,9 @@ def createReview(product_id):
 @login_required
 @view_product_bp.route("/delete/review/<int:product_id>", methods=["POST"])
 def deleteReview(product_id):
-    query = Reviews.query.filter(Reviews.customer_id == current_user.get_id())
+    query = (Reviews.query
+        .filter(Reviews.customer_id == current_user.get_id())
+        .filter(Reviews.product_id == product_id).first())
 
     # error checks
     error = ""
