@@ -112,6 +112,7 @@ a.card:hover{
     font-weight: 600;
     cursor: pointer;
     display: flex;
+    width: 100%;
 }
 .sort-by-wrapper{
     display: flex;
@@ -130,4 +131,9 @@ a.card:hover{
     height: 1px;
     background: var(--green-2);
     margin-top: 10px;
+}
+.search-filter-buttons{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
 }
