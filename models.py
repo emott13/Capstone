@@ -54,6 +54,10 @@ class Users(UserMixin, db.Model):
     
     def has_role(self, role_name):
         return any(role.role_name == role_name for role in self.roles)
+    
+    def get_vendor(self):
+        # returns None or the Vendor
+        return Vendors.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
 
 # Roles
 class Roles(db.Model):
@@ -87,6 +91,8 @@ class Vendors(db.Model):
     store_name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    products = db.relationship("Products")
 
 # Customers
 class Customers(db.Model):
@@ -169,6 +175,17 @@ class Products(db.Model):
         backref=db.backref("products", lazy="dynamic")
     )
     wishlist_items = db.relationship("WishlistItems", back_populates="product")
+
+    specs = db.relationship(
+        "ProductSpecs",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    colors = db.relationship(
+        "ProductColors",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
     images = db.relationship(
         "ProductImages",
         back_populates="product",
@@ -184,6 +201,11 @@ class ProductSpecs(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
+    product = db.relationship(
+        "Products",
+        back_populates="specs"
+    )
+
 # product colors
 class ProductColors(db.Model):
     __tablename__ = "product_colors"
@@ -192,6 +214,11 @@ class ProductColors(db.Model):
     hex_code = db.Column(db.String(7), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    product = db.relationship(
+        "Products",
+        back_populates="colors"
+    )
 
 # product categories
 class ProductCategories(db.Model):

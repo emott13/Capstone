@@ -9,6 +9,48 @@
     <script src="{{ url_for('vendor.static', filename='scripts/vendor.js') }}"></script>
 {% endblock %}
 {% block page_content %}
-    <h1 class="text-center mt-3">Vendor Home</h1>
-    {% include "createProduct.html" %}
+    <div id="vendor-home" class="flex flex-column">
+        <h1 class="text-center mt-3">Vendor Home</h1>
+
+        <a href="{{ url_for('vendor.create_product') }}" class="btn vendor-btn fs-2">Create Product</a>
+
+        <h1 class="text-center mt-3">Current Products</h1>
+        <div class="vendor-table vendor-table-home">
+            <div class="row">
+                <div class="col">Product Name</div>
+                <div class="col-5">Description</div>
+                <div class="col-1">Price</div>
+                <div class="col-1">Page link</div>
+                <div class="col-1">Update product</div>
+                <div class="col-1">Delete product</div>
+            </div>
+            {% for product in products %}
+                <div class="row">
+                    <div class="col">{{ product.product_name }}</div>
+                    <div class="col-5">{{ product.description }}</div>
+                    <div class="col-1">${{ product.price|priceFormat }}</div>
+                    <div class="col-1">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}"
+                            class="btn btn-primary">
+                            Product Page
+                        </a>
+                    </div>
+                    <div class="col-1">
+                        <a href="{{ url_for('vendor.edit_product', product_id=product.product_id) }}"
+                            class="btn btn-secondary">
+                            Update Product
+                        </a>
+                    </div>
+                    <div class="col-1">
+                        <a href="{{ url_for('vendor.delete_product', product_id=product.product_id) }}"
+                            class="btn btn-danger">
+                            Delete Product
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
 {% endblock %}
