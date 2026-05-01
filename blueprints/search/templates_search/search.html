@@ -18,8 +18,8 @@
     <div class="row">
 
         <!-- Search Filters Column -->
+        {% if products %}
         <div class="filters-container col-2">
-            {% if products %}
             <h2>Filters</h2>
 
             <form action="{{ url_for('search.search') }}" method="GET">
