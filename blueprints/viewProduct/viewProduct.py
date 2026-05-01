@@ -127,6 +127,7 @@ def viewProduct(error=None):
     )
 
     create_review_form = CreateReviewForm()
+    user_products = None
 
     if current_user.is_authenticated:
         user_id = current_user.get_id()
@@ -137,22 +138,17 @@ def viewProduct(error=None):
             .all()
         )
 
-        return render_template("viewProduct.html", product=product, vendor=vendor, 
-                           images=images, color=color, spec=spec, error=error, 
-                           reviews=reviews, reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter,
-                           also_bought=also_bought_products, related_products=related_products,
-                           user_products=user_products, create_review_form=create_review_form)
-    
-    return render_template("viewProduct.html", product=product, product_id=product_id,
-                           vendor=vendor, images=images, color=color, spec=spec,
-                           error=error, reviews=reviews,
-                           reviews_filtered=reviews_filtered,
-                           review_sort=review_sort, review_filter=review_filter,
-                           create_review_form=create_review_form,
-                           review_exists=review_exists,
-                           also_bought=also_bought_products,
-                           related_products=related_products,)
+    return render_template("viewProduct.html", product=product,
+        product_id=product_id, vendor=vendor, images=images, color=color,
+        spec=spec, error=error, reviews=reviews,
+        reviews_filtered=reviews_filtered, review_sort=review_sort,
+        review_filter=review_filter, 
+        also_bought=also_bought_products, 
+        related_products=related_products,
+        create_review_form=create_review_form,
+        review_exists=review_exists, 
+        user_products=user_products,
+    )
 
 @login_required
 @view_product_bp.route("/create/review/<int:product_id>", methods=["POST"])
