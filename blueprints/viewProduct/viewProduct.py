@@ -38,8 +38,13 @@ class CreateReviewForm(FlaskForm):
 def viewProduct(error=None):
     if error == None:
         error = request.args.get("error", None)
-
     product_id = request.args.get("id")
+
+    # check if product exists
+    if not Products.query.filter(
+        Products.product_id == product_id).first():
+        return redirect(url_for("home.home"))
+
     # second arg is default value
     review_sort = request.args.get("review-sort", "positive") 
     review_filter = request.args.get("review-filter", "all")
@@ -107,14 +112,8 @@ def viewProduct(error=None):
     # Step 1: get the product
     product = db.session.get(Products, product_id)
 
-    if not product:
-        return []
-
     # Step 2: get category IDs for this product
     category_ids = [c.category_id for c in product.categories]
-
-    if not category_ids:
-        return []
 
     # Step 3: find other products with ANY of those categories
     related_products = (
@@ -129,7 +128,7 @@ def viewProduct(error=None):
     create_review_form = CreateReviewForm()
     user_products = None
 
-    if current_user.is_authenticated:
+    if current_user.is_authenticated and category_ids:
         user_id = current_user.get_id()
         user_products_ids = recommend_for_user(user_id, 8)
         user_products = (
