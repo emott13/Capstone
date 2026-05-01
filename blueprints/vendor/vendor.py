@@ -1,6 +1,6 @@
 from flask import Blueprint, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
-from extensions import conn, db
+from extensions import conn, db, required_roles
 from sqlalchemy import text
 from models import ProductCategories, ProductColors, ProductImages, ProductSpecs, Products, Vendors
 from flask_wtf import FlaskForm
@@ -18,13 +18,6 @@ required_roles_list = ["vendor"]
 
 def enabled_categories():
     return ProductCategories.query.all()
-
-def required_roles(roles: list[str]) -> bool:
-    for role in roles:
-        if current_user.has_role(role):
-            return True
-    # user doesn't not have the role
-    return False
 
 class CreateProductForm(FlaskForm):    
     name = StringField('Product Name',
@@ -76,6 +69,9 @@ product_images:        image_id     product_id     image_url
 @vendor_bp.route("/", methods=["GET"])
 @login_required
 def home():
+    if required_roles(required_roles_list) == False:
+        return redirect(url_for("login.login"))
+
     vendor: Vendors = current_user.get_vendor()
     products: list[Products] = vendor.products
 
