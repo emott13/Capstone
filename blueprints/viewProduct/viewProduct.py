@@ -52,7 +52,7 @@ def viewProduct(error=None):
     vendor = None
     images = []
     colors = []
-    spec = None
+    specs = []
     # contains an array of Reviews objects with the correct product_id
     # and other data
     reviews = ReviewRepository(product_id)
@@ -88,11 +88,11 @@ def viewProduct(error=None):
                     ORDER BY color_id
                 """), {"product_id": product_id}).fetchall()
 
-                spec = conn.execute(text("""
+                specs = conn.execute(text("""
                     SELECT specification FROM product_specs
                     WHERE product_id = :product_id
                     ORDER BY spec_id
-                """), {"product_id": product_id}).fetchone()
+                """), {"product_id": product_id}).fetchall()
                 
         except Exception as error:
             error = "Error loading product."
@@ -140,7 +140,7 @@ def viewProduct(error=None):
 
     return render_template("viewProduct.html", product=product,
         product_id=product_id, vendor=vendor, images=images, colors=colors,
-        spec=spec, error=error, reviews=reviews,
+        specs=specs, error=error, reviews=reviews,
         reviews_filtered=reviews_filtered, review_sort=review_sort,
         review_filter=review_filter, 
         also_bought=also_bought_products, 

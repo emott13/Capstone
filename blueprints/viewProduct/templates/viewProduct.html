@@ -92,7 +92,7 @@
 
                 <h4 style="font-weight: 600">Product Details</h4>
                 <div class="description-box">
-                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
                         <p style="margin: 0;">Color:</p>
                             {% if colors %}
                                 {% for color in colors %}
@@ -105,7 +105,18 @@
                                 <span>No color information available.</span>
                             {% endif %}
                     </div>
-                    <p>Specifications: {{ spec.specification }}</p>
+                    <div>
+                        <p style="margin-bottom: 8px;">Specifications:</p>
+                        {% if specs %}
+                            <ul style="margin: 0; padding-left: 20px; color: #6d6d6d;">
+                                {% for spec in specs %}
+                                    <li>{{ spec.specification }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% else %}
+                            <span>No specifications available.</span>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
