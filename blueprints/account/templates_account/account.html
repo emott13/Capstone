@@ -34,7 +34,7 @@
     <!-- Add more account details as needed -->
 
     {% if current_user.has_role("vendor") %}
-    <form method="POST" action="{{ url_for('account.account') }}" class="" id="vendor-update-name">
+    <form method="POST" action="{{ url_for('account.account') }}" class="form my-4" id="vendor-update-name">
         <h3>Change Store Name</h3>
         {{ vendor_store_form.hidden_tag() }}
 
@@ -52,7 +52,7 @@
     <hr>
     {% endif %}
 
-    <div class="reset">
+    <div class="reset my-4">
         <form method="POST" action="{{ url_for('account.account') }}" class="reset_form">
             <h3>Change Password</h3>
             {{ form.hidden_tag() }}

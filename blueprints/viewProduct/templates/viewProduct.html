@@ -70,7 +70,7 @@
                 <div class="row">
                     <div class="col-sm-3 quantity" style="padding-left: 10px;">
                         <button type="button" class="minus" aria-label="Decrease">&minus;</button>
-                        <input type="number" class="input-box" value="1" min="1">
+                        <input type="number" name="quantity" class="input-box" value="1" min="1">
                         <button type="button" class="plus" aria-label="Increase">&plus;</button>
                     </div>
                     <div class="col-sm-9" style="padding-left: 0;">
@@ -90,31 +90,15 @@
 
                 <h4 class="product-description-h4">Product Details</h4>
                 <div class="description-box">
-                    <div class="colors">
-                        <p>Color:</p>
-                            {% if colors %}
-                                {% for color in colors %}
-                                <div class="color-chip" title="{{ color.hex_code }}">
-                                    <span class="color-swatch" style="background-color: {{ color.hex_code }};"></span>
-                                    <span>{{ color.hex_code }}</span>
-                                </div>
-                                {% endfor %}
-                            {% else %}
-                                <span>No color information available.</span>
-                            {% endif %}
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        {% for color in color %}
+                        <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
+                        {% endfor %}
                     </div>
-                    <div>
-                        <p>Specifications:</p>
-                        {% if specs %}
-                            <ul>
-                                {% for spec in specs %}
-                                    <li>{{ spec.specification }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% else %}
-                            <span>No specifications available.</span>
-                        {% endif %}
-                    </div>
+                    <p>Specifications: </p>
+                    {% for spec in specs %}
+                    <p>{{ spec.specification }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>

@@ -7,11 +7,20 @@
             float: right;
         }
         .checkoutBtn{
-            background-color: var(--purple-2) !important;
-            color: black;
             margin-bottom: 20px;
         }
-        .checkoutBtn:hover{
+        .applyBtn{
+            border-radius: 5px;
+        }
+        .checkoutBtn,
+        .deleteBtn,
+        .applyBtn{
+            background-color: var(--purple-2) !important;
+            color: black;
+        }
+        .checkoutBtn:hover,
+        .deleteBtn:hover,
+        .applyBtn:hover{
             background-color: var(--purple-1) !important;
             color: white !important;
         }
@@ -49,7 +58,7 @@
             </td>
 
             <td>
-                <button type="button" onclick="deleteItem('{{ cartItem.cart_item_id }}')">Remove</button>
+                <button class="btn deleteBtn" type="button" onclick="deleteItem('{{ cartItem.cart_item_id }}')">Remove</button>
             </td>
 
             <td>${{ cartItem.line_total | priceFormat }}</td>
@@ -61,7 +70,7 @@
         <div class="totalsContainer">
             <form method="POST" action="{{ url_for('cart.apply_promo') }}">
                 <input type="text" name="promo_code" placeholder="Enter promo code">
-                <button type="submit">Apply</button>
+                <button type="submit" class="applyBtn">Apply</button>
             </form>
             <table class="table">
                 {% if subtotal %}

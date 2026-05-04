@@ -22,15 +22,25 @@
             <a class="navbar-brand" href="/home" style="color: var(--orange-1);">Hibiscus</a>
         </div>
         <ul class="nav navbar-nav flex-row">
-            <li class="active"><a href="/home">Home</a></li>
+            <li class="{% if request.path == '/home' %}active{% endif %}">
+                <a href="/home">Home</a>
+            </li>
+
             {% if current_user.is_authenticated and current_user.has_role("vendor") %}
                 <li><a href="{{ url_for('vendor.home') }}">Vendor Home</a></li>
             {% endif %}
+
             {% if current_user.is_authenticated and current_user.has_role("admin") %}
                 <li><a href="{{ url_for('admin.home') }}">Admin Home</a></li>
             {% endif %}
-            <li><a href="/best-selling">Best Sellers</a></li>
-            <li><a href="/sale">SALE</a></li>
+
+            <li class="{% if request.path == '/best-selling' %}active{% endif %}">
+                <a href="/best-selling">Best Sellers</a>
+            </li>
+
+            <li class="{% if request.path == '/sale' %}active{% endif %}">
+                <a href="/sale">SALE</a>
+            </li>
         </ul>
         <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-rownavbar-form navbar-left">
             <div class="form-group">
