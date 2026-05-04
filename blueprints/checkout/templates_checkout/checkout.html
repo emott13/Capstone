@@ -1,9 +1,16 @@
 {% extends "base.html" %}
 {% block title %}Checkout {{ super() }}{% endblock %}
-<style>
-
-</style>
 {% block content %}
+<style>
+    .submitBtn{
+        background-color: var(--purple-2) !important;
+        color: black;
+    }
+    .submitBtn:hover{
+        background-color: var(--purple-1) !important;
+        color: white !important;
+    }
+</style>
 {% if cartItems %}
     <div class="container my-4">
         <h2>Checkout</h2>
@@ -49,7 +56,7 @@
 
     <div class="container">
         <form action="/address">
-            <button class="submit">Continue</button>
+            <button class="btn submitBtn" type="submit">Continue</button>
         </form>
     </div>
 {% endif %}

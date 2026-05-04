@@ -22,9 +22,17 @@
             <a class="navbar-brand" href="/home" style="color: var(--orange-1);">Hibiscus</a>
         </div>
         <ul class="nav navbar-nav flex-row">
-            <li class="active"><a href="/home">Home</a></li>
-            <li><a href="/best-selling">Best Sellers</a></li>
-            <li><a href="/sale">SALE</a></li>
+            <li class="{% if request.path == '/home' %}active{% endif %}">
+                <a href="/home">Home</a>
+            </li>
+
+            <li class="{% if request.path == '/best-selling' %}active{% endif %}">
+                <a href="/best-selling">Best Sellers</a>
+            </li>
+
+            <li class="{% if request.path == '/sale' %}active{% endif %}">
+                <a href="/sale">SALE</a>
+            </li>
         </ul>
         <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-rownavbar-form navbar-left">
             <div class="form-group">
@@ -89,26 +97,6 @@
 {% block scripts %}
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const navList = document.querySelector(".nav.navbar-nav.flex-row");
-
-            navList.addEventListener("click", function (e) {
-                // Make sure a <li> (or something inside it) was clicked
-                const li = e.target.closest("li");
-
-                if (!li || !navList.contains(li)) return;
-
-                // Remove active class from all items
-                navList.querySelectorAll("li").forEach(item => {
-                    item.classList.remove("active");
-                });
-
-                // Add active class to clicked item
-                li.classList.add("active");
-            });
-        });
-    </script>
 {% endblock %}
 </body>
 </html>
