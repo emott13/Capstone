@@ -8,6 +8,19 @@
     display: flex;
     flex-wrap: wrap;
 }
+.glyphicon-chevron-left{
+    margin-right: 5px;
+    cursor: pointer;
+}
+#thumbnail-container{
+    display: flex;
+    gap: 5px;
+    overflow-x: auto;
+}
+.thumbnail-img{
+    width: 60px;
+    cursor: pointer;
+}
 .product-img-main{
     max-height: 100%;
     max-width: 100%;
@@ -16,6 +29,44 @@
     max-height: 80vh;
     max-width: 90%;
     cursor: zoom-in;
+}
+.product-info-col{
+    padding: 15px;
+    background-color: var(--tan-2);
+    border: 2px solid var(--bs-border-color);
+    border-radius: 10px;
+}
+.vendor-store-name{
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    color: #6d6d6d;
+}
+.flex-wrap{
+    padding: 0 15px;
+}
+.rating-average{
+    border: 1px solid #C0CEC1;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: white;
+}
+#review-sort,
+#review-filter{
+    cursor: pointer;
+    border: 1px solid #dddddd;
+    background-color: white;
+    padding: 5px;
+}
+#review-submit{
+    cursor: pointer;
+    border: none;
+    background-color: var(--orange-2);
+    padding: 5px;
+    transition: background-color 0.2s;
+    color: var(--green-1);
+}
+#review-submit:hover{
+    background-color: var(--orange-1);
 }
 .ruler{
     margin-top: 30px;
@@ -50,6 +101,12 @@
     padding: 0;
     width: 90%;
     max-width: 1200px;
+}
+#zoomed-img{
+    transition: transform .2s;
+}
+#zoomed-img:hover{
+    transform: scale(1.7);
 }
 .review-hr{
     border-color: var(--green-1);
@@ -123,35 +180,55 @@
     color: var(--orange-1);
     filter: brightness(110%);
 }
-#zoomed-img{
-    transition: transform .2s;
-}
-#zoomed-img:hover{
-    transform: scale(1.7);
-}
 .viewproduct-thumbnail-bar{
     display: flex;
     align-items: center;
     margin-bottom: 15px;
 }
-#thumbnail-container{
-    display: flex;
-    gap: 5px;
-    overflow-x: auto;
-}
-.thumbnail-img{
-    width: 60px;
-    cursor: pointer;
-}
-.product-info-col{
-    padding: 15px;
-    background-color: var(--tan-2);
-    border: 2px solid var(--bs-border-color);
-    border-radius: 10px;
-}
 .review-stars-block{
     margin-bottom: 10px;
     padding: 0 15px;
+}
+.product-price{
+    margin-bottom: 30px;
+    font-weight: 700;
+    color: var(--green-1);
+    font-size: 40px;
+}
+.product-quantity{
+    font-weight: 600;
+}
+.minus{
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+.plus{
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+.product-description{
+    margin-top: 45px;
+}
+.product-description-h4{
+    font-weight: 600;
+}
+.colors{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+.color-header{
+    margin: 0;
+}
+.spec-header{
+    margin-bottom: 8px;
+}
+.specs{
+    margin: 0;
+    padding-left: 20px;
+    color: #6d6d6d;
 }
 .product-quantity-button{
     width: 100%;
@@ -276,81 +353,4 @@
 
 .quantity button:hover {
   background-color: var(--orange-1);
-}
-.rating-average{
-    border: 1px solid #C0CEC1;
-    padding: 5px;
-    border-radius: 5px;
-    background-color: white;
-}
-#review-sort,
-#review-filter{
-    cursor: pointer;
-    border: 1px solid #dddddd;
-    background-color: white;
-    padding: 5px;
-}
-#review-submit{
-    cursor: pointer;
-    border: none;
-    background-color: var(--orange-2);
-    padding: 5px;
-    transition: background-color 0.2s;
-    color: var(--green-1);
-}
-#review-submit:hover{
-    background-color: var(--orange-1);
-}
-.glyphicon-chevron-left{
-    margin-right: 5px;
-    cursor: pointer;
-}
-.vendor-store-name{
-    margin: 0 0 10px 0;
-    font-size: 22px;
-    color: #6d6d6d;
-}
-.flex-wrap{
-    padding: 0 15px;
-}
-.product-price{
-    margin-bottom: 30px;
-    font-weight: 700;
-    color: var(--green-1);
-    font-size: 40px;
-}
-.product-quantity{
-    font-weight: 600;
-}
-.minus{
-    border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px;
-}
-.plus{
-    border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px;
-}
-.product-description{
-    margin-top: 45px;
-}
-.product-description-h4{
-    font-weight: 600;
-}
-.colors{
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-.color-header{
-    margin: 0;
-}
-.spec-header{
-    margin-bottom: 8px;
-}
-.specs{
-    margin: 0;
-    padding-left: 20px;
-    color: #6d6d6d;
 }
