@@ -48,11 +48,16 @@ body{
     border: none;
     padding: 5px 10px;
     color: var(--green-1);
+    transition: background-color 0.2s;
+    border-radius: 5px;
 }
 .search-filter-buttons{
     display: flex;
     justify-content: space-between;
     width: 100%;
+}
+.search-filter-button:hover{
+    background-color: var(--orange-1);
 }
 .search-filter-options{
     max-height: 0;
