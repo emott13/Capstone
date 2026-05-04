@@ -151,7 +151,8 @@ with app.app_context():
 
     # Product colors
     for product in products_list:
-        db.session.add(ProductColors(product_id=product.product_id, hex_code=fake.hex_color()))
+        for _ in range(randint(1, 5)):
+            db.session.add(ProductColors(product_id=product.product_id, hex_code=fake.hex_color()))
     db.session.commit()
 
     # Product categories

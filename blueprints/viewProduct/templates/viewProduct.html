@@ -93,9 +93,14 @@
                 <h4 style="font-weight: 600">Product Details</h4>
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
+                        {% for color in color %}
                         <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
+                        {% endfor %}
                     </div>
-                    <p>Specifications: {{ spec.specification }}</p>
+                    <p>Specifications: </p>
+                    {% for spec in specs %}
+                    <p>{{ spec.specification }}</p>
+                    {% endfor %}
                 </div>
             </div>
         </div>

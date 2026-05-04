@@ -80,13 +80,13 @@ def viewProduct(error=None):
                     SELECT hex_code FROM product_colors
                     WHERE product_id = :product_id
                     ORDER BY color_id
-                """), {"product_id": product_id}).fetchone()
+                """), {"product_id": product_id}).fetchall()
 
-                spec = conn.execute(text("""
+                specs = conn.execute(text("""
                     SELECT specification FROM product_specs
                     WHERE product_id = :product_id
                     ORDER BY spec_id
-                """), {"product_id": product_id}).fetchone()
+                """), {"product_id": product_id}).fetchall()
                 
         except Exception as error:
             error = "Error loading product."
@@ -138,14 +138,14 @@ def viewProduct(error=None):
         )
 
         return render_template("viewProduct.html", product=product, vendor=vendor, 
-                           images=images, color=color, spec=spec, error=error, 
+                           images=images, color=color, specs=specs, error=error, 
                            reviews=reviews, reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
                            also_bought=also_bought_products, related_products=related_products,
                            user_products=user_products, create_review_form=create_review_form)
     
     return render_template("viewProduct.html", product=product, product_id=product_id,
-                           vendor=vendor, images=images, color=color, spec=spec,
+                           vendor=vendor, images=images, color=color, specs=specs,
                            error=error, reviews=reviews,
                            reviews_filtered=reviews_filtered,
                            review_sort=review_sort, review_filter=review_filter,
