@@ -12,7 +12,20 @@
     <div id="vendor-home" class="flex flex-column">
         <h1 class="text-center mt-3">Vendor Home</h1>
 
-        <a href="{{ url_for('vendor.create_product') }}" class="btn vendor-btn fs-2">Create Product</a>
+        {% if success %}
+            <div class="alert alert-success">
+                <p>{{ success }}</p>
+            </div>
+        {% endif %}
+
+        {% if error %}
+            <div class="alert alert-danger">
+                <p>{{ error }}</p>
+            </div>
+        {% endif %}
+
+        <a href="{{ url_for('vendor.create_product', **url_args) }}" 
+            class="btn vendor-btn fs-2">Create Product</a>
 
         <h1 class="text-center mt-3">Current Products</h1>
         <div class="vendor-table vendor-table-home">
@@ -36,13 +49,13 @@
                         </a>
                     </div>
                     <div class="col-1">
-                        <a href="{{ url_for('vendor.edit_product', product_id=product.product_id) }}"
+                        <a href="{{ url_for('vendor.edit_product', product_id=product.product_id, **url_args) }}"
                             class="btn btn-secondary">
                             Update Product
                         </a>
                     </div>
                     <div class="col-1">
-                        <a href="{{ url_for('vendor.delete_product', product_id=product.product_id) }}"
+                        <a href="{{ url_for('vendor.delete_product', product_id=product.product_id, **url_args) }}"
                             class="btn btn-danger">
                             Delete Product
                         </a>

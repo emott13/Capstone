@@ -10,7 +10,8 @@
 {% endblock %}
 {% block page_content %}
     <h1 class="text-center mt-3">Create Product</h1>
-    <form id="create-product" action="{{ url_for('vendor.create_product') }}" 
+    <form id="create-product" 
+        action="{{ url_for('vendor.create_product', **url_args) }}" 
         method="POST" class="vendor-table container">
         {{ form.hidden_tag() }}
         <h2>Create Product</h2>
