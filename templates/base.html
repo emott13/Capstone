@@ -27,11 +27,11 @@
             </li>
 
             {% if current_user.is_authenticated and current_user.has_role("vendor") %}
-                <li><a href="{{ url_for('vendor.home') }}">Vendor Home</a></li>
+                <li class="{% if request.path == '/vendor/' %}active{% endif %}"><a href="/vendor/">Vendor Home</a></li>
             {% endif %}
 
             {% if current_user.is_authenticated and current_user.has_role("admin") %}
-                <li><a href="{{ url_for('admin.home') }}">Admin Home</a></li>
+                <li class="{% if request.path == '/admin/' %}active{% endif %}"><a href="/admin/">Admin Home</a></li>
             {% endif %}
 
             <li class="{% if request.path == '/best-selling' %}active{% endif %}">
@@ -42,7 +42,7 @@
                 <a href="/sale">SALE</a>
             </li>
         </ul>
-        <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-rownavbar-form navbar-left">
+        <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-row navbar-form navbar-left">
             <div class="form-group">
                 <input type="text" class="form-control" placeholder="Search" name="search">
             </div>
