@@ -72,6 +72,7 @@ def home():
     if required_roles(required_roles_list) == False:
         return redirect(url_for("login.login"))
 
+    success = request.args.get("success", None)
     # to pass args (vendor_id) to the CRUD pages if 
     # the arg is already specified
     url_args = dict()
@@ -86,7 +87,8 @@ def home():
     products: list[Products] = vendor.products
 
     return render_template("vendor.html", 
-                           products=products, url_args=url_args)
+                           products=products, url_args=url_args,
+                           success=success)
 
 @vendor_bp.route("/create-product", methods=["GET", "POST"])
 @login_required
