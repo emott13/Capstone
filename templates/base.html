@@ -89,6 +89,26 @@
 {% block scripts %}
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const navList = document.querySelector(".nav.navbar-nav.flex-row");
+
+            navList.addEventListener("click", function (e) {
+                // Make sure a <li> (or something inside it) was clicked
+                const li = e.target.closest("li");
+
+                if (!li || !navList.contains(li)) return;
+
+                // Remove active class from all items
+                navList.querySelectorAll("li").forEach(item => {
+                    item.classList.remove("active");
+                });
+
+                // Add active class to clicked item
+                li.classList.add("active");
+            });
+        });
+    </script>
 {% endblock %}
 </body>
 </html>
