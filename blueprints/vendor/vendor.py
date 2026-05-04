@@ -1,4 +1,4 @@
-from flask import Blueprint, redirect, render_template, request, url_for
+from flask import Blueprint, redirect, render_template, request, url_for, abort
 from flask_login import login_required, current_user
 from extensions import conn, db, required_roles
 from sqlalchemy import text
@@ -13,7 +13,7 @@ vendor_bp = Blueprint("vendor", __name__, static_folder="static_vendor",
                 template_folder="templates_vendor", 
                 url_prefix="/vendor")
 
-required_roles_list = ["vendor"]
+required_roles_list = ["vendor", "admin"]
 
 
 def enabled_categories():
@@ -72,11 +72,21 @@ def home():
     if required_roles(required_roles_list) == False:
         return redirect(url_for("login.login"))
 
-    vendor: Vendors = current_user.get_vendor()
+    # to pass args (vendor_id) to the CRUD pages if 
+    # the arg is already specified
+    url_args = dict()
+
+    vendor: Vendors = get_vendor(url_args, request.args.get('vendor_id'))
+    
+    # if the user is only admin and there is no vendor_id in the URL
+    # or something else goes wrong, then 404
+    if vendor == None:
+        abort(404)
+    
     products: list[Products] = vendor.products
 
     return render_template("vendor.html", 
-                           products=products)
+                           products=products, url_args=url_args)
 
 @vendor_bp.route("/create-product", methods=["GET", "POST"])
 @login_required
@@ -84,18 +94,25 @@ def create_product():
     if required_roles(required_roles_list) == False:
         return redirect(url_for("login.login"))
 
+    url_args = dict()
     error = None
     success = None
+
+    vendor: Vendors = get_vendor(url_args, request.args.get('vendor_id'))
+
+    if not vendor:
+        abort(404)
+
     form = CreateProductForm()
 
     if form.validate_on_submit():
-        error = create_post(form)
+        error = create_post(form, vendor)
 
         if not error:
             success = "Product now created!"
 
     return render_template("createProduct.html", 
-        form=form, success=success, error=error
+        form=form, success=success, error=error, url_args=url_args,
     )
 
 @vendor_bp.route("/edit-product/<int:product_id>", methods=["GET", "POST"])
@@ -113,31 +130,67 @@ def delete_product(product_id: int = None):
     if required_roles(required_roles_list) == False:
         return redirect(url_for("login.login"))
 
-    product: Products = Products.query.where(text(f"product_id = {product_id}")).one_or_none()
+    product: Products = Products.query.where(
+        text(f"product_id = {product_id}")).one_or_none()
+    
 
     if not product:
-        return redirect(url_for('vendor.home', success="Product deleted successfully"))
+        abort(404)
+        # return redirect(url_for('vendor.home', 
+        #                         success="Product deleted successfully"))
+
+    vendor_ownership_verification(product=product)
 
     if request.method == "POST":
         db.session.delete(product)
         db.session.commit()
 
-        return redirect(url_for('vendor.home', success="Product deleted successfully"))
+        return redirect(url_for('vendor.home', 
+                                success="Product deleted successfully"))
 
 
     return render_template("deleteProduct.html",
                            product_id=product_id, product=product)
 
-def create_post(form: CreateProductForm) -> str:
+def get_vendor(url_args: dict, request_vendor_id: None) -> Vendors:
+    """
+    Returns the vendor. If the user is an admin then it returns
+    the vendor with the correct request vendor_id
+    Returns None if a vendor could not be found
+    Also adds to url_args if the arg exists and the user is an admin
+    """
+    vendor: Vendors = None
+    if current_user.has_role("admin") and request_vendor_id:
+        vendor_id = request_vendor_id
+        vendor = Vendors.query.filter(text(
+            f"vendor_id = {vendor_id}")).one_or_404()
+        
+        url_args['vendor_id'] = vendor_id
+
+    if current_user.has_role("vendor") and vendor == None:
+        vendor = current_user.get_vendor()
+    
+    return vendor
+
+def create_post(form: CreateProductForm, vendor: Vendors) -> str:
     # create_form attributes
     # name   desc    price   categoies
     # specs  colors  images
 
     if form.validate_on_submit():
+        vendor_id = vendor.vendor_id
+
+        # if current_user.has_role("admin") and request.args.get("vendor_id"):
+        #     print("admin vendor_id")
+        #     vendor_id = request.args.get("vendor_id")
+        # # check if vendor_id exists in vendor DB
+        # if not Vendors.query.filter(Vendors.vendor_id == vendor_id).first():
+        #     return "Vendor does not exist"
+
         price = form.price.data
         price = int(float(price)*100)
         product = Products(
-            vendor_id=current_user.user_id, 
+            vendor_id=vendor_id,
             product_name=form.name.data,
             description=form.desc.data,
             price=price
@@ -147,8 +200,6 @@ def create_post(form: CreateProductForm) -> str:
         for spec in request.form.getlist('specs'):
             if len(spec) > 0:
                 productSpecs.append(ProductSpecs(specification=spec))
-        # productSpecs = list(map(lambda spec: ProductSpecs(specification=spec), 
-        #                         request.form.getlist('specs')))
         productColors = []
         for hex_code in request.form.getlist('colors'):
             if len(hex_code) == 6:
@@ -158,10 +209,7 @@ def create_post(form: CreateProductForm) -> str:
         productImages = []
         for url in request.form.getlist('images'):
             if len(url) > 0:
-                ProductImages(image_url=url)
-
-        # print(list(map(lambda c: c.image_url, productImages)))
-        # print(list(map(lambda c: c.category_name, form.categories.data)))
+                productImages.append(ProductImages(image_url=url))
 
         product.categories = list(form.categories.data)
         product.specs = productSpecs
@@ -176,3 +224,14 @@ def create_post(form: CreateProductForm) -> str:
 
 
     return ""
+
+def vendor_ownership_verification(product: Products):
+    """Aborts 404 if the vendor isn't an admin and
+       the vendor doesn't own the product """
+    # if vendor does not own the product, 404
+    if (
+        not current_user.has_role("admin") and
+        current_user.has_role("vendor") and 
+        current_user.get_id() != product.vendor_id
+    ):
+        abort(404)
