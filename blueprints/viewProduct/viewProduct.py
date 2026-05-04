@@ -52,7 +52,7 @@ def viewProduct(error=None):
     vendor = None
     images = []
     colors = []
-    spec = None
+    specs = []
     # contains an array of Reviews objects with the correct product_id
     # and other data
     reviews = ReviewRepository(product_id)
