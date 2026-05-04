@@ -134,25 +134,27 @@ def delete_product(product_id: int = None):
 
     product: Products = Products.query.where(
         text(f"product_id = {product_id}")).one_or_none()
-    
 
-    if not product:
+    url_args: dict = {}
+    vendor: Vendors = get_vendor(url_args, request.args.get("vendor_id"))    
+
+    if  (not product or 
+         not current_user.has_role("admin") and
+         vendor.vendor_id != product.vendor_id
+        ):
         abort(404)
-        # return redirect(url_for('vendor.home', 
-        #                         success="Product deleted successfully"))
-
-    vendor_ownership_verification(product=product)
 
     if request.method == "POST":
         db.session.delete(product)
         db.session.commit()
 
         return redirect(url_for('vendor.home', 
-                                success="Product deleted successfully"))
+            success="Product deleted successfully",
+            **url_args))
 
-
+    print(f"url_args = {url_args}")
     return render_template("deleteProduct.html",
-                           product_id=product_id, product=product)
+        product_id=product_id, product=product, url_args=url_args)
 
 def get_vendor(url_args: dict, request_vendor_id: None) -> Vendors:
     """
@@ -226,14 +228,3 @@ def create_post(form: CreateProductForm, vendor: Vendors) -> str:
 
 
     return ""
-
-def vendor_ownership_verification(product: Products):
-    """Aborts 404 if the vendor isn't an admin and
-       the vendor doesn't own the product """
-    # if vendor does not own the product, 404
-    if (
-        not current_user.has_role("admin") and
-        current_user.has_role("vendor") and 
-        current_user.get_id() != product.vendor_id
-    ):
-        abort(404)
