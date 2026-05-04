@@ -10,7 +10,10 @@
 <link rel="stylesheet" href="{{ url_for('search.static', filename='styles/search.css') }}">
 {{ super() }}
 {% endblock %}
-{% block page_content %}
+{% block content %}
+<div class="container">
+
+
     <h1 class="mt-5" id="search-results-heading">Search Results</h1>
     {% if query %}
         <p class="lead">Showing results for "{{ query }}"</p>
@@ -158,6 +161,7 @@
         {% endif %}
 
     </div>
+</div>    
 <script>
     // Price min and max search filter js
     document.querySelectorAll("form").forEach(form => {

@@ -6,6 +6,14 @@
         background-color: #f5f5f5;
         cursor: not-allowed;
     }
+    .submitBtn{
+        background-color: var(--purple-2) !important;
+        color: black;
+    }
+    .submitBtn:hover{
+        background-color: var(--purple-1) !important;
+        color: white !important;
+    }
 </style>
 
 {% block content %}
@@ -40,7 +48,7 @@
 
         <hr>
 
-        <button type="submit">Continue</button>
+        <button type="submit" class="btn submitBtn">Continue</button>
     </form>
 </div>
 
