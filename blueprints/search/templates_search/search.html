@@ -43,55 +43,55 @@
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
-                    <div class="search-filter-options" style="padding-left: 10px;">
-                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
+                    <label onclick="toggleOptions(event)">Category <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <ul class="checkbox-list">
                         {% for cat in filter_categories %}
-                            <li><label><input type="checkbox" name="categories" value="{{ cat.category_name }}" style="margin-right: 5px;" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
+                            <li><label><input type="checkbox" class="option-name" name="categories" value="{{ cat.category_name }}" {% if cat.category_name in selected_categories %}checked{% endif %}> {{ cat.category_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
-                    <div class="search-filter-options" style="padding-left: 10px;">
-                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
+                    <label onclick="toggleOptions(event)">Color <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <ul class="checkbox-list">
                         {% for col in filter_colors %}
-                            <li><label><input type="checkbox" name="colors" value="{{ col.hex_code }}" style="margin-right: 5px;" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
+                            <li><label><input type="checkbox" class="option-name" name="colors" value="{{ col.hex_code }}" {% if col.hex_code in selected_colors %}checked{% endif %}><span style="background-color: {{ col.hex_code }};"> {{ col.hex_code }}</span></label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
-                    <div class="search-filter-options" style="padding-left: 10px;">
-                        <ul class="checkbox-list" style="list-style-type: none; padding: 0;">
+                    <label onclick="toggleOptions(event)">Vendor <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
+                        <ul class="checkbox-list">
                         {% for ven in filter_vendors %}
-                            <li><label><input type="checkbox" name="vendors" value="{{ ven.store_name }}" style="margin-right: 5px;" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
+                            <li><label><input type="checkbox" class="option-name" name="vendors" value="{{ ven.store_name }}" {% if ven.store_name in selected_vendors %}checked{% endif %}> {{ ven.store_name }}</label></li>
                         {% endfor %}
                         </ul>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
-                    <div class="search-filter-options" style="padding-left: 10px;">
+                    <label onclick="toggleOptions(event)">Price <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
                         <div class="mb-2">
-                            <label for="min_price" class="form-label">Minimum: $<span id="val-min-price" style="margin-left: 5px;">0</span></label>
-                            <input type="range" name="min_price" id="min_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_min_price or 0 }}">
+                            <label for="min_price" class="form-label">Minimum: $<span id="val-min-price">0</span></label>
+                            <input type="range" class="range-name" name="min_price" id="min_price" min="0" max="500" value="{{ selected_min_price or 0 }}">
                         </div>
                         <div class="mb-2">
-                            <label for="max_price" class="form-label">Maximum: $<span id="val-max-price" style="margin-left: 5px;">0</span></label>
-                            <input type="range" name="max_price" id="max_price" style="width: 150px; margin-left: 5px;" min="0" max="500" value="{{ selected_max_price or 0 }}">                        
+                            <label for="max_price" class="form-label">Maximum: $<span id="val-max-price">0</span></label>
+                            <input type="range" class="range-name" name="max_price" id="max_price" min="0" max="500" value="{{ selected_max_price or 0 }}">                        
                         </div>
                     </div>
                 </div>
 
                 <div class="search-filter-wrapper">
-                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down" style="padding-left: 5px;"></i></label>
-                    <div class="search-filter-options" style="padding-left: 10px;">
+                    <label onclick="toggleOptions(event)">Reviews <i class="bi bi-chevron-down"></i></label>
+                    <div class="search-filter-options">
                         <div class="mb-2">
                             <label for="min_rating" class="form-label">Minimum (0-5)</label>
                             <input type="number" id="min_rating" name="min_rating" placeholder="0" value="{{ selected_min_rating }}" min="0" max="5" step="0.1" class="form-control">
@@ -111,7 +111,7 @@
             <div class="row mx-4">
                 {% for product in products %}
                     <div class="product list-group-item col-sm-3 d-flex">
-                        <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card" style="margin: 3px;">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=product.product_id) }}" class="card">
 
                             <div class="image-container card-img-top">
                                 {% set images = image_dict.get(product.product_id, []) %}
@@ -127,8 +127,8 @@
 
                             <div class="card-body">
                                 <h4 class="card-title">{{ product.product_name }}</h4>
-                                <p class="card-vendor" style="margin-bottom: 0;"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
-                                <div class="d-flex align-items-center" style="margin-bottom: 15px; margin-top: 0;">
+                                <p class="card-vendor"><i class="bi bi-person-fill"></i> {{ product.store_name }}</p>
+                                <div class="d-flex align-items-center">
                                     {% set avg = product.average_rating %}
                                     {% set full = avg | int %}
                                     {% set half = 1 if (avg - full) >= 0.5 else 0 %}
