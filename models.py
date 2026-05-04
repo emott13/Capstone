@@ -54,6 +54,14 @@ class Users(UserMixin, db.Model):
     
     def has_role(self, role_name):
         return any(role.role_name == role_name for role in self.roles)
+    
+    def get_vendor(self):
+        # returns None or the Vendor
+        return Vendors.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
+
+    def get_admin(self):
+        # returns None or the Admin
+        return Admins.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
 
 # Roles
 class Roles(db.Model):
@@ -87,6 +95,8 @@ class Vendors(db.Model):
     store_name = db.Column(db.String(100), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    products = db.relationship("Products")
 
 # Customers
 class Customers(db.Model):
@@ -170,21 +180,39 @@ class Products(db.Model):
     )
     
     wishlist_items = db.relationship("WishlistItems", back_populates="product")
-    
-    images = db.relationship(
-        "ProductImages",
-        back_populates="product",
-        cascade="all, delete-orphan"
-    )
 
     specs = db.relationship(
         "ProductSpecs",
         back_populates="product",
         cascade="all, delete-orphan"
     )
-
     colors = db.relationship(
         "ProductColors",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    images = db.relationship(
+        "ProductImages",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    cart_items = db.relationship(
+        "CartItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    order_items = db.relationship(
+        "OrderItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    wishlist_items = db.relationship(
+        "WishlistItems",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
+    user_interactions = db.relationship(
+        "UserInteractions",
         back_populates="product",
         cascade="all, delete-orphan"
     )
@@ -265,6 +293,7 @@ class CartItems(db.Model):
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
     cart = db.relationship("Carts", back_populates="cart_items")
+    product = db.relationship("Products", back_populates="cart_items")
 
 # wishlists
 class Wishlists(db.Model):
@@ -286,6 +315,7 @@ class WishlistItems(db.Model):
     quantity = db.Column(db.Integer, nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
     product = db.relationship("Products", back_populates="wishlist_items")
 
 # orders
@@ -324,7 +354,7 @@ class OrderItems(db.Model):
     # RELATIONSHIPS 
     product = db.relationship(
         "Products",
-        backref="order_items"
+        back_populates="order_items",
     )
 
 # order addresses
@@ -567,6 +597,12 @@ class UserInteractions(db.Model):
         )
         db.session.add(interaction)
         db.session.commit()
+    
+    # Relationships
+    product = db.relationship(
+        "Products",
+        back_populates="user_interactions",
+    )
 
 class Recommendations(db.Model):
     __tablename__ = "recommendations"

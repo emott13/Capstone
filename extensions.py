@@ -2,6 +2,7 @@ import os
 import datetime
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_login import current_user
 from sqlalchemy import create_engine
 from flask_bcrypt import Bcrypt
 from dotenv import load_dotenv
@@ -45,6 +46,19 @@ login_manager.login_view = "login.login"
 engine = create_engine(conn_str, echo=True)                                             
 conn = engine.connect()
 
+# -------------------------- #
+# ---- Helper Functions ---- #
+# -------------------------- #
+ 
+def required_roles(roles: list[str]) -> bool:
+    """
+    Takes a list of role names and return True if the user has one of them
+    """
+    for role in roles:
+        if current_user.has_role(role):
+            return True
+    # user doesn't not have the role
+    return False
 
 # -------------------------- #
 # ---- Jinja Formatters ---- #

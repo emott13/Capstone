@@ -1,3 +1,16 @@
+.container {
+    display: flex;
+    flex-direction: column;
+}
+
+#vendor-home,
+.vendor-home {
+    padding: 2rem;
+    color: var(--tan-2);
+    background-color: var(--green-1);
+    flex-grow: 1;
+}
+
 .vendor-btn {
     margin: .5rem 0;
     color: white;
@@ -11,6 +24,17 @@
     border: 1px solid var(--green-2);
 }
 
+.vendor-table-home > .row {
+    background-color: var(--green-2);
+}
+
+.vendor-table-home > .row > .col,
+.vendor-table-home > .row > .col-1,
+.vendor-table-home > .row > .col-5 {
+    border: 1px solid var(--green-1);
+    padding: .5rem;
+}
+
 .vendor-table {
     margin: 0;
     padding: 2rem;
@@ -21,10 +45,6 @@
 .vendor-table hr {
     color: var(--tan-1);
     margin: 1.2rem 0;
-}
-
-.vendor-table > .row {
-
 }
 
 .vendor-table > .row > .col {

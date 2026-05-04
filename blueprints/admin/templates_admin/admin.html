@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}Admin Home {{ super() }}{% endblock %}
+{% block page_content %}
+    <div id="admin-home" class="flex flex-column">
+        <h1 class="text-center mt-3">Admin Home</h1>
+
+        <h4 class="text-center mt-3">
+            Select a vendor to create/update their products</h4>
+        <form id="admin-to-vendor" 
+            action="{{ url_for('vendor.home') }}" 
+            method="GET" class="text-center">
+            <select name="vendor_id" id="vendor_id" class="p-2">
+                {% for vendor in vendors %}
+                    <option for="vendor_id" value="{{ vendor.vendor_id }}">
+                        {{ vendor.store_name }}
+                    </option>
+                {% endfor %}
+            </select>
+
+            <input type="submit" value="Submit" class="btn btn-success">
+        </form>
+    </div>
+
+{% endblock %}
