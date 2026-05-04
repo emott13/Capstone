@@ -59,6 +59,10 @@ class Users(UserMixin, db.Model):
         # returns None or the Vendor
         return Vendors.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
 
+    def get_admin(self):
+        # returns None or the Admin
+        return Admins.query.where(text(f"vendor_id = {self.get_id()}")).one_or_none()
+
 # Roles
 class Roles(db.Model):
     __tablename__ = "roles"

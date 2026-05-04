@@ -14,6 +14,7 @@ from blueprints.checkout.checkout import checkout_bp
 from blueprints.account.account import account_bp
 from blueprints.wishlist.wishlist import wishlist_bp
 from blueprints.vendor.vendor import vendor_bp
+from blueprints.admin.admin import admin_bp
 from ml.inference.popular import get_popular_products
 from models import Users
 
@@ -36,6 +37,7 @@ app.register_blueprint(checkout_bp)
 app.register_blueprint(account_bp)
 app.register_blueprint(wishlist_bp)
 app.register_blueprint(vendor_bp)
+app.register_blueprint(admin_bp)
 
 # redirect to home page
 @app.route("/")

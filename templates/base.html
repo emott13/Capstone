@@ -23,6 +23,12 @@
         </div>
         <ul class="nav navbar-nav flex-row">
             <li class="active"><a href="/home">Home</a></li>
+            {% if current_user.is_authenticated and current_user.has_role("vendor") %}
+                <li><a href="{{ url_for('vendor.home') }}">Vendor Home</a></li>
+            {% endif %}
+            {% if current_user.is_authenticated and current_user.has_role("admin") %}
+                <li><a href="{{ url_for('admin.home') }}">Admin Home</a></li>
+            {% endif %}
             <li><a href="/best-selling">Best Sellers</a></li>
             <li><a href="/sale">SALE</a></li>
         </ul>
