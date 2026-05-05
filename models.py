@@ -206,6 +206,11 @@ class Products(db.Model):
         back_populates="product",
         cascade="all, delete-orphan"
     )
+    reviews = db.relationship(
+        "Reviews",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
     wishlist_items = db.relationship(
         "WishlistItems",
         back_populates="product",
@@ -389,6 +394,12 @@ class Reviews(db.Model):
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    # RELATIONSHIPS 
+    product = db.relationship(
+        "Products",
+        back_populates="reviews",
+    )
 
     def getCustomer(self):
         return db.one_or_404(db.select(Customers).filter_by(customer_id=self.customer_id))
