@@ -96,17 +96,17 @@
                         {% endif %}
                         <div style="display: flex; gap: 5px;">
                         {% for color in colors %}
-                        <ul style="list-style-type: none; padding: 0; margin: 0 0 5px 0;">
-                            <li style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray; display: block;" title="{{ color.hex_code }}"></li>
-                        </ul>
+                            <ul style="list-style-type: none; padding: 0; margin: 0 0 5px 0;">
+                                <li style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray; display: block;" title="{{ color.hex_code }}"></li>
+                            </ul>
                         {% endfor %}
                         </div>
                     </div>
                     <p style="margin-bottom: 5px;">Specifications:</p>
                     {% for spec in specs %}
-                    <ul style="margin-bottom: 0;">
-                        <li>{{ spec.specification }}</li>
-                    </ul>
+                        <ul style="margin-bottom: 0;">
+                            <li>{{ spec.specification }}</li>
+                        </ul>
                     {% endfor %}
                 </div>
             </div>
