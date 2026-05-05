@@ -91,8 +91,11 @@
                 <h4 class="product-description-h4">Product Details</h4>
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        {% for color in color %}
-                        <p style="margin: 0;">Color:</p><div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
+                        {% if colors %}
+                            <p style="margin: 0;">Colors:</p>
+                        {% endif %}
+                        {% for color in colors %}
+                            <div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
                         {% endfor %}
                     </div>
                     <p>Specifications: </p>
