@@ -92,15 +92,21 @@
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
                         {% if colors %}
-                            <p style="margin: 0;">Colors:</p>
+                            <p>Colors:</p>
                         {% endif %}
+                        <div style="display: flex; gap: 5px;">
                         {% for color in colors %}
-                            <div style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray;" title="{{ color.hex_code }}"></div>
+                        <ul style="list-style-type: none; padding: 0; margin: 0 0 5px 0;">
+                            <li style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray; display: block;" title="{{ color.hex_code }}"></li>
+                        </ul>
                         {% endfor %}
+                        </div>
                     </div>
-                    <p>Specifications: </p>
+                    <p style="margin-bottom: 5px;">Specifications:</p>
                     {% for spec in specs %}
-                    <p>{{ spec.specification }}</p>
+                    <ul style="margin-bottom: 0;">
+                        <li>{{ spec.specification }}</li>
+                    </ul>
                     {% endfor %}
                 </div>
             </div>
