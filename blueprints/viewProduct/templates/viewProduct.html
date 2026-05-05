@@ -234,7 +234,7 @@
                     <div class="info">
                         <h6>{{ p.product_name }}</h6>
                         <p>${{ p.price | priceFormat }}</p>
-                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=p.product_id) }}" class="btn btn-sm btn-primary">
                             View
                         </a>
                     </div>
@@ -258,7 +258,7 @@
                     <div class="info">
                         <h6>{{ p.product_name }}</h6>
                         <p>${{ p.price | priceFormat }}</p>
-                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=p.product_id) }}" class="btn btn-sm btn-primary">
                             View
                         </a>
                     </div>
@@ -283,7 +283,7 @@
                     <div class="info">
                         <h6>{{ p.product_name }}</h6>
                         <p>${{ p.price | priceFormat }}</p>
-                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                        <a href="{{ url_for('viewProduct.viewProduct', id=p.product_id) }}" class="btn btn-sm btn-primary">
                             View
                         </a>
                     </div>
