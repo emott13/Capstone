@@ -140,7 +140,7 @@
     <div class="jumbotron">
         <h1>Welcome to Hibiscus</h1>
         <p>Discover a wide range of products at unbeatable prices. Shop now and enjoy exclusive deals!</p>
-        <a href="#" class="btn btn-primary btn-lg">Shop Now</a>
+        <a href="{{ url_for('search.search') }}" class="btn btn-primary btn-lg">Shop Now</a>
     </div>
     <div class="row">
         {% for c in categories %}
