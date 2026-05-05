@@ -26,7 +26,8 @@
             <h2>Filters</h2>
 
             <form action="{{ url_for('search.search') }}" method="GET">
-                <input type="hidden" name="search" value="{{ query }}">
+                <input type="hidden" name="search" value="{{ request.args.get('search', '') }}">
+                <!-- <input type="hidden" name="search" value="{{ query }}"> -->
 
                 <div class="sort-by-wrapper">
                     <select name="sortby" id="sortby" onchange="this.form.submit()">
@@ -168,7 +169,7 @@
         form.addEventListener("submit", function () {
             this.querySelectorAll("input, select").forEach(el => {
                 if (el.value === "" || el.value === null || el.value === undefined) {
-                    el.removeAttribute("name");
+                    // el.removeAttribute("name");
                 }
             });
         });
