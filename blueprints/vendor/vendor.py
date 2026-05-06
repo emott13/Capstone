@@ -19,6 +19,24 @@ required_roles_list = ["vendor", "admin"]
 def enabled_categories():
     return ProductCategories.query.all()
 
+class MaxNum:
+    def __init__(self, max_number, message=None):
+        self.max_number = max_number
+        self.message = message
+
+    def __call__(self, form, field, message=None):
+        number = float(field.data)
+        if number < self.max_number:
+            return number
+
+        if message is None:
+            if self.message is None:
+                message = field.gettext("Invalid input.")
+            else:
+                message = self.message
+
+        raise ValidationError(message)
+
 class CreateProductForm(FlaskForm):    
     name = StringField('Product Name',
         validators=[
@@ -33,7 +51,8 @@ class CreateProductForm(FlaskForm):
     price = StringField('Price',
         validators=[
             InputRequired(), 
-            Regexp(regex="^[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$")
+            Regexp(regex="^[0-9]{1,3}(?:,?[0-9]{3})*(?:\.[0-9]{2})?$"),
+            MaxNum(max_number=1000, message="Price must be less than 1000"),
         ])
     categories = QuerySelectMultipleField('Categories',
         query_factory=enabled_categories,
