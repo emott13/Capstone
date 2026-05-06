@@ -34,7 +34,7 @@
                 <div class="col-5">Description</div>
                 <div class="col-1">Price</div>
                 <div class="col-1">Page link</div>
-                <div class="col-1">Update product</div>
+                <!-- <div class="col-1">Update product</div> -->
                 <div class="col-1">Delete product</div>
             </div>
             {% for product in products %}
@@ -48,12 +48,12 @@
                             Product Page
                         </a>
                     </div>
-                    <div class="col-1">
+                    <!-- <div class="col-1">
                         <a href="{{ url_for('vendor.edit_product', product_id=product.product_id, **url_args) }}"
                             class="btn btn-secondary">
                             Update Product
                         </a>
-                    </div>
+                    </div> -->
                     <div class="col-1">
                         <a href="{{ url_for('vendor.delete_product', product_id=product.product_id, **url_args) }}"
                             class="btn btn-danger">
