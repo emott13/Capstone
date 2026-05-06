@@ -36,6 +36,18 @@
             <h1 style="font-weight: 600;">{{ product.product_name if product else "Unknown Product" }}</h1>
             <h4 class="vendor-store-name"><i class="bi bi-person-fill"></i>{{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
 
+            <!-- Success/Error messages -->
+            {% if success %}
+                <div class="alert alert-success" role="alert">
+                    {{ success }}
+                </div>
+            {% endif %}
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+
             <!-- Product ratings display -->
             <div class="row" style="margin-bottom: 10px;">
                 <div class="d-flex flex-wrap">
@@ -75,7 +87,7 @@
                     </div>
                     <div class="col-sm-9">
                         <button type="submit" class="product-quantity-button" style="margin-right: 20px;"><i class="bi bi-cart-fill"></i> Add To Cart</button>
-                        <button type="submit" class="product-quantity-button wishlist-btn"><i class="bi bi-bookmark-heart-fill"></i> Wishlist</button>
+                        <button type="submit" class="product-quantity-button wishlist-btn" formaction="{{ url_for('viewProduct.add_to_wishlist', product_id=product.product_id) }}"><i class="bi bi-bookmark-heart-fill"></i> Wishlist</button>
                     </div>
                 </div>
             </form>

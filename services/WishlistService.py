@@ -69,3 +69,25 @@ class WishlistService:
 
         WishlistRepository.remove_item(wishlist_item_id)
         db.session.commit()
+
+    @staticmethod
+    def add_item(customer_id, product_id, quantity=1):
+        from models import Wishlists, WishlistItems
+        wishlist = Wishlists.query.filter_by(customer_id=customer_id).first()
+
+        if not wishlist:
+            wishlist = Wishlists(customer_id=customer_id, title="Wishlist")
+            db.session.add(wishlist)
+            db.session.flush()
+        
+        existing_item = WishlistItems.query.filter_by(wishlist_id=wishlist.wishlist_id, product_id=product_id).first()
+        
+        if existing_item:
+            existing_item.quantity += quantity
+
+        else:
+            wishlist_item = WishlistItems(wishlist_id=wishlist.wishlist_id, product_id=product_id, quantity=quantity)
+            db.session.add(wishlist_item)
+        
+        db.session.commit()
+        return True
