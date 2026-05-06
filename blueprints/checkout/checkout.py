@@ -64,6 +64,8 @@ def address():
         return redirect(url_for("checkout.payment"))
         
     addresses = CartService.get_user_addresses(user_id)
+    if not addresses:
+        return render_template("address.html")
     return render_template("address.html", addresses=addresses)
 
 # handles order payment
