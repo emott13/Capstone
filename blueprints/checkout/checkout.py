@@ -62,11 +62,12 @@ def address():
             CartService.set_cart_address(user_id, address_data=address_data)
 
         return redirect(url_for("checkout.payment"))
-        
-    addresses = CartService.get_user_addresses(user_id)
-    if not addresses:
+    
+    try:
+        addresses = CartService.get_user_addresses(user_id)
+        return render_template("address.html", addresses=addresses)
+    except ValueError:
         return render_template("address.html")
-    return render_template("address.html", addresses=addresses)
 
 # handles order payment
 @checkout_bp.route("/payment", methods=["POST", "GET"])
