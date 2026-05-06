@@ -35,10 +35,12 @@ class CreateReviewForm(FlaskForm):
     submit = SubmitField('Create')
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
-def viewProduct(error=None):
+def viewProduct(error=None, product_id=None):
     if error == None:
         error = request.args.get("error", None)
-    product_id = request.args.get("id")
+
+    if product_id is None:
+        product_id = request.args.get("id")
 
     # check if product exists
     if not Products.query.filter(

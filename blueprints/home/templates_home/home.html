@@ -169,7 +169,7 @@
                     <div class="info">
                         <h6>{{ p.product_name }}</h6>
                         <p>${{ p.price | priceFormat }}</p>
-                        <a href="/product/{{ p.product_id }}" class="btn btn-sm btn-primary">
+                        <a href="/view/product?id={{p.product_id}}" class="btn btn-sm btn-primary">
                             View
                         </a>
                     </div>
@@ -181,6 +181,10 @@
                 &#10095;
             </button>
         </div>
+    </div>
+
+    <div class="jumbotron">
+        div.
     </div>
 
 <script>
