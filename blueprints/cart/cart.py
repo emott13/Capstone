@@ -15,6 +15,7 @@ def cart():
     customer_id = current_user.get_id()
 
     promo_code = session.get("manual_promo_code")
+    print("Promotion code: ", promo_code)
 
     cart = CartService.get_cart(customer_id, promo_code)
 
