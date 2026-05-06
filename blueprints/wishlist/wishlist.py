@@ -5,27 +5,34 @@ from flask_login import current_user, login_required
 from services.WishlistService import WishlistService
 from services.CartService import CartService
 from repositories.WishlistRepository import WishlistRepository
+from models import Customers
 
 wishlist_bp = Blueprint("wishlist", __name__, static_folder="static_wishlist",
                   template_folder="templates_wishlist")
 
 @wishlist_bp.route("/wishlist")
+@login_required
 def wishlist():
-    if current_user.has_role("customer"):
+    try:
+        customer = Customers.query.filter_by(customer_id=current_user.get_id()).first()
+
+        if not customer:
+            return redirect(url_for("home.home"))
         customer_id = current_user.get_id()
 
         # get wishlist items from database using customer_id
         wishlist_items = WishlistService.get_wishlist_items(customer_id)
 
 
-        print("wishlist items", type(wishlist_items))
-        for item in wishlist_items:
-            print("item", item)
+        if wishlist_items:
+            for item in wishlist_items:
+                print(f"DEBUG: Item: {item}")
         
         return render_template("wishlist.html", wishlists=wishlist_items)
-    # customer id
-    # get wishlist items from database
-    # render wishlist template with items
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return redirect(url_for("home.home"))
 
 @wishlist_bp.route("/update_wishlist", methods=["POST"])
 @login_required

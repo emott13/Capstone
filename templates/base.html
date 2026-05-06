@@ -42,12 +42,17 @@
                 <a href="/sale">SALE</a>
             </li>
         </ul>
-        <form action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-row navbar-form navbar-left">
+        <form method="GET" action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-row navbar-form navbar-left">
             <div class="form-group">
-                <input type="text" class="form-control" placeholder="Search" name="search">
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    placeholder="Search" 
+                    name="search"
+                    value="{{ request.args.get('search', '') }}"
+                >
             </div>
             <button class="btn btn-default search-btn h-100">
-                <!-- <span class="glyphicon glyphicon-search" style="color: var(--tan-2);"></span> -->
                 <i class="bi bi-search" style="color: var(--tan-2);"></i>
             </button>
         </form>
