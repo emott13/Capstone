@@ -19,27 +19,27 @@
     <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="/home" style="color: var(--orange-1);">Hibiscus</a>
+            <a class="navbar-brand" href="{{ url_for('home.home') }}" style="color: var(--orange-1);">Hibiscus</a>
         </div>
         <ul class="nav navbar-nav flex-row">
-            <li class="{% if request.path == '/home' %}active{% endif %}">
-                <a href="/home">Home</a>
+            <li class="{% if request.path == url_for('home.home') %}active{% endif %}">
+                <a href="{{ url_for('home.home') }}">Home</a>
             </li>
 
             {% if current_user.is_authenticated and current_user.has_role("vendor") %}
-                <li class="{% if request.path == '/vendor/' %}active{% endif %}"><a href="/vendor/">Vendor Home</a></li>
+                <li class="{% if request.path == url_for('vendor.home') %}active{% endif %}"><a href="/vendor/">Vendor Home</a></li>
             {% endif %}
 
             {% if current_user.is_authenticated and current_user.has_role("admin") %}
-                <li class="{% if request.path == '/admin/' %}active{% endif %}"><a href="/admin/">Admin Home</a></li>
+                <li class="{% if request.path == url_for('admin.home') %}active{% endif %}"><a href="/admin/">Admin Home</a></li>
             {% endif %}
 
-            <li class="{% if request.path == '/best-selling' %}active{% endif %}">
-                <a href="/best-selling">Best Sellers</a>
+            <li class="{% if request.path == url_for('search.best_selling') %}active{% endif %}">
+                <a href="{{ url_for('search.best_selling') }}">Best Sellers</a>
             </li>
 
-            <li class="{% if request.path == '/sale' %}active{% endif %}">
-                <a href="/sale">SALE</a>
+            <li class="{% if request.path == url_for('search.sale') %}active{% endif %}">
+                <a href="{{ url_for('search.sale') }}">SALE</a>
             </li>
         </ul>
         <form method="GET" action="{{ url_for('search.search') }}" class="navbar-search-form d-flex flex-row navbar-form navbar-left">
@@ -58,13 +58,23 @@
         </form>
         <ul class="nav navbar-nav navbar-right flex-row">
             {% if not current_user.is_authenticated %}
-                <li><a href="{{ url_for('register.register') }}"><i class="bi bi-person-fill"></i> Sign Up</a></li>
-                <li><a href="{{ url_for('login.login') }}"><i class="bi bi-box-arrow-in-right"></i> Login</a></li>
+                <li class="{% if request.path == url_for('register.register') %}active{% endif %}">
+                    <a href="{{ url_for('register.register') }}"><i class="bi bi-person-fill"></i> Sign Up</a>
+                </li>
+                <li class="{% if request.path == url_for('login.login') %}active{% endif %}">
+                    <a href="{{ url_for('login.login') }}"><i class="bi bi-box-arrow-in-right"></i> Login</a>
+                </li>
             {% else %}
                 <li><a href="{{ url_for('login.logout') }}"><i class="bi bi-box-arrow-in-right"></i> Logout</a></li>
-                <li><a href="{{ url_for('cart.cart') }}"><i class="bi bi-cart-fill"></i>Cart</a></li>
-                <li><a href="{{ url_for('order.order') }}"><i class="bi bi-list"></i>Orders</a></li>
-                <li><a href="{{ url_for('account.account') }}"><i class="bi bi-person-circle"></i> Account</a></li>
+                <li class="{% if request.path == url_for('cart.cart') %}active{% endif %}">
+                    <a href="{{ url_for('cart.cart') }}"><i class="bi bi-cart-fill"></i>Cart</a>
+                </li>
+                <li class="{% if request.path == url_for('order.order') %}active{% endif %}">
+                    <a href="{{ url_for('order.order') }}"><i class="bi bi-list"></i>Orders</a>
+                </li>
+                <li class="{% if request.path == url_for('account.account') %}active{% endif %}">
+                    <a href="{{ url_for('account.account') }}"><i class="bi bi-person-circle"></i> Account</a>
+                </li>
             {% endif %}
         </ul>
     </div>
