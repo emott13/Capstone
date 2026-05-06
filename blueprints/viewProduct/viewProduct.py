@@ -13,6 +13,7 @@ from wtforms.validators import InputRequired, Length
 from flask_login import current_user, login_required
 from ml.inference.also_bought import get_also_bought
 from ml.inference.recommend import recommend_for_user
+from services.WishlistService import WishlistService
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -35,10 +36,13 @@ class CreateReviewForm(FlaskForm):
     submit = SubmitField('Create')
 
 @view_product_bp.route("/view/product", methods = ["GET", "POST"])
-def viewProduct(error=None):
+def viewProduct(error=None, product_id=None, success=None):
     if error == None:
         error = request.args.get("error", None)
-    product_id = request.args.get("id")
+    if success == None:
+        success = request.args.get("success", None)
+    if product_id is None:
+        product_id = request.args.get("id")
 
     # check if product exists
     if not Products.query.filter(
@@ -140,7 +144,7 @@ def viewProduct(error=None):
 
     return render_template("viewProduct.html", product=product,
         product_id=product_id, vendor=vendor, images=images, colors=colors,
-        specs=specs, error=error, reviews=reviews,
+        specs=specs, error=error, success=success, reviews=reviews,
         reviews_filtered=reviews_filtered, review_sort=review_sort,
         review_filter=review_filter, 
         also_bought=also_bought_products, 
@@ -205,3 +209,16 @@ def deleteReview(product_id):
 
     print(error)
     return redirect(url_for('viewProduct.viewProduct', id=product_id, error=error) + '#reviews')
+
+@login_required
+@view_product_bp.route("/add_to_wishlist/<int:product_id>", methods=["POST"])
+def add_to_wishlist(product_id):
+    try:
+        quantity = int(request.form.get("quantity", 1))
+        if quantity <= 0:
+            quantity = 1
+        
+        WishlistService.add_item(customer_id=current_user.get_id(), product_id=product_id, quantity=quantity)
+        return redirect(url_for('viewProduct.viewProduct', id=product_id, success="Product added to wishlist!"))
+    except Exception as exc:
+        return redirect(url_for('viewProduct.viewProduct', id=product_id, error="Failed to add product to wishlist."))
