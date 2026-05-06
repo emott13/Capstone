@@ -197,7 +197,7 @@ class CartRepository:
             address2=data.get("add2"),
             city=data.get("city"),
             state=data.get("state"),
-            zip=data.get("zip"),
+            zip_code=data.get("zip"),
             country=data.get("country"),
         )
 
