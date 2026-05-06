@@ -4,6 +4,8 @@ from extensions import db
 from models import Addresses, Carts
 import json
 
+MAX_CART_ITEM_SIZE = 100
+
 class CartRepository:
 
     @staticmethod
@@ -129,7 +131,7 @@ class CartRepository:
         """), {"cart_id": cart_id, "product_id": product_id}).fetchone()
         if existing:
             # Update the quantity
-            new_quantity = existing[1] + quantity
+            new_quantity = min(existing[1] + quantity, MAX_CART_ITEM_SIZE)
             db.session.execute(text("""
                 UPDATE cart_items SET quantity = :quantity, updated_at = CURRENT_TIMESTAMP
                 WHERE cart_item_id = :cart_item_id
@@ -149,6 +151,7 @@ class CartRepository:
         SET quantity = :quantity
         WHERE cart_item_id = :cart_item_id
         """
+        quantity = min(quantity, MAX_CART_ITEM_SIZE)
 
         db.session.execute(
             text(sql),
