@@ -28,6 +28,9 @@
     border-radius: 5px;
     max-height: 80vh;
     max-width: 90%;
+    min-height: 500px;
+    min-width: 500px;
+    object-fit: cover;
     cursor: zoom-in;
 }
 .product-info-col{
