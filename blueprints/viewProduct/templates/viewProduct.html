@@ -34,7 +34,7 @@
         <!-- Column with product information + quantity selection + add to cart -->
         <div class="col-sm-6 product-info-col">
             <h1 style="font-weight: 600;">{{ product.product_name if product else "Unknown Product" }}</h1>
-            <h4 class="vendor-store-name"><i class="bi bi-person-fill"></i>{{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
+            <h4 class="vendor-store-name"><i class="bi bi-person-fill"></i> {{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
 
             <!-- Success/Error messages -->
             {% if success %}
@@ -78,7 +78,6 @@
             <!-- Quantity adjustment and add to cart button -->
             <form action="{{ url_for('cart.add_to_cart') }}" method="post" class="form-flex">
                 <input type="hidden" name="product_id" value="{{ product.product_id }}">
-                <h4 class="product-quantity">Quantity</h4>
                 <div class="big-row">
                     <div class="col-sm-3 quantity">
                         <button type="button" class="minus" aria-label="Decrease">&minus;</button>
