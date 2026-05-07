@@ -1,9 +1,9 @@
 from datetime import datetime
 from flask import Blueprint, render_template, request, url_for, redirect
-from flask_login import login_user
+from flask_login import login_user, current_user
 from sqlalchemy import text
 from extensions import bcrypt, db
-from models import Users, UserRoles, Roles, Customers, Carts, Vendors
+from models import Users, UserRoles, Roles, Customers, Carts, Vendors, Admins
 from flask_wtf import FlaskForm
 from wtforms import (StringField, PasswordField, DateField, SubmitField, RadioField)
 from wtforms.validators import InputRequired, Length, Email, EqualTo, Regexp, ValidationError
@@ -68,11 +68,21 @@ def register():
     register_form = RegisterForm()
     error = request.args.get("error", None)
     if register_form.validate_on_submit():
-        error = register_post(register_form)
+        try:
+            error = register_post(register_form)
+        except Exception as exc:
+            print(exc)
+            error = "unknown error"
+
         if not error:
             return redirect(url_for('login.login', success="Account created! Login here"))
 
-    roles = Roles.query.where(text('role_name != \'admin\'')).order_by(Roles.role_id.desc())
+    roles = None
+    # Show admin role if the user is an admin
+    if current_user.is_authenticated and current_user.has_role("admin"):
+        roles = Roles.query.order_by(Roles.role_id.desc())
+    else:
+        roles = Roles.query.where(text('role_name != \'admin\'')).order_by(Roles.role_id.desc())
 
     return render_template("register.html", error=error,
                            roles=roles, register_form=register_form,
@@ -85,8 +95,9 @@ def register_post(register_form) -> str:
 
     if role_ids == []:
         return "Need to select an account type"
-        
-    hashed_password = bcrypt.generate_password_hash(register_form.password.data).decode('utf-8')
+
+    hashed_password = bcrypt.generate_password_hash(
+        register_form.password.data).decode('utf-8')
     user = Users(username=register_form.username.data,
                 email=register_form.email.data,
                 password=hashed_password,
@@ -95,28 +106,35 @@ def register_post(register_form) -> str:
                 dob=register_form.dob.data,
     )
 
+    customer: Customers = None
+    vendor: Vendors = None
+    admin: Admins = None
+    roles = []
+    for role_id in role_ids:
+        role = Roles.query.where(
+            text(f"role_id = {int(role_id)}")).one_or_none()
+
+        if (role.role_name == "admin" and
+            ( not current_user.is_authenticated or
+              not current_user.has_role('admin') )
+            ):
+            return "Role unavailable"
+        if role.role_name == "admin":
+            admin = Admins()
+        if role.role_name == "vendor":
+            vendor = Vendors(store_name=user.username)
+        elif role.role_name == "customer":
+            customer = Customers()
+        
+        roles.append(role)
+
+    user.roles = roles
+    user.customer = customer
+    user.vendor = vendor
+    user.admin = admin
+    print(user.roles)
+
     db.session.add(user)
     db.session.commit()
 
-    customer_role_id = db.session.execute(
-        text("SELECT role_id FROM roles WHERE role_name = :role_name"), {"role_name": "customer"}
-    ).one()[0]
-    vendor_role_id = db.session.execute(
-        text("SELECT role_id FROM roles WHERE role_name = :role_name"), {"role_name": "vendor"}
-    ).one()[0]
-
-    roles = []
-    for role_id in role_ids:
-        roles.append(UserRoles(user_id=user.user_id, role_id=role_id))
-        if int(role_id) == int(customer_role_id):
-            customer = Customers(customer_id=user.user_id)
-            db.session.add(customer)
-            db.session.commit()
-            db.session.add(Carts(customer_id=customer.customer_id))
-        elif int(role_id) == int(vendor_role_id):
-            vendor = Vendors(vendor_id=user.user_id, store_name=user.username)
-            db.session.add(vendor)
-    db.session.add_all(roles)
-    db.session.commit()
-    
     return ""
