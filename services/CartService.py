@@ -1,10 +1,19 @@
 # services/CartService.py
-from flask import request
+from flask import request, session
 from flask_login import current_user
 
 from repositories.CartRepository import CartRepository
 from services.OrderPricingService import OrderPricingService
 from extensions import db
+from datetime import datetime, timezone
+from models import (
+    Carts,
+    Promotion,
+    PromotionTarget,
+    PromotionRedemption,
+    ProductCategories,
+    product_category_map
+)
 
 class CartService:
 
@@ -17,24 +26,20 @@ class CartService:
         if not cart:
             return None
 
-        items = cart["items"]
-
-        # Ensure Python list of dicts
-        if isinstance(items, str):
-            import json
-            items = json.loads(items)
-            cart["items"] = items
+        promo_code = session.get("manual_promo_code")
 
         pricing = OrderPricingService.calculate_cart(
-            items=items,
+            items=cart["items"],
             customer_id=customer_id,
             promo_code=promo_code
         )
 
         # Merge pricing info into cart dict
-        cart.update(pricing)
+        # cart.update(pricing)
+
+        print("Pricing Information: ", pricing)
         print('CartService.get_cart - Final cart data:', cart)  # Debug log
-        return cart
+        return cart, pricing
     
     @staticmethod
     def get_cart_by_user_id(user_id):
@@ -88,3 +93,6 @@ class CartService:
     @staticmethod
     def get_user_addresses(user_id):
         return CartRepository.get_user_addresses(user_id)
+    
+
+    

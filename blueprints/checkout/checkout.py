@@ -84,7 +84,7 @@ def payment():
     if request.method == "POST":
 
         customer_id = current_user.get_id()
-        promo_code = request.form.get("promo_code")
+        promo_code = session["manual_promo_code"]
         items=CartRepository.get_cart(customer_id)
 
         amount = OrderPricingService.calculate_cart(
@@ -119,6 +119,7 @@ def confirmation():
     
     user_id = current_user.get_id()
     promo_code = session.get("manual_promo_code")
+    print('PROMOTION CODE: ', promo_code)
     cartDict = CartService.get_cart(user_id, promo_code)
     cart = CartService.get_cart_by_user_id(user_id)
 

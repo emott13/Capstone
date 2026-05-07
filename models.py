@@ -43,6 +43,8 @@ class Users(UserMixin, db.Model):
         backref=db.backref("users", lazy="dynamic")
     )
 
+    vendor = db.relationship("Vendors", back_populates="user", uselist=False)
+
     phone_numbers = db.relationship(
         "PhoneNumbers", 
         secondary="user_phone_numbers", 
@@ -96,7 +98,14 @@ class Vendors(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
-    products = db.relationship("Products")
+    # Relationships 
+    products = db.relationship("Products", back_populates="vendor")
+    user = db.relationship("Users", back_populates="vendor", uselist=False)
+    promotion_targets = db.relationship(
+        "PromotionTarget",
+        back_populates="vendor",
+        cascade="all, delete-orphan"
+    )
 
 # Customers
 class Customers(db.Model):
@@ -181,6 +190,8 @@ class Products(db.Model):
     
     wishlist_items = db.relationship("WishlistItems", back_populates="product")
 
+    vendor = db.relationship("Vendors", back_populates="products")
+
     specs = db.relationship(
         "ProductSpecs",
         back_populates="product",
@@ -221,6 +232,11 @@ class Products(db.Model):
         back_populates="product",
         cascade="all, delete-orphan"
     )
+    promotion_targets = db.relationship(
+        "PromotionTarget",
+        back_populates="product",
+        cascade="all, delete-orphan"
+    )
     
 # product specs
 class ProductSpecs(db.Model):
@@ -252,6 +268,13 @@ class ProductCategories(db.Model):
     category_image = db.Column(db.String(255), nullable=False)
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
+
+    # Relationships
+    promotion_targets = db.relationship(
+        "PromotionTarget",
+        back_populates="category",
+        cascade="all, delete-orphan"
+    )
 
 # product images
 class ProductImages(db.Model):
@@ -515,6 +538,11 @@ class PromotionTarget(db.Model):
         db.ForeignKey("product_categories.category_id"),
         nullable=True
     )
+
+    # Relationships
+    product = db.relationship("Products", back_populates="promotion_targets")
+    vendor = db.relationship("Vendors", back_populates="promotion_targets")
+    category = db.relationship("ProductCategories", back_populates="promotion_targets")
 
 # promotion conditions
 class PromotionCondition(db.Model):

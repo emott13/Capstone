@@ -18,30 +18,41 @@ class PromotionService:
 
         # Fetch active promotions
         promos = Promotion.query.filter(Promotion.is_active == True).all()
+        print('PROMOTIONS: ', promos)
 
         # Optionally filter by promo code if provided
         if promo_code:
             promos = [p for p in promos if p.code and p.code.upper() == promo_code.upper()]
 
+        print("PROMOTIONS AFTER PROMO CODE: ", promos)
         # Shuffle or sort by discount value (optional)
         promos.sort(key=lambda p: p.discount_value, reverse=True)
 
         for promo in promos:
             # Check usage limits
             if not PromotionService.check_usage_limits(promo, customer_id):
+                print("promotion 1: ", promo.promotion_id, promo.discount_type, promo.discount_value)
+                
                 continue
 
-            # Check conditions
-            if not PromotionService.check_conditions(promo, customer, subtotal):
-                continue
+            # Check conditions (No conditions in db currently)
+            # if not PromotionService.check_conditions(promo, customer, subtotal):
+            #     print("promotion 2: ", promo)
+            #     continue
 
             # Check if scope matches cart items
             if not PromotionService.scope_matches(promo, items):
+                print("promotion 3: ", promo)
                 continue
+            else:
+                print("scope matches")
 
             # Non-stackable promotion conflict
             if applied_non_stackable and not promo.stackable:
+                print("promotion 4: ", promo)
                 continue
+            else:
+                print("stacking rules passed")
 
             # Calculate discount
             discount_amount = PromotionService.calculate_discount(promo, items, subtotal)
@@ -68,6 +79,8 @@ class PromotionService:
         """
         total_usage = db.session.query(func.count(PromotionRedemption.promotion_redemption_id))\
             .filter_by(promotion_id=promo.promotion_id).scalar()
+        
+        print("TOTAL USAGE", total_usage)
 
         if promo.usage_limit and total_usage >= promo.usage_limit:
             return False
@@ -75,7 +88,10 @@ class PromotionService:
         customer_usage = db.session.query(func.count(PromotionRedemption.promotion_redemption_id))\
             .filter_by(promotion_id=promo.promotion_id, customer_id=customer_id).scalar()
 
+        print("CUSTOMER USAGE ", customer_usage)
+
         if promo.per_customer_limit and customer_usage >= promo.per_customer_limit:
+            print("PER CUST LIMIT ", promo.per_customer_limit)
             return False
 
         return True
@@ -108,17 +124,23 @@ class PromotionService:
         `items` should be a list of dicts:
         [{'product_id': ..., 'vendor_id': ..., 'category_id': ...}]
         """
+        print("CHECKING ITEMS FOR SCOPE TYPE MATCH: ", items)
         if promo.scope_type == "cart":
             return True
 
         targets = PromotionTarget.query.filter_by(promotion_id=promo.promotion_id).all()
+        print("TARGETS ", targets[0])
+        print("promo scope type ", promo.scope_type)
         for item in items:
             for target in targets:
                 if promo.scope_type == "product" and target.product_id == item["product_id"]:
+                    print("target successful: product")
                     return True
                 if promo.scope_type == "vendor" and target.vendor_id == item["vendor_id"]:
+                    print("target successful: vendor")
                     return True
-                if promo.scope_type == "category" and hasattr(item, "category_id") and target.category_id == item.get("category_id"):
+                if promo.scope_type == "category" and target.category_id in item["category_ids"]:
+                    print("target successful: category")
                     return True
         return False
 

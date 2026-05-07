@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash, session
+from flask import Blueprint, get_flashed_messages, render_template, request, redirect, url_for, flash, session
 from flask_login import login_required, current_user
 from services.CartService import CartService
 
@@ -17,7 +17,7 @@ def cart():
     promo_code = session.get("manual_promo_code")
     print("Promotion code: ", promo_code)
 
-    cart = CartService.get_cart(customer_id, promo_code)
+    cart, pricing = CartService.get_cart(customer_id, promo_code)
 
     if not cart or not cart.get("items"):
         # Either the cart doesn't exist, or it has no items
@@ -26,11 +26,11 @@ def cart():
     return render_template(
         "cart.html",
         cartItems=cart["items"],
-        subtotal=cart["subtotal"],
-        discounts=cart["discounts"],
-        tax=cart["tax"],
-        total=cart["total"],
-        promotions=cart["applied_promotions"]
+        subtotal=pricing["subtotal"],
+        discounts=pricing["discounts"],
+        tax=pricing["tax"],
+        total=pricing["total"],
+        promotions=pricing["applied_promotions"]
     )
 
 @cart_bp.route("/add-to-cart", methods=["POST"])
@@ -63,7 +63,7 @@ def apply_promo():
 
     session["manual_promo_code"] = code
 
-    flash("Promo code applied","success")
+    print("Promo code applied")
 
     return redirect(url_for("cart.cart"))
 

@@ -10,7 +10,7 @@ class OrderPricingService:
         Compute subtotal, discounts, tax, and total for the cart.
         Expects items as a list of dicts (Python-native, not JSON string).
         """
-
+        print("CART ITEMS:", items)
         if not items:
             return {
                 "subtotal": 0,
@@ -38,13 +38,13 @@ class OrderPricingService:
             quantity = int(item.get("quantity", 0))
             subtotal += price * quantity
 
-        # Apply promotions automatically for testing
-        # discount_total, applied_promotions = PromotionService.apply_promotions(
-        #     items,
-        #     subtotal,
-        #     customer_id,
-        #     promo_code
-        # )
+        # Apply promotions 
+        discount_total, applied_promotions = PromotionService.apply_promotions(
+            items,
+            subtotal,
+            customer_id,
+            promo_code
+        )
 
         # Calculate tax on discounted subtotal
         try:
@@ -74,5 +74,5 @@ class OrderPricingService:
                 "discounts": 0,
                 "tax": tax,
                 "total": total,
-                "applied_promotions": 0
+                "applied_promotions": []
             }
