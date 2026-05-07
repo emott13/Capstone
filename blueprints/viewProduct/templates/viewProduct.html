@@ -4,6 +4,11 @@
 {{ super() }}
 <link rel="stylesheet" href="{{ url_for('viewProduct.static', filename='styles/viewProduct.css') }}">
 {% endblock %}
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('viewProduct.static', filename='scripts/review.js') }}"></script>
+    <script src="{{ url_for('viewProduct.static', filename='scripts/viewProduct.js') }}"></script>
+{% endblock %}
 {% block page_content %}
 
 <div class="outer-wrapper">
@@ -135,116 +140,12 @@
 </div>
 
 {% include "reviewProduct.html" %}
-<script>
-    let createReviewForm = document.getElementById("create-review");
-
-    // Make create review stars show correctly
-    updateReviewCreate(createReviewForm.rating.value);
-
-
-    // Set main product image for zoom function
-    function setMainImage(url){
-        let main = document.getElementById('main-product-img');
-        if(main){
-            main.src = url;
-        }
-        let overlay = document.getElementById('image-zoom');
-        let zoomed = document.getElementById('zoomed-img');
-        if(overlay && overlay.style.display !== 'none' && zoomed){
-            zoomed.src = url;
-        }
-    }
-    // Scrolling smoothness on image zoom
-    function scrollThumbs(dir){
-        let container = document.getElementById('thumbnail-container');
-        if(container){
-            container.scrollBy({ left: dir * 70, behavior: 'smooth' });
-        }
-    }
-    // Image zoom movement on cursor
-    function zoomPan(e) {
-        let zoomed = e.currentTarget;
-        let rect = zoomed.getBoundingClientRect();
-        let x = e.clientX - rect.left;
-        let y = e.clientY - rect.top;
-        let xPct = (x / rect.width) * 100;
-        let yPct = (y / rect.height) * 100;
-        zoomed.style.transformOrigin = xPct + "% " + yPct + "%";
-    }
-    // Image zoom resets after cursor moved away
-    function resetZoomOrigin(){
-        const zoomed = document.getElementById('zoomed-img');
-        if(zoomed){
-            zoomed.style.transformOrigin = 'center center';
-        }
-    }
-    // Open lightbox for image zoom
-    function openZoom(src){
-        let overlay = document.getElementById('image-zoom');
-        let zoomed = document.getElementById('zoomed-img');
-        let main = document.getElementById('main-product-img');
-        let imgSrc = src || (main ? main.src : '');
-        if(!overlay || !zoomed){
-            return;
-        }
-        zoomed.src = imgSrc;
-        overlay.style.display = 'block';
-        zoomed.addEventListener('mousemove', zoomPan);
-        zoomed.addEventListener('mouseleave', resetZoomOrigin);
-    }
-    // Close lightbox
-    function closeZoom(){
-        let overlay = document.getElementById('image-zoom');
-        let zoomed = document.getElementById('zoomed-img');
-        if(!overlay){
-            return;
-        }
-        overlay.style.display = 'none';
-        if(zoomed){
-            zoomed.src = '';
-            zoomed.style.transformOrigin = 'center center';
-            zoomed.removeEventListener('mousemove', zoomPan);
-            zoomed.removeEventListener('mouseleave', resetZoomOrigin);
-        }
-    }
-
-    // Reviews Start
-
-    function toggleReviewCreate() {
-        /* toggles the div for creating/updating/deleting a review */
-        let createReviewElem = document.getElementById("create-review");
-        createReviewElem.hidden = !createReviewElem.hidden;
-    }
-
-    function updateReviewCreate(rating) {
-        /* 
-            Makes the create review stars responsive. Ex. pressing 3rd star makes all 
-            current and previous stars orange 
-        */
-        let createReviewLabels = document.getElementsByClassName('create-review-label') ;
-
-        for (let i = 1; i <= 5; i++) {
-            // gets the <i> elem containing the icon within the label
-            let starElem = createReviewLabels[i-1].children[0];
-            if (i <= rating) {
-                starElem.classList.add("review-star");
-                starElem.classList.remove("review-star-gray");
-            }
-            else {
-                starElem.classList.add("review-star-gray");
-                starElem.classList.remove("review-star");
-            }
-        }
-    }
-
-    // Reviews End
-</script>
 
 {% if also_bought %}
     <div class="carousel-container">
         <h3 class="mb-3">Customers Also Bought</h3>
         <div class="carousel-wrapper">
-            <button class="carousel-btn left" onclick="scrollLeft('first')">&#10094;</button>
+            <button class="carousel-btn left" onclick="scrollLeftt('first')">&#10094;</button>
             <div id="carouselTrack1" class="carousel-track">
                 {% for p in also_bought %}
                 <div class="product-card">
@@ -268,7 +169,7 @@
     <div class="carousel-container">
         <h3 class="mb-3">Related Products</h3>
         <div class="carousel-wrapper">
-            <button class="carousel-btn left" onclick="scrollLeft('second')">&#10094;</button>
+            <button class="carousel-btn left" onclick="scrollLeftt('second')">&#10094;</button>
             <div id="carouselTrack2" class="carousel-track">
                 {% for p in related_products %}
                 <div class="product-card">
@@ -293,7 +194,7 @@
     <div class="carousel-container">
         <h3 class="mb-3">Recommended For You</h3>
         <div class="carousel-wrapper">
-            <button class="carousel-btn left" onclick="scrollLeft('third')">&#10094;</button>
+            <button class="carousel-btn left" onclick="scrollLeftt('third')">&#10094;</button>
             <div id="carouselTrack3" class="carousel-track">
                 {% for p in user_products %}
                 <div class="product-card">
@@ -313,113 +214,4 @@
         </div>
     </div>
 {% endif %}
-
-<script>
-    function scrollLeft(track) {
-        switch (track) {
-            case 'first':
-                document.getElementById("carouselTrack1").scrollBy({
-                    left: -300,
-                    behavior: "smooth"
-                });
-                break;
-            case 'second':
-                document.getElementById("carouselTrack2").scrollBy({
-                    left: -300,
-                    behavior: "smooth"
-                });
-                break;
-            case 'third':
-                document.getElementById("carouselTrack3").scrollBy({
-                    left: -300,
-                    behavior: "smooth"
-                });
-                break;
-        }
-        
-    }
-
-    function scrollRight(track) {
-        switch (track) {
-            case 'first':
-                document.getElementById("carouselTrack1").scrollBy({
-                    left: 300,
-                    behavior: "smooth"
-                });
-                break;
-            case 'second':
-                document.getElementById("carouselTrack2").scrollBy({
-                    left: 300,
-                    behavior: "smooth"
-                });
-                break;
-            case 'third':
-                document.getElementById("carouselTrack3").scrollBy({
-                    left: 300,
-                    behavior: "smooth"
-                });
-                break;
-        }
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const track = document.getElementById("carouselTrack1");
-
-        // Clone items for illusion of infinity
-        const items = Array.from(track.children);
-
-        items.forEach(item => {
-            const clone = item.cloneNode(true);
-            track.appendChild(clone);
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const track = document.getElementById("carouselTrack2");
-
-        // Clone items for illusion of infinity
-        const items = Array.from(track.children);
-
-        items.forEach(item => {
-            const clone = item.cloneNode(true);
-            track.appendChild(clone);
-        });
-    });
-
-    document.addEventListener("DOMContentLoaded", () => {
-        const track = document.getElementById("carouselTrack3");
-
-        // Clone items for illusion of infinity
-        const items = Array.from(track.children);
-
-        items.forEach(item => {
-            const clone = item.cloneNode(true);
-            track.appendChild(clone);
-        });
-    });
-
-    let quantityContainer = document.querySelector(".quantity");
-    let minusBtn = quantityContainer.querySelector(".minus");
-    let plusBtn = quantityContainer.querySelector(".plus");
-    let inputBox = quantityContainer.querySelector(".input-box");
-
-    updateButtons();
-
-    quantityContainer.addEventListener("click", (e) => {
-        if(e.target.classList.contains("minus")){
-            inputBox.value = parseInt(inputBox.value) - 1;
-        }
-        else if(e.target.classList.contains("plus")){
-            inputBox.value = parseInt(inputBox.value) + 1;
-        }
-        updateButtons();
-    });
-
-    function updateButtons(){
-        let value = parseInt(inputBox.value);
-        minusBtn.disabled = value <= parseInt(inputBox.min);
-        plusBtn.disabled = value >= parseInt(inputBox.max);
-    }
-
-</script>
 {% endblock %}
