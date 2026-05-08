@@ -33,7 +33,12 @@ class UserRepository:
         
         # result = db.session.execute(sql, {"user_id": user_id, "phone_number": phone_number}).fetchone()
 
-        phone_number_model = PhoneNumbers(phone_number=phone_number)
+        phone_number_model = PhoneNumbers.query \
+            .where(PhoneNumbers.phone_number == phone_number).one_or_none()
+
+        if not phone_number_model:
+            phone_number_model = PhoneNumbers(phone_number=phone_number)
+
         user.phone_numbers.append(phone_number_model)
 
         db.session.commit()
