@@ -16,12 +16,12 @@
 
         <!-- Column with product images + image zoom -->
         <div class="col-sm-6">
-            {% if images and images|length > 1 %}
+            {% if product.images and product.images|length > 1 %}
             <!-- Product image carosuel -->
                 <div class="mb-2 viewproduct-thumbnail-bar">
                     <span class="glyphicon glyphicon-chevron-left" onclick="scrollThumbs(-1)"></span>
                     <div id="thumbnail-container">
-                        {% for img in images %}
+                        {% for img in product.images %}
                             <img src="{{ img.image_url }}" class="img-thumbnail thumbnail-img" onclick="setMainImage('{{ img.image_url }}')">
                         {% endfor %}
                     </div>
@@ -29,8 +29,8 @@
                 </div>
             {% endif %}
             <!-- Main product image -->
-            {% if images and images|length > 0 %}
-                <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
+            {% if product.images and product.images|length > 0 %}
+                <img id="main-product-img" class="product-img-main" style="cursor: zoom-in;" src="{{ product.images[0].image_url }}" alt="{{ product.product_name }}" onclick="openZoom(this.src);">
             {% else %}
                 <img id="main-product-img" class="product-img-main" src="https://www.gardeners.com/cdn/shop/files/8592211_001E-tif.jpg?v=1758559724&width=1200" alt="Error Image" onclick="openZoom(this.src)">
             {% endif %}
@@ -39,7 +39,7 @@
         <!-- Column with product information + quantity selection + add to cart -->
         <div class="col-sm-6 product-info-col">
             <h1 style="font-weight: 600;">{{ product.product_name if product else "Unknown Product" }}</h1>
-            <h4 class="vendor-store-name"><i class="bi bi-person-fill"></i> {{ vendor.store_name if vendor else "Unknown Vendor" }}</h4>
+            <h4 class="vendor-store-name"><i class="bi bi-person-fill"></i> {{ product.vendor.store_name if product.vendor else "Unknown Vendor" }}</h4>
 
             <!-- Success/Error messages -->
             {% if success %}
@@ -121,11 +121,11 @@
                 <h4 class="product-description-h4">Product Details</h4>
                 <div class="description-box">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        {% if colors %}
+                        {% if product.colors %}
                             <p>Colors:</p>
                         {% endif %}
                         <div style="display: flex; gap: 5px;">
-                        {% for color in colors %}
+                        {% for color in product.colors %}
                             <ul style="list-style-type: none; padding: 0; margin: 0 0 5px 0;">
                                 <li style="background-color: {{ color.hex_code }}; width: 50px; height: 20px; border: 1px solid gray; display: block;" title="{{ color.hex_code }}"></li>
                             </ul>
@@ -133,7 +133,7 @@
                         </div>
                     </div>
                     <p style="margin-bottom: 5px;">Specifications:</p>
-                    {% for spec in specs %}
+                    {% for spec in product.specs %}
                         <ul style="margin-bottom: 0;">
                             <li>{{ spec.specification }}</li>
                         </ul>

@@ -14,7 +14,7 @@ from flask_login import current_user, login_required
 from ml.inference.also_bought import get_also_bought
 from ml.inference.recommend import recommend_for_user
 from services.WishlistService import WishlistService
-from sqlalchemy.orm import joinedload
+from sqlalchemy.orm import joinedload, selectinload
 from datetime import datetime
 from sqlalchemy import or_, and_
 
@@ -76,19 +76,22 @@ def viewProduct(error=None, product_id=None, success=None):
             product = (
                 db.session.query(Products)
                 .options(
-                    joinedload(Products.vendor).joinedload("user"),
-                    joinedload(Products.images),
-                    joinedload(Products.colors),
-                    joinedload(Products.specs),
+                    selectinload(Products.specs),
+                    selectinload(Products.colors),
+                    selectinload(Products.images),
+                    selectinload(Products.categories),
+                    selectinload(Products.vendor)
                 )
-                .filter_by(product_id=product_id)
+                .filter(
+                    Products.product_id == product_id
+                )
                 .first()
             )
                 
         except Exception as error:
             error = "Error loading product."
 
-
+    print("PRODUCT TESTING: ", product.vendor.store_name)
     # --- Customers Also Bought These Products --- #
 
     also_bought_ids = get_also_bought(product_id)
@@ -155,8 +158,7 @@ def viewProduct(error=None, product_id=None, success=None):
         )
 
     return render_template("viewProduct.html", product=product,
-        product_id=product_id, vendor=vendor, images=images, colors=colors,
-        specs=specs, success=success, reviews=reviews, promotions=promotions,
+        product_id=product_id, success=success, reviews=reviews, promotions=promotions,
         reviews_filtered=reviews_filtered, review_sort=review_sort,
         review_filter=review_filter, 
         also_bought=also_bought_products, 
