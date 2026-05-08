@@ -125,6 +125,7 @@ def register_post(register_form) -> str:
             vendor = Vendors(store_name=user.username)
         elif role.role_name == "customer":
             customer = Customers()
+            customer.cart = Carts()
         
         roles.append(role)
 
