@@ -23,6 +23,8 @@ class PromotionService:
         # Optionally filter by promo code if provided
         if promo_code:
             promos = [p for p in promos if p.code and p.code.upper() == promo_code.upper()]
+        else:
+            promos = []
 
         print("PROMOTIONS AFTER PROMO CODE: ", promos)
         # Shuffle or sort by discount value (optional)
