@@ -66,12 +66,17 @@
                 </li>
             {% else %}
                 <li><a href="{{ url_for('login.logout') }}"><i class="bi bi-box-arrow-in-right"></i> Logout</a></li>
-                <li class="{% if request.path == url_for('cart.cart') %}active{% endif %}">
-                    <a href="{{ url_for('cart.cart') }}"><i class="bi bi-cart-fill"></i>Cart</a>
-                </li>
-                <li class="{% if request.path == url_for('order.order') %}active{% endif %}">
-                    <a href="{{ url_for('order.order') }}"><i class="bi bi-list"></i>Orders</a>
-                </li>
+                {% if current_user.has_role('customer') %}
+                    <li class="{% if request.path == url_for('cart.cart') %}active{% endif %}">
+                        <a href="{{ url_for('cart.cart') }}"><i class="bi bi-cart-fill"></i>Cart</a>
+                    </li>
+                    <li class="{% if request.path == url_for('order.order') %}active{% endif %}">
+                        <a href="{{ url_for('order.order') }}"><i class="bi bi-list"></i>Orders</a>
+                    </li>
+                    <li class="{% if request.path == url_for('wishlist.wishlist') %}active{% endif %}">
+                        <a href="{{ url_for('wishlist.wishlist') }}"><i class="bi bi-journal-bookmark"></i> Wishlist</a>
+                    </li>
+                {% endif %}
                 <li class="{% if request.path == url_for('account.account') %}active{% endif %}">
                     <a href="{{ url_for('account.account') }}"><i class="bi bi-person-circle"></i> Account</a>
                 </li>

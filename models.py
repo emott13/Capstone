@@ -37,6 +37,11 @@ class Users(UserMixin, db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
+    # Relationships
+    customer = db.relationship("Customers", uselist=False, backref="users")
+    vendor = db.relationship("Vendors", uselist=False, backref="users")
+    admin = db.relationship("Admins", uselist=False, backref="users")
+
     roles = db.relationship(
         "Roles",
         secondary="user_roles",
