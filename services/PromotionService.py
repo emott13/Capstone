@@ -139,7 +139,7 @@ class PromotionService:
                 if promo.scope_type == "vendor" and target.vendor_id == item["vendor_id"]:
                     print("target successful: vendor")
                     return True
-                if promo.scope_type == "category" and target.category_id in item["category_ids"]:
+                if promo.scope_type == "category" and hasattr(item, "category_id") and target.category_id == item.get("category_id"):
                     print("target successful: category")
                     return True
         return False

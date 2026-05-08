@@ -20,9 +20,9 @@ def checkout():
 
         promo_code = session.get("manual_promo_code")
 
-        cart = CartService.get_cart(customer_id, promo_code)
+        cart, pricing = CartService.get_cart(customer_id, promo_code)
 
-        if not cart or not cart.get("items"):
+        if not cart or not cart["items"]:
             # Either the cart doesn't exist, or it has no items
             flash("Your cart is empty. Please add items before checking out.","error")
             return redirect(url_for("cart.cart"))
@@ -30,11 +30,11 @@ def checkout():
         return render_template(
             "checkout.html",
             cartItems=cart["items"],
-            subtotal=cart["subtotal"],
-            discounts=cart["discounts"],
-            tax=cart["tax"],
-            total=cart["total"],
-            promotions=cart["applied_promotions"]
+            subtotal=pricing["subtotal"],
+            discounts=pricing["discounts"],
+            tax=pricing["tax"],
+            total=pricing["total"],
+            promotions=pricing["applied_promotions"]
         )
     
 # handles order address
@@ -84,7 +84,10 @@ def payment():
     if request.method == "POST":
 
         customer_id = current_user.get_id()
-        promo_code = session["manual_promo_code"]
+        try:
+            promo_code = session["manual_promo_code"]
+        except:
+            promo_code = None
         items=CartRepository.get_cart(customer_id)
 
         amount = OrderPricingService.calculate_cart(
@@ -120,7 +123,7 @@ def confirmation():
     user_id = current_user.get_id()
     promo_code = session.get("manual_promo_code")
     print('PROMOTION CODE: ', promo_code)
-    cartDict = CartService.get_cart(user_id, promo_code)
+    cartDict, pricing = CartService.get_cart(user_id, promo_code)
     cart = CartService.get_cart_by_user_id(user_id)
 
     if request.method == "POST":
@@ -142,10 +145,10 @@ def confirmation():
 
     # print("CART", cart)
     return render_template("confirmation.html", 
-        subtotal=cartDict["subtotal"],
-        discounts=cartDict["discounts"],
-        tax=cartDict["tax"],
-        total=cartDict["total"],
-        promotions=cartDict["applied_promotions"],
+        subtotal=pricing["subtotal"],
+        discounts=pricing["discounts"],
+        tax=pricing["tax"],
+        total=pricing["total"],
+        promotions=pricing["applied_promotions"],
         cart=cart
     )

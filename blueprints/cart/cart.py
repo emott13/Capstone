@@ -67,6 +67,14 @@ def apply_promo():
 
     return redirect(url_for("cart.cart"))
 
+@cart_bp.route("/remove_promo", methods=["POST"])
+def remove_promo():
+    session.pop("manual_promo_code", None)
+
+    print("Promotion code removed successfully.")
+
+    return redirect(url_for("cart.cart"))
+
 @cart_bp.route("/update_cart", methods=["POST"])
 @login_required
 def update_cart():
