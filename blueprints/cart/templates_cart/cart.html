@@ -39,6 +39,8 @@
 {% block page_content %}
 
 <div class="container my-4">
+    <h1 style="margin-top: 20px;">Cart</h1>
+    <hr>
     {% if cartItems %}
         <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
             <table class="table">
