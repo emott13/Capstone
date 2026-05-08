@@ -119,19 +119,10 @@ class Customers(db.Model):
     created_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now())
     updated_at = db.Column(db.DateTime(timezone=True), server_default=db.func.now(), onupdate=db.func.now())
 
-    # def __init__(self, **kwargs):
-    #     super().__init__(**kwargs)
-    #     # Custom initialization
-    #     # this might not work. Sorry if this errors for one of you
-    #     cart = Carts(customer_id=self.customer_id)
-    #     db.session.add(cart)
-    #     db.session.commit()
-    
+    cart = db.relationship("Carts", backref="customers", uselist=False)    
+
     def getUser(self):
         return db.one_or_404(db.select(Users).filter_by(user_id=self.customer_id))
-
-    # def getCart(self):
-    #     return Carts.query.filter_by(text("customer_id = :customer_id", {"customer_id": self.customer_id})).get_or_404()
 
 # PhoneNumbers
 class PhoneNumbers(db.Model):
