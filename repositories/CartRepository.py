@@ -51,7 +51,9 @@ class CartRepository:
     def get_cart(customer_id):
         """
         Fetch the customer's cart and all items as Python-native list of dicts.
+        Includes category_ids for each product.
         """
+
         sql = """
         SELECT
             c.cart_id,
@@ -66,27 +68,47 @@ class CartRepository:
                         'vendor_id', p.vendor_id,
                         'price', p.price,
                         'quantity', ci.quantity,
-                        'line_total', ci.quantity * p.price
+                        'line_total', ci.quantity * p.price,
+
+                        -- Category IDs
+                        'category_ids',
+                        COALESCE(
+                            (
+                                SELECT json_agg(pcm.category_id)
+                                FROM product_category_map pcm
+                                WHERE pcm.product_id = p.product_id
+                            ),
+                            '[]'
+                        )
                     )
                 ) FILTER (WHERE ci.product_id IS NOT NULL),
                 '[]'
             ) AS items
 
         FROM carts c
-        LEFT JOIN cart_items ci ON c.cart_id = ci.cart_id
-        LEFT JOIN products p ON ci.product_id = p.product_id
+
+        LEFT JOIN cart_items ci
+            ON c.cart_id = ci.cart_id
+
+        LEFT JOIN products p
+            ON ci.product_id = p.product_id
+
         WHERE c.customer_id = :customer_id
+
         GROUP BY c.cart_id
         """
 
-        result = db.session.execute(text(sql), {"customer_id": customer_id}).mappings().fetchone()
+        result = db.session.execute(
+            text(sql),
+            {"customer_id": customer_id}
+        ).mappings().fetchone()
 
         if not result:
             return None
 
         items = result["items"]
 
-        # Ensure we have Python objects
+        # Ensure Python objects
         if isinstance(items, str):
             items = json.loads(items)
 

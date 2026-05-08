@@ -83,7 +83,23 @@
                     {% for promo in promotions %}
                     <tr>
                         <td>Code:</td>
-                        <td>{{ promo.code }}</td>
+
+                        <td class="d-flex align-items-center gap-2">
+                            <span>{{ promo.code }}</span>
+
+                            <form 
+                                method="POST"
+                                action="{{ url_for('cart.remove_promo') }}"
+                                style="display:inline;"
+                            >
+                                <button 
+                                    type="submit"
+                                    class="btn btn-sm btn-outline-danger"
+                                >
+                                    Remove
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                     {% endfor %}
                 {% endif %}

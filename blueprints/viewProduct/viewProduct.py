@@ -4,7 +4,7 @@ from flask_wtf import FlaskForm
 from wtforms import RadioField, StringField, SubmitField, TextAreaField
 from wtforms.validators import InputRequired, Length
 from extensions import conn, db
-from models import Products, Reviews, ProductCategories
+from models import Products, Reviews, ProductCategories, Promotion, PromotionTarget
 from sqlalchemy import text
 from repositories.ReviewRepository import ReviewRepository
 from flask_wtf import FlaskForm
@@ -14,6 +14,11 @@ from flask_login import current_user, login_required
 from ml.inference.also_bought import get_also_bought
 from ml.inference.recommend import recommend_for_user
 from services.WishlistService import WishlistService
+from sqlalchemy.orm import joinedload
+from datetime import datetime
+from sqlalchemy import or_, and_
+
+
 
 view_product_bp = Blueprint("viewProduct", __name__, static_folder="viewProduct_static", template_folder="templates")
 
@@ -68,35 +73,17 @@ def viewProduct(error=None, product_id=None, success=None):
 
     if product_id:
         try:
-            product = Products.query.get(product_id)
-            if product:
-                vendor_res = conn.execute(text("""
-                    SELECT first_name, last_name, store_name
-                    FROM users u JOIN vendors v
-                    ON u.user_id = v.vendor_id
-                    WHERE v.vendor_id = :vendor_id
-                """), {"vendor_id": product.vendor_id}).fetchone()
-                
-                if vendor_res:
-                    vendor = vendor_res
-
-                images = conn.execute(text("""
-                    SELECT image_url FROM product_images
-                    WHERE product_id = :product_id
-                    ORDER BY image_id
-                """), {"product_id": product_id}).fetchall()
-
-                colors = conn.execute(text("""
-                    SELECT hex_code FROM product_colors
-                    WHERE product_id = :product_id
-                    ORDER BY color_id
-                """), {"product_id": product_id}).fetchall()
-
-                specs = conn.execute(text("""
-                    SELECT specification FROM product_specs
-                    WHERE product_id = :product_id
-                    ORDER BY spec_id
-                """), {"product_id": product_id}).fetchall()
+            product = (
+                db.session.query(Products)
+                .options(
+                    joinedload(Products.vendor).joinedload("user"),
+                    joinedload(Products.images),
+                    joinedload(Products.colors),
+                    joinedload(Products.specs),
+                )
+                .filter_by(product_id=product_id)
+                .first()
+            )
                 
         except Exception as error:
             error = "Error loading product."
@@ -130,6 +117,31 @@ def viewProduct(error=None, product_id=None, success=None):
         .all()
     )
 
+    # --- Product Promotions --- #
+
+    now = datetime.utcnow()
+
+    promotions = (
+        db.session.query(Promotion)
+        .join(Promotion.targets)  # joins PromotionTarget
+        .filter(
+            # Active promotions
+            Promotion.is_active.is_(True),
+            or_(Promotion.starts_at == None, Promotion.starts_at <= now),
+            or_(Promotion.ends_at == None, Promotion.ends_at >= now),
+
+            # Match ANY target type
+            or_(
+                PromotionTarget.product_id == product.product_id,
+                PromotionTarget.vendor_id == product.vendor_id,
+                PromotionTarget.category_id.in_(category_ids) if category_ids else False
+            )
+        )
+        .options(joinedload(Promotion.targets))
+        .distinct()
+        .all()
+    )
+
     create_review_form = CreateReviewForm()
     user_products = None
 
@@ -144,7 +156,7 @@ def viewProduct(error=None, product_id=None, success=None):
 
     return render_template("viewProduct.html", product=product,
         product_id=product_id, vendor=vendor, images=images, colors=colors,
-        specs=specs, error=error, success=success, reviews=reviews,
+        specs=specs, success=success, reviews=reviews, promotions=promotions,
         reviews_filtered=reviews_filtered, review_sort=review_sort,
         review_filter=review_filter, 
         also_bought=also_bought_products, 
