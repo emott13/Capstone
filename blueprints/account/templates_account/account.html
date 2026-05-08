@@ -99,6 +99,17 @@
 
         <div class="account-info">
             <form method="POST" action="{{ url_for('account.account') }}" class="reset_form">
+                {% if success %}
+                    <div class="alert alert-success" role="alert">
+                        {{ success }}
+                    </div>
+                {% endif %}
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
                 <h4>Change Password</h4>
                 {{ form.hidden_tag() }}
 
@@ -107,8 +118,6 @@
                 <p><b>{{ form.confirm_password.label }}: </b>{{ form.confirm_password() }}</p>
                 
                 <button type="submit" class="btn btn-secondary">Reset Password</button>
-                {% if error %}<p style="color:red;">{{ error }}</p>{% endif %}
-                {% if success %}<p style="color:green;">{{ success }}</p>{% endif %}
             </form>
         </div>
 
