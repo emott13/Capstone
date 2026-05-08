@@ -31,7 +31,7 @@
     </style>
     {{ super() }}
 {% endblock %}
-{% block content %}
+{% block page_content %}
 
 <div class="container my-4">
     <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
