@@ -86,6 +86,7 @@ def best_selling():
 def sale():
 
     product_ids = get_sale_products()
+    print("SALE PRODUCT IDS", product_ids)
     products = fetch_products_by_ids(product_ids)
     print('SALE products: ', products)
     image_dict = get_first_two_product_images(products)

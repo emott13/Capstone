@@ -215,7 +215,7 @@ with app.app_context():
     # can be adjusted later to hard code categories for specific products if needed
     categories_list = ProductCategories.query.all()
 
-    # hardcoded count: 62
+    # hardcoded count: 63
 
     # soils
     for product in products_list[:5]:
