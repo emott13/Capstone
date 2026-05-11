@@ -1,88 +1,141 @@
-{% extends "base.html" %}
-{% block title %}Account {{ super() }}{% endblock %}
+{% extends "base.html" %} 
+{% block title %}Account {{ super() }}{% endblock %} 
+{% block styles %} 
+{{ super() }} 
 <style>
-    .buttons {
+    .buttons{
         display: flex;
+        gap: 10px;
     }
-    .btn-main {
-        background-color: var(--purple-2) !important;
+    .btn-main{
+        height: 40px;
+        background-color: var(--purple-2);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        color: white;
+        padding: 8px 15px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 5px;
     }
     .btn-main:hover{
-        background-color: var(--purple-1) !important;
+        background-color: var(--purple-1);
+        color: white;
     }
-</style>
-{% block content %}
-<div class="container" style="margin-top: 10px;">
-    <h1>Account Details</h1>
+    .btn-secondary{
+        height: 40px;
+        background-color: var(--orange-2);
+        border: none;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        color: var(--green-1);
+        padding: 8px 15px;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        border-radius: 5px;
+    }
+    .btn-secondary:hover{
+        background-color: var(--orange-1);
+        color: var(--green-1);
+    }
+    .wrapper{
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        width: 100%;
+    }
+    .account-info{
+        flex: 1; 
+        padding: 15px;
+        background-color: var(--green-2);
+        color: white;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+    h4{ 
+        font-weight: 600;
+        margin-bottom: 10px;
+    }
+    b{
+        font-weight: 600;
+    }
+    p{
+        margin-bottom: 10px;
+    }
+</style> 
+{% endblock %} 
+
+{% block page_content %} 
+<div class="container">
+    <h1 style="margin-top: 3rem;">Account Details</h1>
     <p>Welcome to your account page, {{ user.username }}!</p>
-    <p>Email: {{ user.email }}</p>
-    <p>Created at: {{ user.created_at.strftime("%c") }}</p>
-    <p>Phone numbers:</p>
-    {% for number in user.phone_numbers %}
-        <p>{{ number.phone_number }}</p>
-    {% endfor %}
-    <form action="{{ url_for('account.add_phone_number') }}" method="POST">
-        <input type="text" name="phone_number" placeholder="Add phone number">
-        <button type="submit">Add</button>
-    </form>
+
     <hr>
     <div class="buttons">
         <a href="{{ url_for('order.order') }}" class="btn btn-main">Orders</a>
-        <a href="{{ url_for('wishlist.wishlist') }}" class="btn btn-main">Wishlists</a>
+        <a href="{{ url_for('wishlist.wishlist') }}" class="btn btn-main">Wishlist</a>
     </div>
     <hr>
-    <!-- Add more account details as needed -->
 
-    {% if current_user.has_role("vendor") %}
-    <form method="POST" action="{{ url_for('account.account') }}" class="form my-4" id="vendor-update-name">
-        <h3>Change Store Name</h3>
-        {{ vendor_store_form.hidden_tag() }}
-
-        <div>
-            <label>Current Store Name</label>
-            <h4>{{ current_store_name }}</h4>
+    <div class="wrapper">
+        <div class="account-info">
+            <h4>Account Information</h4>
+            <p><b>Email: </b>{{ user.email }}</p>
+            <p><b>Created at: </b>{{ user.created_at.strftime("%c") }}</p>
+            <b>Phone numbers:</b>
+            <ul>
+                {% for number in user.phone_numbers %}
+                <li>{{ number.phone_number }}</li>
+                {% endfor %}
+            </ul>
+            <form action="{{ url_for('account.add_phone_number') }}" method="POST">
+                <input type="text" name="phone_number" placeholder="Add phone number">
+                <button type="submit" class="btn btn-secondary">Add</button>
+            </form>
         </div>
-        <div>
-            {{ vendor_store_form.store_name.label }}
-            {{ vendor_store_form.store_name() }}
+
+        <div class="account-info">
+            <form method="POST" action="{{ url_for('account.account') }}" class="reset_form">
+                {% if success %}
+                    <div class="alert alert-success" role="alert">
+                        {{ success }}
+                    </div>
+                {% endif %}
+                {% if error %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error }}
+                    </div>
+                {% endif %}
+
+                <h4>Change Password</h4>
+                {{ form.hidden_tag() }}
+
+                <p><b>{{ form.old_password.label }}: </b>{{ form.old_password() }}</p>
+                <p><b>{{ form.new_password.label }}: </b>{{ form.new_password() }}</p>
+                <p><b>{{ form.confirm_password.label }}: </b>{{ form.confirm_password() }}</p>
+                
+                <button type="submit" class="btn btn-secondary">Reset Password</button>
+            </form>
         </div>
 
-        {{ vendor_store_form.submit() }}
-    </form>
-    <hr>
-    {% endif %}
+        {% if current_user.has_role("vendor") %}
+            <div class="account-info">
+                <form method="POST" action="{{ url_for('account.account') }}" id="vendor-update-name">
+                    <h4>Change Store Name</h4>
+                    {{ vendor_store_form.hidden_tag() }}
 
-    <div class="reset my-4">
-        <form method="POST" action="{{ url_for('account.account') }}" class="reset_form">
-            <h3>Change Password</h3>
-            {{ form.hidden_tag() }}
+                    <p><b>Current Store Name: </b>{{ current_store_name }}</p>
 
-            <div>
-                {{ form.old_password.label }}
-                {{ form.old_password() }}
+                    <p><b>{{ vendor_store_form.store_name.label }}: </b>{{ vendor_store_form.store_name() }}</p>
+
+                    <button type="submit" class="btn btn-secondary">Set Store Name</button>
+                </form>
             </div>
-
-            <div>
-                {{ form.new_password.label }}
-                {{ form.new_password() }}
-            </div>
-
-            <div>
-                {{ form.confirm_password.label }}
-                {{ form.confirm_password() }}
-            </div>
-
-            <button type="submit">Reset Password</button>
-
-            {% if error %}
-                <p style="color:red;">{{ error }}</p>
-            {% endif %}
-
-            {% if success %}
-                <p style="color:green;">{{ success }}</p>
-            {% endif %}
-        </form>
+        {% endif %}
     </div>
-    
+
 </div>
 {% endblock %}
