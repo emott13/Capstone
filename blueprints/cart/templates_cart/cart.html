@@ -1,70 +1,76 @@
 {% extends "base.html" %}
 {% block title %}My Cart {{ super() }}{% endblock %}
 {% block styles %}
-    <style>
-        .totalsContainer{
-            width: 350px;
-            float: right;
-        }
-        .checkoutBtn{
-            margin-bottom: 20px;
-        }
-        .applyBtn{
-            border-radius: 5px;
-        }
-        .checkoutBtn,
-        .deleteBtn,
-        .applyBtn{
-            background-color: var(--purple-2) !important;
-            color: black;
-        }
-        .checkoutBtn:hover,
-        .deleteBtn:hover,
-        .applyBtn:hover{
-            background-color: var(--purple-1) !important;
-            color: white !important;
-        }
-        .product{
-            text-decoration: none;
-            color: black;
-        }
-    </style>
-    {{ super() }}
+<style>
+    .totalsContainer {
+        width: 350px;
+        float: right;
+    }
+
+    .checkoutBtn {
+        margin-bottom: 20px;
+    }
+
+    .applyBtn {
+        border-radius: 5px;
+    }
+
+    .checkoutBtn,
+    .deleteBtn,
+    .applyBtn {
+        background-color: var(--purple-2) !important;
+        color: black;
+    }
+
+    .checkoutBtn:hover,
+    .deleteBtn:hover,
+    .applyBtn:hover {
+        background-color: var(--purple-1) !important;
+        color: white !important;
+    }
+
+    .product {
+        text-decoration: none;
+        color: black;
+    }
+</style>
+{{ super() }}
 {% endblock %}
 {% block page_content %}
 
 <div class="container my-4">
-    <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
-<table class="table">
+    <h1 style="margin-top: 20px;">Cart</h1>
+    <hr>
     {% if cartItems %}
-        <tr>
-            <th>Product</th>
-            <th>Quantity</th>
-            <th>Action</th>
-            <th>Price</th>
-        </tr>
-        {% for cartItem in cartItems %}
-        <tr>
-            <td><a href="/view/product?id={{ cartItem.product_id }}" class="product">{{ cartItem.product_name }}</a></td>
+        <form id="quantityChange" method="POST" action="{{ url_for('cart.update_cart') }}">
+            <table class="table">
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Action</th>
+                    <th>Price</th>
+                </tr>
+                {% for cartItem in cartItems %}
+                    <tr>
+                        <td>
+                            <a href="/view/product?id={{ cartItem.product_id }}" class="product">{{ cartItem.product_name }}</a>
+                        </td>
 
-            <td>
-                <input 
-                    type="number"
-                    min="1"
-                    value="{{ cartItem.quantity }}"
-                    name="quantity_{{ cartItem.cart_item_id }}"
-                    onchange="document.getElementById('quantityChange').submit()"
-                >
-            </td>
+                        <td>
+                            <input type="number" min="1" value="{{ cartItem.quantity }}"
+                                name="quantity_{{ cartItem.cart_item_id }}"
+                                onchange="document.getElementById('quantityChange').submit()">
+                        </td>
 
-            <td>
-                <button class="btn deleteBtn" type="button" onclick="deleteItem('{{ cartItem.cart_item_id }}')">Remove</button>
-            </td>
+                        <td>
+                            <button class="btn deleteBtn" type="button"
+                                onclick="deleteItem('{{ cartItem.cart_item_id }}')">Remove</button>
+                        </td>
 
-            <td>${{ cartItem.line_total | priceFormat }}</td>
-        </tr>
-        {% endfor %}
-        </table>
+                        <td>${{ cartItem.line_total | priceFormat }}</td>
+                    </tr>
+                {% endfor %}
+            </table>
         </form>
 
         <div class="totalsContainer">
@@ -74,56 +80,49 @@
             </form>
             <table class="table">
                 {% if subtotal %}
-                <tr>
-                    <td>Subtotal:</td>
-                    <td>${{ subtotal | priceFormat }}</td> 
-                </tr>
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td>${{ subtotal | priceFormat }}</td>
+                    </tr>
                 {% endif %}
                 {% if promotions %}
                     {% for promo in promotions %}
-                    <tr>
-                        <td>Code:</td>
+                        <tr>
+                            <td>Code:</td>
 
-                        <td class="d-flex align-items-center gap-2">
-                            <span>{{ promo.code }}</span>
+                            <td class="d-flex align-items-center gap-2">
+                                <span>{{ promo.code }}</span>
 
-                            <form 
-                                method="POST"
-                                action="{{ url_for('cart.remove_promo') }}"
-                                style="display:inline;"
-                            >
-                                <button 
-                                    type="submit"
-                                    class="btn btn-sm btn-outline-danger"
-                                >
-                                    Remove
-                                </button>
-                            </form>
-                        </td>
-                    </tr>
+                                <form method="POST" action="{{ url_for('cart.remove_promo') }}" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                                        Remove
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
                     {% endfor %}
                 {% endif %}
                 {% if discounts %}
-                <tr>
-                    <td>
-                        Discounts: 
-                    </td>
-                    <td>
-                        -${{ discounts | priceFormat }}
-                    </td>
-                </tr>
+                    <tr>
+                        <td>
+                            Discounts:
+                        </td>
+                        <td>
+                            -${{ discounts | priceFormat }}
+                        </td>
+                    </tr>
                 {% endif %}
                 {% if tax %}
-                <tr>
-                    <td>Tax: </td>
-                    <td>${{ tax | priceFormat }}</td>
-                </tr>
+                    <tr>
+                        <td>Tax: </td>
+                        <td>${{ tax | priceFormat }}</td>
+                    </tr>
                 {% endif %}
                 {% if total %}
-                <tr>
-                    <td>Total: </td>
-                    <td>${{ total | priceFormat }}</td>
-                </tr>
+                    <tr>
+                        <td>Total: </td>
+                        <td>${{ total | priceFormat }}</td>
+                    </tr>
                 {% endif %}
             </table>
             <form action="{{ url_for('checkout.checkout') }}" method="post">
@@ -140,22 +139,22 @@
 
 {% endblock %}
 {% block scripts %}
-    <script>
-        function confirmOrder() {
-            return confirm("Are you sure you're ready to submit?")
-        }
+<script>
+    function confirmOrder() {
+        return confirm("Are you sure you're ready to submit?")
+    }
 
-        function deleteItem(cartItemId){
-            let confirmed = confirm('Are you sure you want to remove this item?')
-            if (confirmed) {
-                let quantityInput = document.querySelector(`input[name="quantity_${cartItemId}"]`);
-                if (quantityInput) {
-                    quantityInput.value = 0;
-                    document.getElementById('quantityChange').submit();
-                }
+    function deleteItem(cartItemId) {
+        let confirmed = confirm('Are you sure you want to remove this item?')
+        if (confirmed) {
+            let quantityInput = document.querySelector(`input[name="quantity_${cartItemId}"]`);
+            if (quantityInput) {
+                quantityInput.value = 0;
+                document.getElementById('quantityChange').submit();
             }
         }
+    }
 
-    </script>
-    {{ super() }}
+</script>
+{{ super() }}
 {% endblock %}

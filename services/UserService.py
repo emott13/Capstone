@@ -1,16 +1,17 @@
 from extensions import db
 from sqlalchemy import text
+from models import Users
 from repositories.UserRepository import UserRepository
 
 class UserService:
     @staticmethod
-    def get_user_by_id(user_id):
+    def get_user_by_id(user_id: int):
         user = UserRepository.get_customer_by_id(user_id)
         return user
     
     @staticmethod
-    def add_phone_number(user_id, phone_number):
-        user = UserRepository.get_customer_by_id(user_id)
+    def add_phone_number(user_id: int, phone_number: str):
+        user: Users = UserRepository.get_user_by_id(user_id)
         if not user:
             return "User not found"
 
@@ -20,5 +21,4 @@ class UserService:
             return "Phone number already exists"
 
         # Add the new phone number to the user's list of phone numbers
-        new_phone = UserRepository.add_phone_number(user_id, phone_number)
-        return new_phone
+        UserRepository.add_phone_number(user, phone_number)

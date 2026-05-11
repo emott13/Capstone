@@ -93,7 +93,7 @@ def add_phone_number():
     if not number:
         return redirect(url_for("account.account"))
 
-    user_service = UserService.add_phone_number(current_user.get_id(), number)
+    UserService.add_phone_number(current_user.get_id(), number)
 
     return redirect(url_for("account.account"))
     
