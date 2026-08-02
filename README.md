@@ -4,10 +4,19 @@ Hibiscus is a plant/outdoor themed e-commerce website. All the products and desc
 
 ## Gallery
 
+Home page
 ![home](github_images/home.png)
+
+Search page
 ![search](github_images/search.png)
+
+Product page
 ![product](github_images/product.png)
+
+Product reviews
 ![reviews](github_images/product_reviews.png)
+
+Cart page
 ![cart](github_images/cart.png)
 
 ## Setup Instructions
