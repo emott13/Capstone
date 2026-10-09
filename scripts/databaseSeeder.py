@@ -36,7 +36,7 @@ with app.app_context():
 
     # --- USERS --- #
     users_list = []
-    for _ in range(30):
+    for _ in range(100):
         password = bcrypt.generate_password_hash("password").decode("utf-8")
         user = Users(
             username=fake.user_name(),
