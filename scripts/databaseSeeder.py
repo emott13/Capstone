@@ -36,7 +36,7 @@ with app.app_context():
 
     # --- USERS --- #
     users_list = []
-    for _ in range(30):
+    for _ in range(100):
         password = bcrypt.generate_password_hash("password").decode("utf-8")
         user = Users(
             username=fake.user_name(),
@@ -215,7 +215,7 @@ with app.app_context():
     # can be adjusted later to hard code categories for specific products if needed
     categories_list = ProductCategories.query.all()
 
-    # hardcoded count: 62
+    # hardcoded count: 63
 
     # soils
     for product in products_list[:5]:

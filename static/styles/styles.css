@@ -123,6 +123,13 @@ body{
     border: var(--purple-1) 1px solid !important;
 }
 
+.btn-success {
+    background-color: var(--green-2) !important;
+    border: var(--green-2) 1px solid !important;
+}
+
+
+
 /* -- footer -- */
 
 footer{
