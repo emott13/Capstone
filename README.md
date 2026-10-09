@@ -4,7 +4,7 @@ Hibiscus is a garden center themed e-commerce website. This serves as an undergr
 
 Hibiscus has three types of sample users with distinct permissions: customer, vendor, admin, or any combination of the three. Sample data is generated using a faker library, leading to some amusing names. Data variables include 100 users, 50+ products, carts and wishlists for each user, previous orders, and product reviews. 
 
-A blended recommendation system is used to promote "related" products, "customers also bought" products, and "recommended for you" products. "Recommended for you" products are determined using a machine learning model trained using a Bayesian Personalized Ranking system. After training, the it generates a personalized total ranking for each user derived from implicit feedback (clicks & purchases) and review ratings, based on the idea that a user prefers any item they have interacted with over items they have not. 
+A blended recommendation system is used to promote "related" products, "customers also bought" products, and "recommended for you" products. "Recommended for you" products are determined using a machine learning model trained using a Bayesian Personalized Ranking system. After training, it generates a personalized total ranking for each user derived from implicit feedback (clicks & purchases) and review ratings, based on the idea that a user prefers any item they have interacted with over items they have not. 
 
 ## Gallery
 
