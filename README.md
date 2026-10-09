@@ -22,10 +22,10 @@ Scroll further to see product reviews!
 ![product reviews](github_images/cap_product_reviews.png)
 
 Under reviews you can find related products and also bought-together items.
-![related products and also bought-together products](github_images/cap_related.png)
+![related products and also bought-together products](github_images/cap_also_bought.png)
 
 If a user is logged in, you can also see personalized recommendations.
-![also bought-together products and recommended products](github_images/cap_also_bought.png)
+![also bought-together products and recommended products](github_images/cap_related.png)
 
 Cart Page (Requires logged in user)
 ![cart](github_images/cap_cart.png)
