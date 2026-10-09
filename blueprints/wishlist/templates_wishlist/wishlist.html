@@ -2,6 +2,31 @@
 
 {% block title %}Wishlists{% endblock %}
 
+{% block styles %}
+<style>
+    .deleteBtn, .updateQntyBtn {
+        background-color: var(--purple-2) !important;
+        color: black;
+    }
+
+    .deleteBtn:hover, .updateQntyBtn:hover {
+        background-color: var(--purple-1) !important;
+        color: white !important;
+    }
+
+    .addCartBtn {
+        background-color: var(--orange-2) !important;
+        color: black;
+    }
+
+    .addCartBtn:hover {
+        background-color: var(--orange-1) !important;
+        color: white;
+    }
+</style>
+{{ super() }}
+{% endblock %}
+
 {% block page_content %}
 <div class="container">
     <h1 style="margin-top: 20px;">Wishlists</h1>
@@ -40,6 +65,7 @@
                     <!-- Remove button -->
                     <button 
                         type="submit"
+                        class="btn deleteBtn"
                         name="remove_item_id"
                         value="{{ item.wishlist_item_id }}"
                         formaction="{{ url_for('wishlist.remove_item') }}"
@@ -48,6 +74,7 @@
                     </button>
                     <button 
                         type="submit"
+                        class="btn addCartBtn"
                         name="add_to_cart_id"
                         value="{{ item.wishlist_item_id }}"
                         formaction="{{ url_for('wishlist.add_to_cart') }}"
@@ -63,6 +90,7 @@
     <!-- Update button -->
     <button 
         type="submit" 
+        class="btn updateQntyBtn"
         formaction="{{ url_for('wishlist.update_wishlist') }}"
     >
         Update Quantities
