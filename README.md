@@ -75,10 +75,10 @@ The product page displays product information and customer reviews.
 ![product](github_images/cap_view_product.png)
 ![product reviews](github_images/cap_product_reviews.png)
 
-Related products and frequently purchased-together items appear below the reviews.
+Under reviews you can find related products and also bought-together items.
 ![related products and also bought-together products](github_images/cap_also_bought.png)
 
-Logged-in users can also recieve personalized product recommendations.
+If a user is logged in, you can also see personalized recommendations.
 ![also bought-together products and recommended products](github_images/cap_related.png)
 
 ### Shopping Cart and Wishlist 
