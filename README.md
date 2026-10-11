@@ -90,16 +90,32 @@ The shopping cart allows users to manage their selected products and view applic
 Users can save roducts to a wislist for future purchases.
 ![wishlist](github_images/cap_wishlist.png)
 
-### User Accounts and Order History
+### Checkout Process
+
+Hibiscus impliments a multi-step simulated checkout workflow that guides customers from their shopping cart to order confirmation.
+
+1) Review Order: Review selected products, quantities, and order totals.
+![order review page](github_images/cap_checkout.png)
+
+2) Delivery Address: Select a saved delivery address or enter a new one.
+![delivery address selection](github_images/cap_checkout_address.png)
+
+3) Payment Details: Enter the required payment information.
+![payment page](github_images/cap_checkout_payment.png)
+
+4) Order Confirmation: Verify the final order totals and delivery address before confirming the order.
+![order confirmtaion page](github_images/cap_checkout_review.png) 
+
+5) Order History: View the completed order on the customer's orders page.
+![order history page](github_images/cap_checkout_order.png)
+
+### User Accounts
 
 The account page provides account management options based on the user's assigned roles.
 ![account information](github_images/cap_account_cv.png)
 
  - **All users:** Account information and password changes.
  - **Vendors:** Additional functionality for changing their store name.
-
-Customers can view their previous orders from the order history page.
-![orders](github_images/cap_order.png)
 
 ### Vendor and Administrator Dashboards
 
