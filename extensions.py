@@ -22,9 +22,14 @@ load_dotenv()
 db_user = os.environ["DB_USER"]
 db_password = os.environ["DB_PASSWORD"]
 db_name = os.environ["DB_NAME"]
+db_host = os.getenv("DB_HOST", "localhost")
+db_port = os.getenv("DB_PORT", "5432")
 
 # Initialize Flask app
-conn_str = f"postgresql://{db_user}:{db_password}@localhost/{db_name}" 
+conn_str = (
+    f"postgresql://{db_user}:{db_password}"
+    f"@{db_host}:{db_port}/{db_name}"
+)
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = conn_str
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
