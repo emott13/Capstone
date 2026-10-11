@@ -51,8 +51,8 @@ Sample users can have any combination of customer, vendor, and administrator rol
  - Backend: Python, Flask
  - Frontend: HTML, CSS, JavaScript, Bootstrap
  - Database: PostgreSQL
- - ORM: 
- - Authentication:
+ - ORM: SQLAlchemy
+ - Authentication: Flask-Login, Flask-Bcrypt
  - Machine Learning: PyTorch, Bayesian Personalized Ranking (BPR)
  - Test Data Generation: Faker
  - Development Tools: Git, GitHub, Visual Studio Code
