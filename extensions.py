@@ -28,7 +28,7 @@ conn_str = f"postgresql://{db_user}:{db_password}@localhost/{db_name}"
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = conn_str
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-app.config["SECRET_KEY"] = b'\xdak\xd2\xf7\x80,8\x0f\xbdG\xb7\x87\xe4h\xcf\xae'
+app.config["SECRET_KEY"] = os.environ["SECRET_KEY"]
 
 # Initialize database
 db = SQLAlchemy()
