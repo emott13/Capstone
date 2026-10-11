@@ -1,20 +1,23 @@
 {% extends "base.html" %}
 {% block title %}Address {{ super() }}{% endblock %}
 
+{% block styles %}
+{{ super() }}
 <style>
     .address-input:disabled {
         background-color: #f5f5f5;
         cursor: not-allowed;
     }
-    .submitBtn{
+    .submitBtn {
         background-color: var(--purple-2) !important;
         color: black;
     }
-    .submitBtn:hover{
+    .submitBtn:hover {
         background-color: var(--purple-1) !important;
         color: white !important;
     }
 </style>
+{% endblock %}
 
 {% block page_content %}
 <div class="container my-4">
